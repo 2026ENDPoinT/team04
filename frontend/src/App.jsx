@@ -190,7 +190,7 @@ const SEED_ACCOUNTS = [
   {
     id: 2,
     department: '컴퓨터공학과',
-    studentId: '26101501',
+    studentId: '261',
     name: '김민수',
     statusMessage: '알고리즘 스터디 구합니다 💻',
     role: 'STUDENT',
@@ -201,8 +201,8 @@ const SEED_ACCOUNTS = [
   {
     id: 3,
     department: '컴퓨터공학과',
-    studentId: '24101888',
-    name: '김민수',
+    studentId: '262',
+    name: '박진',
     statusMessage: '졸업작품 준비 중... 화이팅!',
     role: 'STUDENT',
     preferredMainView: 'TIMETABLE',
@@ -212,7 +212,7 @@ const SEED_ACCOUNTS = [
   {
     id: 4,
     department: '컴퓨터공학과',
-    studentId: '26101999',
+    studentId: '263',
     name: '이서연',
     statusMessage: '수요일 오후 공강이에요 ☕',
     role: 'STUDENT',
@@ -255,7 +255,7 @@ const SEED_COURSES_BY_STUDENT = {
       ]
     }
   ],
-  '26101501': [
+  '261': [
     {
       id: 201,
       year: 2026,
@@ -287,7 +287,7 @@ const SEED_COURSES_BY_STUDENT = {
       ]
     }
   ],
-  '24101888': [
+  '262': [
     {
       id: 301,
       year: 2026,
@@ -303,7 +303,7 @@ const SEED_COURSES_BY_STUDENT = {
       ]
     }
   ],
-  '26101999': [
+  '263': [
     {
       id: 401,
       year: 2026,
@@ -350,7 +350,7 @@ const SEED_ACTIVITIES_BY_STUDENT = {
       schedules: [{ day: '금', startTime: '14:00', endTime: '16:00' }]
     }
   ],
-  '26101501': [
+  '261': [
     {
       id: 5003,
       title: '밴드부 정기 합주',
@@ -380,12 +380,273 @@ const SEED_ACTIVITIES_BY_STUDENT = {
 
 const FEEDBACK_STATUS_OPTIONS = ['제출 완료', '검토 중', '검토 완료'];
 
+// <졸업요건 조건 1, 2, 3> 서울과학기술대학교 공식 EPiC folio 인정 활동 카탈로그 (클릭만으로 간편 추가/삭제 지원)
+// 각 활동명 옆에 둥근 박스로 '필수 요건' / '선택 요건', '~~점' 배지 및 활동 일시(scheduleDate) 표시
+const SEOULTECH_OFFICIAL_EPIC_CATALOG = [
+  {
+    activityCode: 'EPIC_REQ_01',
+    title: '전공 졸업작품 (캡스톤디자인 종합설계 발표 및 심사)',
+    reqType: '필수 요건',
+    points: 200,
+    category: '전공/학술',
+    scheduleDate: '매 학기 6월 / 12월 말 학과 심사 주간',
+    description: '컴퓨터공학과 학부생 졸업 필수 종합설계 작품 제출 및 발표',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_REQ_02',
+    title: 'ST 진로탐색 및 전공상담 (지도교수 정기 면담)',
+    reqType: '필수 요건',
+    points: 50,
+    category: '진로/상담',
+    scheduleDate: '매 학기 상시 (1학기 3~6월 / 2학기 9~12월)',
+    description: '서울과기대 EPiC folio 진로 및 학업설계 지도교수 필수 상담',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_REQ_03',
+    title: '공인어학성적 또는 정보처리기사 자격 취득 인증',
+    reqType: '필수 요건',
+    points: 150,
+    category: '어학/자격증',
+    scheduleDate: '연중 상시 접수 (졸업 사정 전월 마감)',
+    description: 'TOEIC 700+ / OPIc IM1+ 또는 정보처리기사(산업기사) 자격증 공식 등록',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_01',
+    title: 'SW 코딩역량인증 / PCCP·TOPCIT 성적 우수 인증',
+    reqType: '선택 요건',
+    points: 120,
+    category: '전공/학술',
+    scheduleDate: '2026.05.23 (토) / 2026.10.31 (토) 정기 시행',
+    description: 'SW중심대학사업단 주관 TOPCIT 및 코딩역량 평가 응시/수상',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_02',
+    title: '교내·외 해커톤 및 SW 경진대회 참가/입상',
+    reqType: '선택 요건',
+    points: 150,
+    category: '공모전/경진대회',
+    scheduleDate: '2026.07 ~ 2026.11 (하계/동계 방학 및 학기 중)',
+    description: '서울과기대 창의융합 해커톤, ICPC, 외부 알고리즘/개발 공모전 참여',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_03',
+    title: '현장실습 (ICT 학점연계 인턴십 / 하계·동계 Co-op)',
+    reqType: '선택 요건',
+    points: 200,
+    category: '현장실습/인턴',
+    scheduleDate: '하계(2026.07~08) / 동계(2027.01~02) / 학기제',
+    description: '대학일자리플러스센터 및 현장실습지원센터 연계 기업 인턴십 수료',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_04',
+    title: 'CTL 교수학습개발센터 학습공동체 (튜터링·스터디그룹)',
+    reqType: '선택 요건',
+    points: 80,
+    category: '비교과/특강',
+    scheduleDate: '학기별 운영 (2026.03.16 ~ 2026.06.05)',
+    description: '전공 튜터링 및 스터디그룹 8주 이상 완주 시 EPiC 마일리지 자동 부여',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_05',
+    title: '창업지원단 ST 창업캠프 및 창업동아리 활동',
+    reqType: '선택 요건',
+    points: 100,
+    category: '공모전/경진대회',
+    scheduleDate: '2026.05.08 ~ 2026.05.10 / 학기 중 상시',
+    description: '아이디어 경진대회 및 IT 서비스 창업 캠프 수료',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_06',
+    title: '대학일자리플러스센터 AI 모의면접 & 취업역량 부트캠프',
+    reqType: '선택 요건',
+    points: 60,
+    category: '진로/상담',
+    scheduleDate: '매월 둘째·넷째 주 수요일 14:00 ~ 17:00',
+    description: '이력서·포트폴리오 첨삭 및 현직 개발자 멘토링 특강 수료',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_07',
+    title: '글로벌 교환학생 / 단기 해외연수 및 어학연수 프로그램',
+    reqType: '선택 요건',
+    points: 150,
+    category: '글로벌/봉사',
+    scheduleDate: '하계/동계 방학 파견 및 정규학기 파견',
+    description: '국제교육본부 주관 해외 자매대학 파견 및 글로벌 역량 프로그램',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  },
+  {
+    activityCode: 'EPIC_SEL_08',
+    title: '사회봉사활동 및 전공 재능기부 멘토링 (30시간 이상)',
+    reqType: '선택 요건',
+    points: 50,
+    category: '글로벌/봉사',
+    scheduleDate: '연중 상시 (VMS / 1365 인증서 연동)',
+    description: '지역사회 코딩 교육 봉사 및 공인 봉사활동 시간 인증',
+    officialUrl: 'https://epic.seoultech.ac.kr'
+  }
+];
+
+const SEED_GRADUATION_BY_STUDENT = {
+  '26101232': {
+    admissionType: 'REGULAR', // 'REGULAR' (신입학 재학생) | 'TRANSFER' (편입생)
+    selectedEpicItems: [
+      {
+        activityCode: 'EPIC_REQ_02',
+        title: 'ST 진로탐색 및 전공상담 (지도교수 정기 면담)',
+        reqType: '필수 요건',
+        points: 50,
+        category: '진로/상담',
+        scheduleDate: '매 학기 상시 (1학기 3~6월 / 2학기 9~12월)',
+        officialUrl: 'https://epic.seoultech.ac.kr',
+        status: 'COMPLETED' // 이수 완료
+      },
+      {
+        activityCode: 'EPIC_SEL_04',
+        title: 'CTL 교수학습개발센터 학습공동체 (튜터링·스터디그룹)',
+        reqType: '선택 요건',
+        points: 80,
+        category: '비교과/특강',
+        scheduleDate: '학기별 운영 (2026.03.16 ~ 2026.06.05)',
+        officialUrl: 'https://epic.seoultech.ac.kr',
+        status: 'COMPLETED' // 이수 완료
+      },
+      {
+        activityCode: 'EPIC_REQ_01',
+        title: '전공 졸업작품 (캡스톤디자인 종합설계 발표 및 심사)',
+        reqType: '필수 요건',
+        points: 200,
+        category: '전공/학술',
+        scheduleDate: '매 학기 6월 / 12월 말 학과 심사 주간',
+        officialUrl: 'https://epic.seoultech.ac.kr',
+        status: 'WISH' // 이수 희망
+      },
+      {
+        activityCode: 'EPIC_SEL_02',
+        title: '교내·외 해커톤 및 SW 경진대회 참가/입상',
+        reqType: '선택 요건',
+        points: 150,
+        category: '공모전/경진대회',
+        scheduleDate: '2026.07 ~ 2026.11 (하계/동계 방학 및 학기 중)',
+        officialUrl: 'https://epic.seoultech.ac.kr',
+        status: 'WISH' // 이수 희망
+      }
+    ]
+  }
+};
+
+// <그룹 조건 1 ~ 7> 초기 샘플 그룹 데이터 (공개 그룹 1개, 비공개 그룹 1개)
+const SEED_STUDY_GROUPS = [
+  {
+    id: 7001,
+    name: '서울과기대 알고리즘·코테 정복반',
+    description: '매주 백준/프로그래머스 문제 풀이 및 코드 리뷰를 진행하는 공개 스터디 그룹입니다.',
+    isPrivate: false,
+    ownerId: 1,
+    boardCategories: ['공지사항', '자유게시판', '질문/답변', '문제풀이 인증'],
+    members: [
+      {
+        userId: 1,
+        role: 'OWNER',
+        status: 'ACTIVE',
+        canRead: true,
+        canWrite: true,
+        canManageRoles: true
+      },
+      {
+        userId: 2,
+        role: 'MANAGER',
+        status: 'ACTIVE',
+        canRead: true,
+        canWrite: true,
+        canManageRoles: true
+      },
+      {
+        userId: 4,
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        canRead: true,
+        canWrite: true,
+        canManageRoles: false
+      }
+    ],
+    posts: [
+      {
+        id: 8001,
+        category: '공지사항',
+        authorId: 1,
+        authorName: '최준우',
+        authorDept: '컴퓨터공학과',
+        title: '[필독] 알고리즘 스터디 주간 진행 규칙 안내',
+        content: '매주 수요일 오후 3시 전까지 각자 맡은 골드 난이도 2문제를 풀고 풀이를 공유해 주세요!',
+        createdAt: '2026-03-10 10:00'
+      },
+      {
+        id: 8002,
+        category: '질문/답변',
+        authorId: 2,
+        authorName: '김민수',
+        authorDept: '컴퓨터공학과',
+        title: '다익스트라 우선순위 큐 시간복잡도 질문입니다',
+        content: '간선 개수가 많을 때 파이썬 heapq 대신 C++ priority_queue를 쓰는 게 유리할까요?',
+        createdAt: '2026-03-11 15:40'
+      }
+    ]
+  },
+  {
+    id: 7002,
+    name: '2026 캡스톤디자인 A팀 (비공개)',
+    description: '가입 시 그룹 관리자의 승인이 필요한 캡스톤디자인 프로젝트 비공개 그룹입니다.',
+    isPrivate: true,
+    ownerId: 2,
+    boardCategories: ['공지사항', '회의록', '개발일지'],
+    members: [
+      {
+        userId: 2,
+        role: 'OWNER',
+        status: 'ACTIVE',
+        canRead: true,
+        canWrite: true,
+        canManageRoles: true
+      },
+      {
+        userId: 3,
+        role: 'MEMBER',
+        status: 'PENDING',
+        canRead: true,
+        canWrite: true,
+        canManageRoles: false
+      }
+    ],
+    posts: [
+      {
+        id: 8003,
+        category: '회의록',
+        authorId: 2,
+        authorName: '김민수',
+        authorDept: '컴퓨터공학과',
+        title: '1주차 주제 선정 및 역할 분담 회의록',
+        content: '백엔드 API 설계와 프론트엔드 타임테이블 컴포넌트를 각각 분담하여 진행합니다.',
+        createdAt: '2026-03-12 13:00'
+      }
+    ]
+  }
+];
+
 const SEED_USER_FEEDBACKS = [
   {
     id: 9001,
     userId: 2,
     department: '컴퓨터공학과',
-    studentId: '26101501',
+    studentId: '261',
     authorName: '김민수',
     title: '여름/겨울 계절학기 시간표 색상 테마 추가 건의',
     content: '계절학기 과목을 등록할 때 구분하기 쉽도록 파스텔 민트 외에 추가 색상을 선택할 수 있으면 좋겠습니다!',
@@ -398,7 +659,7 @@ const SEED_USER_FEEDBACKS = [
     id: 9002,
     userId: 4,
     department: '컴퓨터공학과',
-    studentId: '26101999',
+    studentId: '263',
     authorName: '이서연',
     title: '성적 예측 기능에서 퀴즈 항목 기본 비율 조정 건의',
     content: '과목별로 퀴즈가 2번 이상 있는 경우가 많아서 시험 항목 추가 시 기본 반영비율이 10%로 들어가면 편리할 것 같아요.',
@@ -419,7 +680,7 @@ const getDefaultApiUrl = () => {
 export default function App() {
   const [accounts, setAccounts] = useState(() => {
     try {
-      const saved = localStorage.getItem('seoultech_accounts_v5');
+      const saved = localStorage.getItem('seoultech_accounts_v6');
       return saved ? JSON.parse(saved) : SEED_ACCOUNTS;
     } catch {
       return SEED_ACCOUNTS;
@@ -428,7 +689,7 @@ export default function App() {
 
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('seoultech_current_user_v5');
+      const saved = localStorage.getItem('seoultech_current_user_v6');
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
@@ -437,7 +698,7 @@ export default function App() {
 
   const [authToken, setAuthToken] = useState(() => {
     try {
-      return localStorage.getItem('seoultech_auth_token_v5') || '';
+      return localStorage.getItem('seoultech_auth_token_v6') || '';
     } catch {
       return '';
     }
@@ -445,7 +706,7 @@ export default function App() {
 
   const [serverConfig, setServerConfig] = useState(() => {
     try {
-      const saved = localStorage.getItem('seoultech_server_config_v5');
+      const saved = localStorage.getItem('seoultech_server_config_v6');
       return saved ? JSON.parse(saved) : { apiUrl: getDefaultApiUrl() };
     } catch {
       return { apiUrl: getDefaultApiUrl() };
@@ -455,6 +716,17 @@ export default function App() {
   const [isServerConnected, setIsServerConnected] = useState(false);
   const [isServerModalOpen, setIsServerModalOpen] = useState(false);
   const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
+  // <조건 4, 5> 상단 이름·학번·학과 클릭 시 열리는 개인정보 수정 팝업 모달 상태
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
+
+  // <조건 3> 각 박스를 접거나 펼칠 수 있는 'v' 버튼 상태 관리
+  const [collapsedBoxes, setCollapsedBoxes] = useState({});
+  const toggleBoxCollapse = (boxKey) => {
+    setCollapsedBoxes((prev) => ({
+      ...prev,
+      [boxKey]: !prev[boxKey]
+    }));
+  };
 
   const [authMode, setAuthMode] = useState('LOGIN');
   // 보안 강화: 초기 실행 시 학과의 '컴퓨터공학과'만 기본 입력하고, 학번과 이름은 빈 문자열로 설정
@@ -467,7 +739,7 @@ export default function App() {
 
   const [coursesByStudent, setCoursesByStudent] = useState(() => {
     try {
-      const saved = localStorage.getItem('seoultech_courses_by_student_v5');
+      const saved = localStorage.getItem('seoultech_courses_by_student_v6');
       return saved ? JSON.parse(saved) : SEED_COURSES_BY_STUDENT;
     } catch {
       return SEED_COURSES_BY_STUDENT;
@@ -477,7 +749,7 @@ export default function App() {
   // <조건 1 ~ 7> 기타 활동(Custom Activity) 상태 및 사용자 정의 카테고리 상태
   const [activitiesByStudent, setActivitiesByStudent] = useState(() => {
     try {
-      const saved = localStorage.getItem('seoultech_activities_by_student_v5');
+      const saved = localStorage.getItem('seoultech_activities_by_student_v6');
       return saved ? JSON.parse(saved) : SEED_ACTIVITIES_BY_STUDENT;
     } catch {
       return SEED_ACTIVITIES_BY_STUDENT;
@@ -535,6 +807,48 @@ export default function App() {
   // ADMIN 전용 피드백 답변 입력 상태 맵 ({ [feedbackId]: { status, adminReply } })
   const [adminFeedbackDrafts, setAdminFeedbackDrafts] = useState({});
   const [adminFeedbackStatusFilter, setAdminFeedbackStatusFilter] = useState('ALL');
+
+  // <그룹 조건 1 ~ 7> 그룹(StudyGroup) 상태 및 그룹 생성/게시판/검색/권한 관리 상태
+  const [studyGroups, setStudyGroups] = useState(() => {
+    try {
+      const saved = localStorage.getItem('seoultech_study_groups_v5');
+      return saved ? JSON.parse(saved) : SEED_STUDY_GROUPS;
+    } catch {
+      return SEED_STUDY_GROUPS;
+    }
+  });
+
+  const [selectedGroupId, setSelectedGroupId] = useState(7001);
+  const [groupInnerTab, setGroupInnerTab] = useState('BOARD'); // 'BOARD' | 'MEMBERS' | 'ROLES'
+  const [groupForm, setGroupForm] = useState({
+    name: '',
+    description: '',
+    isPrivate: false
+  });
+  const [newGroupCategoryInput, setNewGroupCategoryInput] = useState('');
+  const [selectedGroupBoardCategory, setSelectedGroupBoardCategory] = useState('ALL');
+  const [groupPostSearchQuery, setGroupPostSearchQuery] = useState('');
+  const [editingGroupPostId, setEditingGroupPostId] = useState(null);
+  const [groupPostForm, setGroupPostForm] = useState({
+    category: '자유게시판',
+    title: '',
+    content: ''
+  });
+  // 그룹원 목록에서 간단하게 바로 메시지 보내기용 인라인 입력 상태 ({ [userId]: '메시지' })
+  const [quickMemberMessageMap, setQuickMemberMessageMap] = useState({});
+
+  // <졸업요건 조건 1, 2, 3> 학번·재학생/편입생별 졸업요건 및 EPiC folio(이수 완료 / 이수 희망) 관리 상태
+  const [graduationByStudent, setGraduationByStudent] = useState(() => {
+    try {
+      const saved = localStorage.getItem('seoultech_graduation_by_student_v5');
+      return saved ? JSON.parse(saved) : SEED_GRADUATION_BY_STUDENT;
+    } catch {
+      return SEED_GRADUATION_BY_STUDENT;
+    }
+  });
+
+  const [epicCatalogFilter, setEpicCatalogFilter] = useState('ALL'); // 'ALL' | '필수 요건' | '선택 요건'
+  const [epicCategoryFilter, setEpicCategoryFilter] = useState('ALL');
 
   // 친구 관계 로컬 동기화 상태 (백엔드 미연결 시에도 100% 동작 보장)
   const [friendships, setFriendships] = useState(() => {
@@ -654,11 +968,11 @@ export default function App() {
   };
 
   useEffect(() => {
-    localStorage.setItem('seoultech_accounts_v5', JSON.stringify(accounts));
+    localStorage.setItem('seoultech_accounts_v6', JSON.stringify(accounts));
   }, [accounts]);
 
   useEffect(() => {
-    localStorage.setItem('seoultech_courses_by_student_v5', JSON.stringify(coursesByStudent));
+    localStorage.setItem('seoultech_courses_by_student_v6', JSON.stringify(coursesByStudent));
   }, [coursesByStudent]);
 
   useEffect(() => {
@@ -674,7 +988,7 @@ export default function App() {
   }, [predictionsByStudent]);
 
   useEffect(() => {
-    localStorage.setItem('seoultech_activities_by_student_v5', JSON.stringify(activitiesByStudent));
+    localStorage.setItem('seoultech_activities_by_student_v6', JSON.stringify(activitiesByStudent));
   }, [activitiesByStudent]);
 
   useEffect(() => {
@@ -689,16 +1003,27 @@ export default function App() {
   }, [userFeedbacks]);
 
   useEffect(() => {
+    localStorage.setItem('seoultech_study_groups_v5', JSON.stringify(studyGroups));
+  }, [studyGroups]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      'seoultech_graduation_by_student_v5',
+      JSON.stringify(graduationByStudent)
+    );
+  }, [graduationByStudent]);
+
+  useEffect(() => {
     localStorage.setItem('seoultech_server_config_v5', JSON.stringify(serverConfig));
   }, [serverConfig]);
 
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem('seoultech_current_user_v5', JSON.stringify(currentUser));
+      localStorage.setItem('seoultech_current_user_v6', JSON.stringify(currentUser));
       setProfileForm({
-        department: currentUser.department,
-        studentId: currentUser.studentId,
-        name: currentUser.name,
+        department: currentUser.department || '컴퓨터공학과',
+        studentId: currentUser.studentId || '',
+        name: currentUser.name || '',
         statusMessage: currentUser.statusMessage || '',
         preferredMainView: currentUser.preferredMainView || 'TIMETABLE',
         currentYear: currentUser.currentYear || 2026,
@@ -706,11 +1031,11 @@ export default function App() {
       });
       setMyStatusDraft(currentUser.statusMessage || '');
     } else {
-      localStorage.removeItem('seoultech_current_user_v5');
+      localStorage.removeItem('seoultech_current_user_v6');
     }
   }, [currentUser]);
 
-  // 백엔드 연결 확인 및 자동 동기화
+  // 백엔드 서버 헬스 체크 및 초기 데이터 동기화
   useEffect(() => {
     const syncFromBackend = async () => {
       const base = (serverConfig.apiUrl || '').replace(/\/$/, '');
@@ -719,50 +1044,11 @@ export default function App() {
         return;
       }
       try {
-        const healthRes = await fetch(`${base}/health`);
-        if (!healthRes.ok) {
+        const res = await fetch(`${base}/health`);
+        if (res.ok) {
+          setIsServerConnected(true);
+        } else {
           setIsServerConnected(false);
-          return;
-        }
-        setIsServerConnected(true);
-
-        if (authToken) {
-          const [meRes, coursesRes, predRes] = await Promise.all([
-            fetch(`${base}/auth/me`, {
-              headers: { Authorization: `Bearer ${authToken}` }
-            }),
-            fetch(`${base}/courses`, {
-              headers: { Authorization: `Bearer ${authToken}` }
-            }),
-            fetch(`${base}/predictions`, {
-              headers: { Authorization: `Bearer ${authToken}` }
-            })
-          ]);
-
-          if (meRes.ok) {
-            const meData = await meRes.json();
-            if (meData.user) {
-              setCurrentUser(meData.user);
-              if (coursesRes.ok) {
-                const coursesData = await coursesRes.json();
-                if (Array.isArray(coursesData.courses)) {
-                  setCoursesByStudent((prev) => ({
-                    ...prev,
-                    [meData.user.studentId]: coursesData.courses
-                  }));
-                }
-              }
-              if (predRes && predRes.ok) {
-                const predData = await predRes.json();
-                if (Array.isArray(predData.predictions)) {
-                  setPredictionsByStudent((prev) => ({
-                    ...prev,
-                    [meData.user.studentId]: predData.predictions
-                  }));
-                }
-              }
-            }
-          }
         }
       } catch {
         setIsServerConnected(false);
@@ -770,6 +1056,603 @@ export default function App() {
     };
     syncFromBackend();
   }, [serverConfig.apiUrl, authToken]);
+
+  // <피드백 조건 2, 3> 건의 사항 및 개선점 제출 핸들러
+  const handleSubmitUserFeedback = async (e) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    const trimmedTitle = feedbackSubmissionForm.title.trim();
+    const trimmedContent = feedbackSubmissionForm.content.trim();
+
+    if (!trimmedTitle) {
+      showToast('error', '피드백(건의 사항) 제목을 입력해 주세요.');
+      return;
+    }
+    if (!trimmedContent) {
+      showToast('error', '건의 사항이나 개선점 내용을 입력해 주세요.');
+      return;
+    }
+
+    const nowStr = new Date().toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const newFeedbackItem = {
+      id: Date.now(),
+      userId: currentUser.id,
+      department: currentUser.department,
+      studentId: currentUser.studentId,
+      authorName: currentUser.name,
+      title: trimmedTitle,
+      content: trimmedContent,
+      status: '제출 완료',
+      adminReply: '',
+      createdAt: nowStr,
+      repliedAt: null
+    };
+
+    const base = (serverConfig.apiUrl || '').replace(/\/$/, '');
+    if (base && isServerConnected && authToken) {
+      try {
+        await fetch(`${base}/admin/feedbacks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            title: trimmedTitle,
+            content: trimmedContent
+          })
+        });
+      } catch {
+        // 로컬 저장소와 동기화
+      }
+    }
+
+    setUserFeedbacks((prev) => [newFeedbackItem, ...prev]);
+    setFeedbackSubmissionForm({ title: '', content: '' });
+    showToast(
+      'success',
+      '건의 사항이 서버에 제출되었습니다! (현재 진행 상태: 제출 완료)'
+    );
+  };
+
+  // =========================================================================
+  // <그룹 기능 조건 1 ~ 7> 핸들러 모음
+  // =========================================================================
+
+  // 현재 선택된 그룹 객체
+  const activeGroup = useMemo(() => {
+    if (!studyGroups.length) return null;
+    return studyGroups.find((g) => g.id === selectedGroupId) || studyGroups[0];
+  }, [studyGroups, selectedGroupId]);
+
+  // 현재 선택된 그룹에서 나의 멤버십/권한 정보
+  const myMembershipInActiveGroup = useMemo(() => {
+    if (!activeGroup || !currentUser) return null;
+    return (activeGroup.members || []).find((m) => m.userId === currentUser.id) || null;
+  }, [activeGroup, currentUser]);
+
+  // <조건 1, 2> 새 그룹 생성 (생성한 유저가 그룹 최고 관리자 OWNER가 됨)
+  const handleCreateStudyGroup = (e) => {
+    e.preventDefault();
+    if (!currentUser) return;
+    const trimmedName = groupForm.name.trim();
+    if (!trimmedName) {
+      showToast('error', '생성할 그룹 이름을 입력해 주세요.');
+      return;
+    }
+
+    const newGroup = {
+      id: Date.now(),
+      name: trimmedName,
+      description: groupForm.description.trim() || '함께 공부하고 정보를 나누는 그룹입니다.',
+      isPrivate: Boolean(groupForm.isPrivate),
+      ownerId: currentUser.id,
+      boardCategories: ['공지사항', '자유게시판', '질문/답변', '자료실'],
+      members: [
+        {
+          userId: currentUser.id,
+          role: 'OWNER',
+          status: 'ACTIVE',
+          canRead: true,
+          canWrite: true,
+          canManageRoles: true
+        }
+      ],
+      posts: []
+    };
+
+    setStudyGroups((prev) => [newGroup, ...prev]);
+    setSelectedGroupId(newGroup.id);
+    setGroupInnerTab('BOARD');
+    setGroupForm({ name: '', description: '', isPrivate: false });
+    showToast(
+      'success',
+      `'${trimmedName}' (${newGroup.isPrivate ? '비공개·승인제' : '공개·즉시가입'}) 그룹이 생성되었으며 최고 관리자가 되었습니다!`
+    );
+  };
+
+  // <조건 2> 그룹 가입 신청 (공개 그룹은 허락 없이 즉시 가입, 비공개 그룹은 승인 대기)
+  const handleJoinStudyGroup = (group) => {
+    if (!currentUser) return;
+    const existing = (group.members || []).find((m) => m.userId === currentUser.id);
+    if (existing) {
+      showToast(
+        'error',
+        existing.status === 'ACTIVE'
+          ? '이미 가입된 그룹입니다.'
+          : '현재 비공개 그룹 가입 승인 대기 중입니다.'
+      );
+      return;
+    }
+
+    const nextStatus = group.isPrivate ? 'PENDING' : 'ACTIVE';
+    const newMemberEntry = {
+      userId: currentUser.id,
+      role: 'MEMBER',
+      status: nextStatus,
+      canRead: true,
+      canWrite: true,
+      canManageRoles: false
+    };
+
+    setStudyGroups((prev) =>
+      prev.map((g) =>
+        g.id === group.id ? { ...g, members: [...(g.members || []), newMemberEntry] } : g
+      )
+    );
+    setSelectedGroupId(group.id);
+
+    showToast(
+      'success',
+      group.isPrivate
+        ? `'${group.name}' 비공개 그룹에 가입 신청을 보냈습니다. 관리자 승인 후 활동할 수 있습니다.`
+        : `'${group.name}' 공개 그룹에 즉시 가입되었습니다!`
+    );
+  };
+
+  // <조건 1, 2, 6> 비공개 그룹 가입 승인/거절 및 그룹원 추방/탈퇴 (인원이 0명이 되면 그룹 자동 삭제)
+  const handleGroupMemberStatusAction = (groupId, targetUserId, action) => {
+    if (!currentUser) return;
+    let autoDeletedGroupName = null;
+
+    setStudyGroups((prev) => {
+      const updatedList = prev
+        .map((g) => {
+          if (g.id !== groupId) return g;
+
+          if (action === 'APPROVE') {
+            return {
+              ...g,
+              members: (g.members || []).map((m) =>
+                m.userId === targetUserId ? { ...m, status: 'ACTIVE' } : m
+              )
+            };
+          }
+
+          // 거절, 강제 퇴장 또는 탈퇴
+          const remainingMembers = (g.members || []).filter((m) => m.userId !== targetUserId);
+          const activeMembers = remainingMembers.filter((m) => m.status === 'ACTIVE');
+
+          // <조건 6> 그룹 활성 인원이 0명일 때 그 그룹은 자동으로 삭제됨
+          if (activeMembers.length === 0) {
+            autoDeletedGroupName = g.name;
+            return null;
+          }
+
+          // 만약 최고 관리자(OWNER)가 나갔는데 남은 활성 멤버가 있다면 첫 번째 멤버에게 최고 관리자 승계
+          const hasOwner = activeMembers.some((m) => m.role === 'OWNER');
+          let finalMembers = remainingMembers;
+          let nextOwnerId = g.ownerId;
+          if (!hasOwner && activeMembers.length > 0) {
+            nextOwnerId = activeMembers[0].userId;
+            finalMembers = remainingMembers.map((m) =>
+              m.userId === nextOwnerId
+                ? {
+                    ...m,
+                    role: 'OWNER',
+                    canRead: true,
+                    canWrite: true,
+                    canManageRoles: true
+                  }
+                : m
+            );
+          }
+
+          return {
+            ...g,
+            ownerId: nextOwnerId,
+            members: finalMembers
+          };
+        })
+        .filter(Boolean);
+
+      return updatedList;
+    });
+
+    if (autoDeletedGroupName) {
+      showToast(
+        'success',
+        `'${autoDeletedGroupName}' 그룹의 인원이 0명이 되어 그룹이 자동으로 삭제되었습니다.`
+      );
+    } else if (action === 'APPROVE') {
+      showToast('success', '비공개 그룹 가입 신청을 승인했습니다!');
+    } else if (Number(targetUserId) === Number(currentUser.id)) {
+      showToast('success', '그룹에서 탈퇴했습니다.');
+    } else {
+      showToast('success', '해당 그룹원 상태를 변경했습니다.');
+    }
+  };
+
+  // <조건 5> 그룹 권한 임명 (게시글 쓰기 권한, 보기 권한, 권한 임명 권한, 최고관리자 위임)
+  const handleUpdateGroupMemberPermission = (groupId, targetUserId, field, value) => {
+    setStudyGroups((prev) =>
+      prev.map((g) => {
+        if (g.id !== groupId) return g;
+
+        if (field === 'MAKE_OWNER') {
+          return {
+            ...g,
+            ownerId: targetUserId,
+            members: (g.members || []).map((m) => {
+              if (m.userId === targetUserId) {
+                return {
+                  ...m,
+                  role: 'OWNER',
+                  canRead: true,
+                  canWrite: true,
+                  canManageRoles: true
+                };
+              }
+              if (m.role === 'OWNER') {
+                return { ...m, role: 'MANAGER' };
+              }
+              return m;
+            })
+          };
+        }
+
+        return {
+          ...g,
+          members: (g.members || []).map((m) => {
+            if (m.userId !== targetUserId) return m;
+            const updated = { ...m, [field]: value };
+            if (field === 'canManageRoles' && value === true && updated.role === 'MEMBER') {
+              updated.role = 'MANAGER';
+            }
+            if (field === 'canManageRoles' && value === false && updated.role === 'MANAGER') {
+              updated.role = 'MEMBER';
+            }
+            return updated;
+          })
+        };
+      })
+    );
+    showToast('success', '그룹원의 세부 권한 설정이 즉시 반영되었습니다.');
+  };
+
+  // <조건 3> 그룹 게시판 카테고리 추가
+  const handleAddGroupBoardCategory = () => {
+    if (!activeGroup) return;
+    const trimmed = newGroupCategoryInput.trim();
+    if (!trimmed) {
+      showToast('error', '추가할 게시판 카테고리 이름을 입력해 주세요.');
+      return;
+    }
+    if ((activeGroup.boardCategories || []).includes(trimmed)) {
+      showToast('error', '이미 존재하는 게시판 카테고리입니다.');
+      return;
+    }
+
+    setStudyGroups((prev) =>
+      prev.map((g) =>
+        g.id === activeGroup.id
+          ? { ...g, boardCategories: [...(g.boardCategories || []), trimmed] }
+          : g
+      )
+    );
+    setGroupPostForm((prev) => ({ ...prev, category: trimmed }));
+    setNewGroupCategoryInput('');
+    showToast('success', `'${trimmed}' 게시판 카테고리가 추가되었습니다.`);
+  };
+
+  // <조건 3, 4, 5> 그룹 게시글 작성 및 수정 (그룹 최고 관리자는 모든 게시글 수정 가능)
+  const handleSaveGroupPost = (e) => {
+    e.preventDefault();
+    if (!activeGroup || !currentUser) return;
+
+    const isSystemAdmin = currentUser.role === 'ADMIN';
+    const isGroupOwner = myMembershipInActiveGroup?.role === 'OWNER';
+    const canWritePost =
+      isSystemAdmin ||
+      isGroupOwner ||
+      (myMembershipInActiveGroup?.status === 'ACTIVE' && myMembershipInActiveGroup?.canWrite);
+
+    if (!canWritePost) {
+      showToast('error', '현재 이 그룹 게시판의 게시글 쓰기 권한이 없습니다.');
+      return;
+    }
+
+    const trimmedTitle = groupPostForm.title.trim();
+    const trimmedContent = groupPostForm.content.trim();
+    if (!trimmedTitle || !trimmedContent) {
+      showToast('error', '게시글 제목과 내용을 모두 입력해 주세요.');
+      return;
+    }
+
+    const nowStr = new Date().toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    if (editingGroupPostId) {
+      setStudyGroups((prev) =>
+        prev.map((g) => {
+          if (g.id !== activeGroup.id) return g;
+          return {
+            ...g,
+            posts: (g.posts || []).map((p) =>
+              p.id === editingGroupPostId
+                ? {
+                    ...p,
+                    category: groupPostForm.category || '자유게시판',
+                    title: trimmedTitle,
+                    content: trimmedContent
+                  }
+                : p
+            )
+          };
+        })
+      );
+      setEditingGroupPostId(null);
+      showToast('success', '그룹 게시글이 수정되었습니다.');
+    } else {
+      const newPost = {
+        id: Date.now(),
+        category: groupPostForm.category || activeGroup.boardCategories?.[0] || '자유게시판',
+        authorId: currentUser.id,
+        authorName: currentUser.name,
+        authorDept: currentUser.department,
+        title: trimmedTitle,
+        content: trimmedContent,
+        createdAt: nowStr
+      };
+
+      setStudyGroups((prev) =>
+        prev.map((g) =>
+          g.id === activeGroup.id ? { ...g, posts: [newPost, ...(g.posts || [])] } : g
+        )
+      );
+      showToast('success', '그룹 게시판에 새 게시글이 등록되었습니다!');
+    }
+
+    setGroupPostForm({
+      category: activeGroup.boardCategories?.[0] || '자유게시판',
+      title: '',
+      content: ''
+    });
+  };
+
+  // <조건 4> 그룹 게시글 삭제 (작성자 본인 또는 그룹 최고 관리자 OWNER는 모든 게시글 삭제 가능)
+  const handleDeleteGroupPost = (postId) => {
+    if (!activeGroup) return;
+    setStudyGroups((prev) =>
+      prev.map((g) =>
+        g.id === activeGroup.id
+          ? { ...g, posts: (g.posts || []).filter((p) => p.id !== postId) }
+          : g
+      )
+    );
+    if (editingGroupPostId === postId) {
+      setEditingGroupPostId(null);
+    }
+    showToast('success', '게시글이 삭제되었습니다.');
+  };
+
+  // <조건 7> 그룹원 목록에서 간단하게 메시지 바로 전송
+  const handleSendQuickMessageToGroupMember = (targetUser) => {
+    if (!currentUser || !targetUser) return;
+    const text = String(quickMemberMessageMap[targetUser.id] || '').trim();
+    if (!text) {
+      showToast('error', `${targetUser.name}님에게 보낼 메시지를 입력해 주세요.`);
+      return;
+    }
+
+    const newMsg = {
+      id: Date.now(),
+      senderId: currentUser.id,
+      receiverId: targetUser.id,
+      type: 'MESSAGE',
+      content: `[그룹: ${activeGroup?.name || '그룹'}] ${text}`,
+      day: null,
+      startTime: null,
+      endTime: null,
+      status: 'UNREAD',
+      createdAt: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setInteractions((prev) => [newMsg, ...prev]);
+    setQuickMemberMessageMap((prev) => ({ ...prev, [targetUser.id]: '' }));
+    showToast('success', `그룹원 ${targetUser.name}님에게 메시지를 전송했습니다!`);
+  };
+
+  // =========================================================================
+  // <졸업요건 기능 조건 1, 2, 3> 학번·재학생/편입생 자동 판별 및 EPiC folio 원클릭 핸들러
+  // =========================================================================
+  const myGraduationData = useMemo(() => {
+    if (!currentUser) {
+      return {
+        admissionType: 'REGULAR',
+        selectedEpicItems: []
+      };
+    }
+    return (
+      graduationByStudent[currentUser.studentId] || {
+        admissionType: 'REGULAR',
+        selectedEpicItems: []
+      }
+    );
+  }, [graduationByStudent, currentUser]);
+
+  const updateMyGraduationData = (updater) => {
+    if (!currentUser) return;
+    setGraduationByStudent((prev) => {
+      const currentObj = prev[currentUser.studentId] || {
+        admissionType: 'REGULAR',
+        selectedEpicItems: []
+      };
+      const nextObj = typeof updater === 'function' ? updater(currentObj) : updater;
+      return {
+        ...prev,
+        [currentUser.studentId]: nextObj
+      };
+    });
+  };
+
+  // <조건 1> 사용자가 입력한 개인정보(학번 맨앞 2자리 입학년도) 및 재학생/편입생 여부에 따라 졸업 기준 학점과 EPiC folio 기준 점수 자동 계산
+  const graduationStandardsAndProgress = useMemo(() => {
+    const sid = String(currentUser?.studentId || '').trim();
+    const prefix2 = parseInt(sid.slice(0, 2), 10);
+    const entryYear = !Number.isNaN(prefix2)
+      ? prefix2 >= 80
+        ? 1900 + prefix2
+        : 2000 + prefix2
+      : 2026;
+
+    const admissionType = myGraduationData.admissionType || 'REGULAR';
+
+    // 서울과기대 입학년도별 총 졸업 기준 학점 자동 적용
+    // 2020학번 이전: 140학점 / 2021~2022학번: 136학점 / 2023학번 이후: 132학점
+    let requiredTotalCredits = 132;
+    if (entryYear <= 2020) {
+      requiredTotalCredits = 140;
+    } else if (entryYear <= 2022) {
+      requiredTotalCredits = 136;
+    }
+
+    // 서울과기대 재학생(신입학) / 편입생별 EPiC folio 졸업인증 기준 점수
+    // 신입학(재학생): 700점 (2020학번 이전 600점) / 편입생: 50% 감면 (350점 / 300점)
+    const baseEpic = entryYear <= 2020 ? 600 : 700;
+    const requiredEpicScore =
+      admissionType === 'TRANSFER' ? Math.round(baseEpic * 0.5) : baseEpic;
+
+    const items = myGraduationData.selectedEpicItems || [];
+    const completedItems = items.filter((it) => it.status === 'COMPLETED');
+    const wishItems = items.filter((it) => it.status === 'WISH');
+
+    const currentEpicScore = completedItems.reduce(
+      (sum, it) => sum + (Number(it.points) || 0),
+      0
+    );
+    const wishEpicScore = wishItems.reduce(
+      (sum, it) => sum + (Number(it.points) || 0),
+      0
+    );
+    // <조건 2> 이수하고 싶은 활동(WISH)까지 모두 이수했을 때의 예상 총 EPiC folio 점수
+    const projectedEpicScore = currentEpicScore + wishEpicScore;
+
+    const completedMandatoryCount = completedItems.filter(
+      (it) => it.reqType === '필수 요건'
+    ).length;
+    const projectedMandatoryCount = items.filter(
+      (it) => it.reqType === '필수 요건'
+    ).length;
+
+    return {
+      entryYear,
+      studentYearPrefix: sid.slice(0, 2) || '26',
+      admissionType,
+      requiredTotalCredits,
+      requiredEpicScore,
+      currentEpicScore,
+      wishEpicScore,
+      projectedEpicScore,
+      completedItems,
+      wishItems,
+      completedMandatoryCount,
+      projectedMandatoryCount
+    };
+  }, [currentUser, myGraduationData]);
+
+  // 재학생(신입학) <-> 편입생 전환 핸들러 (<조건 1>)
+  const handleChangeAdmissionType = (nextType) => {
+    updateMyGraduationData((prev) => ({
+      ...prev,
+      admissionType: nextType
+    }));
+    showToast(
+      'success',
+      nextType === 'TRANSFER'
+        ? '입학 유형이 [편입생]으로 설정되어 EPiC folio 기준 점수가 편입생 감면 기준으로 자동 조정되었습니다.'
+        : '입학 유형이 [신입학 재학생]으로 설정되어 학번 기준 졸업요건이 적용되었습니다.'
+    );
+  };
+
+  // <조건 2> 공식 EPiC folio 카탈로그에서 클릭 한 번으로 [이수 완료] 또는 [이수 희망]으로 등록/변경/삭제
+  const handleToggleEpicCatalogItem = (catalogItem, targetStatus) => {
+    const existing = (myGraduationData.selectedEpicItems || []).find(
+      (it) => it.activityCode === catalogItem.activityCode
+    );
+
+    if (existing && existing.status === targetStatus) {
+      // 이미 같은 상태로 등록되어 있으면 클릭 시 즉시 삭제(해제)
+      updateMyGraduationData((prev) => ({
+        ...prev,
+        selectedEpicItems: (prev.selectedEpicItems || []).filter(
+          (it) => it.activityCode !== catalogItem.activityCode
+        )
+      }));
+      showToast('success', `'${catalogItem.title}' 활동을 목록에서 삭제했습니다.`);
+      return;
+    }
+
+    const newItem = {
+      activityCode: catalogItem.activityCode,
+      title: catalogItem.title,
+      reqType: catalogItem.reqType,
+      points: catalogItem.points,
+      category: catalogItem.category,
+      scheduleDate: catalogItem.scheduleDate,
+      officialUrl: catalogItem.officialUrl,
+      status: targetStatus // 'COMPLETED' | 'WISH'
+    };
+
+    updateMyGraduationData((prev) => {
+      const filtered = (prev.selectedEpicItems || []).filter(
+        (it) => it.activityCode !== catalogItem.activityCode
+      );
+      return {
+        ...prev,
+        selectedEpicItems: [newItem, ...filtered]
+      };
+    });
+
+    showToast(
+      'success',
+      targetStatus === 'COMPLETED'
+        ? `✅ '${catalogItem.title}' (+${catalogItem.points}점) 활동이 [이수 완료]로 등록되었습니다!`
+        : `✨ '${catalogItem.title}' (+${catalogItem.points}점) 활동이 [이수 희망]에 추가되어 예상 점수에 반영되었습니다!`
+    );
+  };
+
+  const handleRemoveEpicItem = (activityCode, title) => {
+    updateMyGraduationData((prev) => ({
+      ...prev,
+      selectedEpicItems: (prev.selectedEpicItems || []).filter(
+        (it) => it.activityCode !== activityCode
+      )
+    }));
+    showToast('success', `'${title}' 활동이 삭제되었습니다.`);
+  };
 
   const courses = useMemo(() => {
     if (!currentUser) return [];
@@ -1212,28 +2095,142 @@ export default function App() {
     const base = (serverConfig.apiUrl || '').replace(/\/$/, '');
     if (base && isServerConnected && authToken) {
       try {
-        await fetch(`${base}/admin/feedbacks`, {
+        await fetch(`${base}/activities`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${authToken}`
           },
-          body: JSON.stringify({
-            title: trimmedTitle,
-            content: trimmedContent
-          })
+          body: JSON.stringify(record)
         });
       } catch {
         // 로컬 저장소와 동기화
       }
     }
 
-    setUserFeedbacks((prev) => [newFeedbackItem, ...prev]);
-    setFeedbackSubmissionForm({ title: '', content: '' });
+    updateCurrentUserActivities((prev) => {
+      if (editingActivityId) {
+        return prev.map((a) => (a.id === editingActivityId ? record : a));
+      }
+      return [record, ...prev];
+    });
+
     showToast(
       'success',
-      '건의 사항이 서버에 제출되었습니다! (현재 진행 상태: 제출 완료)'
+      editingActivityId
+        ? `'${trimmedTitle}' 기타 활동 세부정보가 수정되었습니다.`
+        : `'${trimmedTitle}' 기타 활동이 타임테이블에 등록되었습니다.`
     );
+
+    setEditingActivityId(null);
+    setActivityForm({
+      title: '',
+      category: myActivityCategories[0] || '동아리/스터디',
+      description: '',
+      link: '',
+      startDate: '2026-03-02',
+      endDate: '2026-06-21',
+      color: '#FFE699',
+      isPrivate: false,
+      schedules: [{ day: '수', startTime: '15:00', endTime: '16:30' }]
+    });
+  };
+
+  // <조건 5> 등록한 기타 활동 목록에서 활동명을 클릭해 세부정보 수정
+  const startEditActivity = (act) => {
+    setEditingActivityId(act.id);
+    setActivityForm({
+      title: act.title,
+      category: act.category || myActivityCategories[0] || '동아리/스터디',
+      description: act.description || '',
+      link: act.link || '',
+      startDate: act.startDate || '2026-03-02',
+      endDate: act.endDate || '2026-06-21',
+      color: act.color || '#FFE699',
+      isPrivate: Boolean(act.isPrivate),
+      schedules:
+        Array.isArray(act.schedules) && act.schedules.length > 0
+          ? act.schedules
+          : [{ day: '수', startTime: '15:00', endTime: '16:30' }]
+    });
+    setMainView('DASHBOARD');
+    setActiveToolCategory('ACTIVITY');
+  };
+
+  const handleDeleteActivity = (id, title) => {
+    updateCurrentUserActivities((prev) => prev.filter((a) => a.id !== id));
+    if (editingActivityId === id) setEditingActivityId(null);
+    showToast('success', `'${title}' 기타 활동이 삭제되었습니다.`);
+  };
+
+  // ADMIN 전용: 유저 강제 삭제 및 유저의 친구 관계 강제 추가/삭제 핸들러
+  const handleAdminForceDeleteUser = (targetUser) => {
+    if (!currentUser || currentUser.role !== 'ADMIN') return;
+    if (targetUser.id === currentUser.id) {
+      showToast('error', '현재 로그인 중인 운영자 본인 계정은 삭제할 수 없습니다.');
+      return;
+    }
+
+    setAccounts((prev) => prev.filter((a) => a.id !== targetUser.id));
+    setFriendships((prev) =>
+      prev.filter((f) => f.requesterId !== targetUser.id && f.receiverId !== targetUser.id)
+    );
+    setCoursesByStudent((prev) => {
+      const next = { ...prev };
+      delete next[targetUser.studentId];
+      return next;
+    });
+    setActivitiesByStudent((prev) => {
+      const next = { ...prev };
+      delete next[targetUser.studentId];
+      return next;
+    });
+    if (adminSelectedUserId === targetUser.id) {
+      setAdminSelectedUserId(null);
+    }
+    showToast('success', `[ADMIN] ${targetUser.name}(${targetUser.studentId}) 계정을 강제 삭제했습니다.`);
+  };
+
+  const handleAdminForceAddFriend = (userAId, userBId) => {
+    if (!currentUser || currentUser.role !== 'ADMIN') return;
+    const aId = Number(userAId);
+    const bId = Number(userBId);
+    if (!aId || !bId || aId === bId) {
+      showToast('error', '서로 다른 두 사용자를 선택해 주세요.');
+      return;
+    }
+
+    const existing = friendships.find(
+      (f) =>
+        (f.requesterId === aId && f.receiverId === bId) ||
+        (f.requesterId === bId && f.receiverId === aId)
+    );
+
+    if (existing) {
+      setFriendships((prev) =>
+        prev.map((f) => (f.id === existing.id ? { ...f, status: 'ACCEPTED' } : f))
+      );
+      showToast('success', '[ADMIN] 두 사용자의 친구 관계를 즉시 승인(ACCEPTED) 상태로 강제 연결했습니다.');
+      return;
+    }
+
+    setFriendships((prev) => [
+      {
+        id: Date.now(),
+        requesterId: aId,
+        receiverId: bId,
+        status: 'ACCEPTED'
+      },
+      ...prev
+    ]);
+    setAdminFriendAddTargetId('');
+    showToast('success', '[ADMIN] 두 사용자를 강제로 친구 추가했습니다.');
+  };
+
+  const handleAdminForceRemoveFriend = (friendshipId) => {
+    if (!currentUser || currentUser.role !== 'ADMIN') return;
+    setFriendships((prev) => prev.filter((f) => f.id !== friendshipId));
+    showToast('success', '[ADMIN] 해당 친구 관계를 강제로 해제했습니다.');
   };
 
   // <피드백 조건 3, 5> ADMIN 전용 피드백 현황(제출 완료 / 검토 중 / 검토 완료) 변경 및 답변 등록 핸들러
@@ -1880,26 +2877,19 @@ export default function App() {
   const handleSaveProfile = (e) => {
     e.preventDefault();
     const dept = profileForm.department.trim();
-    const sid = profileForm.studentId.trim();
     const uname = profileForm.name.trim();
     const numYear = Number(profileForm.currentYear);
 
-    if (!dept || !sid || !uname) {
-      showToast('error', '학과, 학번, 이름은 비워둘 수 없습니다.');
+    if (!dept || !uname) {
+      showToast('error', '학과와 이름은 비워둘 수 없습니다.');
       return;
     }
 
-    const dup = accounts.find((a) => a.studentId === sid && a.id !== currentUser.id);
-    if (dup) {
-      showToast('error', '이미 다른 사용자가 사용 중인 학번입니다.');
-      return;
-    }
-
-    const oldSid = currentUser.studentId;
+    // <조건 4, 5> 학번은 변경하지 않고 기존 학번을 그대로 유지
     const updatedUser = {
       ...currentUser,
       department: dept,
-      studentId: sid,
+      studentId: currentUser.studentId,
       name: uname,
       statusMessage: (profileForm.statusMessage || '').trim(),
       preferredMainView: profileForm.preferredMainView,
@@ -1907,18 +2897,10 @@ export default function App() {
       currentSemester: profileForm.currentSemester
     };
 
-    if (oldSid !== sid) {
-      setCoursesByStudent((prev) => {
-        const next = { ...prev };
-        next[sid] = next[oldSid] || [];
-        delete next[oldSid];
-        return next;
-      });
-    }
-
     setAccounts((prev) => prev.map((a) => (a.id === currentUser.id ? updatedUser : a)));
     setCurrentUser(updatedUser);
     setMyStatusDraft(updatedUser.statusMessage || '');
+    setIsProfilePopupOpen(false);
     showToast('success', '개인정보 및 현재 학기 설정이 저장되었습니다.');
   };
 
@@ -1934,6 +2916,7 @@ export default function App() {
       return next;
     });
     setIsDeleteAccountModalOpen(false);
+    setIsProfilePopupOpen(false);
     setCurrentUser(null);
     showToast('success', `${deletedName}님의 회원탈퇴가 완료되었습니다.`);
   };
@@ -2027,7 +3010,7 @@ export default function App() {
                 type="text"
                 value={authForm.studentId}
                 onChange={(e) => setAuthForm({ ...authForm, studentId: e.target.value })}
-                placeholder="학번 8자리를 입력하세요"
+                placeholder="학번을 입력하세요"
                 className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#A8FFDB]"
               />
             </div>
@@ -2068,33 +3051,6 @@ export default function App() {
               {authMode === 'LOGIN' ? '시스템 접속하기' : '회원가입 및 시작하기'}
             </button>
           </form>
-
-          {/* 데모 계정 빠른 전환 안내 (일반 학생 계정만 표시, 운영자 자동입력 제외) */}
-          <div className="mt-6 pt-4 border-t border-gray-800/80">
-            <p className="text-[11px] text-gray-400 mb-2">
-              💡 <strong>친구 및 동명이인 테스트용 샘플 학생 계정</strong> (클릭 시 자동 입력):
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {SEED_ACCOUNTS.filter((acc) => acc.role !== 'ADMIN').map((acc) => (
-                <button
-                  key={acc.studentId}
-                  type="button"
-                  onClick={() => {
-                    setAuthMode('LOGIN');
-                    setAuthForm({
-                      department: acc.department,
-                      studentId: acc.studentId,
-                      name: acc.name,
-                      autoLogin: true
-                    });
-                  }}
-                  className="text-[11px] px-2.5 py-1 rounded-lg bg-[#0D0D12] border border-gray-800 text-gray-300 hover:border-[#A8FFDB] hover:text-[#A8FFDB]"
-                >
-                  {acc.name} ({acc.studentId.slice(0, 2)}학번)
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     );
@@ -2133,32 +3089,47 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0D0D12] text-gray-100 p-[20px] font-sans">
-      <div className="max-w-7xl mx-auto space-y-5">
-        {/* 상단 고정 헤더 */}
-        <header className="bg-[#151521] border border-[#A8FFDB]/25 rounded-2xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.4)]">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="px-3.5 py-2 rounded-xl bg-[#A8FFDB]/10 border border-[#A8FFDB]/40 flex items-center gap-2">
+      <div className="max-w-7xl mx-auto space-y-3">
+        {/* 상단 고정 헤더 (<조건 4, 5> 학과, 학번, 이름 클릭 시 학번 제외 개인정보 수정 및 로그아웃/탈퇴 팝업창 오픈) */}
+        <header className="bg-[#151521] border border-[#A8FFDB]/25 rounded-2xl px-4 py-3 shadow-[0_0_30px_rgba(0,0,0,0.4)]">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setIsProfilePopupOpen(true)}
+                title="클릭하여 개인정보 수정 / 로그아웃 / 탈퇴"
+                className="px-3 py-1.5 rounded-xl bg-[#A8FFDB]/10 border border-[#A8FFDB]/40 hover:border-[#A8FFDB] flex items-center gap-2 transition cursor-pointer"
+              >
                 <UserCheck className="w-4 h-4 text-[#A8FFDB]" />
-                <span className="text-sm font-bold text-[#A8FFDB]">
+                <span className="text-xs font-bold text-[#A8FFDB]">
                   {currentUser.department}
                 </span>
-              </div>
+              </button>
 
-              <div className="px-3.5 py-2 rounded-xl bg-[#1E1E2E] border border-gray-700 text-sm">
+              <button
+                type="button"
+                onClick={() => setIsProfilePopupOpen(true)}
+                title="클릭하여 개인정보 수정 / 로그아웃 / 탈퇴"
+                className="px-3 py-1.5 rounded-xl bg-[#1E1E2E] border border-gray-700 hover:border-[#A8FFDB] text-xs transition cursor-pointer"
+              >
                 <span className="text-gray-400 mr-1.5">학번</span>
                 <span className="font-mono font-bold text-white">{currentUser.studentId}</span>
-              </div>
+              </button>
 
-              <div className="px-3.5 py-2 rounded-xl bg-[#1E1E2E] border border-gray-700 text-sm flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsProfilePopupOpen(true)}
+                title="클릭하여 개인정보 수정 / 로그아웃 / 탈퇴"
+                className="px-3 py-1.5 rounded-xl bg-[#1E1E2E] border border-gray-700 hover:border-[#A8FFDB] text-xs flex items-center gap-2 transition cursor-pointer"
+              >
                 <span className="text-gray-400">이름</span>
                 <span className="font-bold text-white">{currentUser.name}</span>
                 {currentUser.role === 'ADMIN' && (
-                  <span className="px-2 py-0.5 text-[11px] font-extrabold rounded-md bg-[#FFB2D0]/20 text-[#FFB2D0] border border-[#FFB2D0]/40 flex items-center gap-1">
+                  <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-[#FFB2D0]/20 text-[#FFB2D0] border border-[#FFB2D0]/40 flex items-center gap-1">
                     <ShieldCheck className="w-3 h-3" /> 운영자
                   </span>
                 )}
-              </div>
+              </button>
 
               <div className="px-3 py-1.5 rounded-xl bg-[#D4B2FF]/10 border border-[#D4B2FF]/30 text-xs font-bold text-[#D4B2FF]">
                 현재 학기: {currentUser.currentYear || 2026}년{' '}
@@ -2166,27 +3137,27 @@ export default function App() {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="px-4 py-2 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="px-3 py-1.5 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center gap-1.5">
                 <span className="text-xs text-gray-400">현재 학기 학점</span>
-                <span className="text-base font-extrabold text-[#A8FFDB]">
+                <span className="text-sm font-extrabold text-[#A8FFDB]">
                   {academicStats.currentSemesterCredits}
                 </span>
                 <span className="text-xs text-gray-500">학점</span>
               </div>
 
-              <div className="px-4 py-2 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center gap-2">
+              <div className="px-3 py-1.5 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center gap-1.5">
                 <span className="text-xs text-gray-400">총 이수 학점</span>
-                <span className="text-base font-extrabold text-[#D4B2FF]">
+                <span className="text-sm font-extrabold text-[#D4B2FF]">
                   {academicStats.totalEarnedCredits}
                 </span>
                 <span className="text-xs text-gray-500">학점</span>
               </div>
 
-              <div className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#A8FFDB]/20 to-[#D4B2FF]/20 border border-[#A8FFDB]/50 flex items-center gap-2">
+              <div className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#A8FFDB]/20 to-[#D4B2FF]/20 border border-[#A8FFDB]/50 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-[#A8FFDB]" />
                 <span className="text-xs font-semibold text-gray-200">총 평점(GPA)</span>
-                <span className="text-lg font-black text-white">{academicStats.gpa}</span>
+                <span className="text-base font-black text-white">{academicStats.gpa}</span>
                 <span className="text-xs text-gray-400">/ 4.5</span>
               </div>
 
@@ -2195,9 +3166,9 @@ export default function App() {
                 onClick={() => {
                   setCurrentUser(null);
                   setAuthToken('');
-                  localStorage.removeItem('seoultech_auth_token_v5');
+                  localStorage.removeItem('seoultech_auth_token_v6');
                 }}
-                className="p-2.5 rounded-xl bg-[#1E1E2E] hover:bg-[#FFB2D0]/20 text-gray-300 hover:text-[#FFB2D0] border border-gray-700 transition"
+                className="p-2 rounded-xl bg-[#1E1E2E] hover:bg-[#FFB2D0]/20 text-gray-300 hover:text-[#FFB2D0] border border-gray-700 transition"
                 title="로그아웃"
               >
                 <LogOut className="w-4 h-4" />
@@ -2206,33 +3177,33 @@ export default function App() {
           </div>
         </header>
 
-        {/* 메인 화면 전환 탭 */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#151521] border border-gray-800 rounded-2xl p-3">
+        {/* 메인 화면 전환 탭 (<조건 2> '시간표' 및 '도구'로 명칭 변경) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#151521] border border-gray-800 rounded-2xl p-2.5">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setMainView('TIMETABLE')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-extrabold transition ${
+              className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-extrabold transition ${
                 mainView === 'TIMETABLE'
                   ? 'bg-[#A8FFDB] text-[#0D0D12] shadow-[0_0_20px_rgba(168,255,219,0.3)]'
                   : 'text-gray-400 hover:text-white hover:bg-[#1E1E2E]'
               }`}
             >
               <Calendar className="w-4 h-4" />
-              1. 시간표 (주간 강의 시간표)
+              시간표
             </button>
 
             <button
               type="button"
               onClick={() => setMainView('DASHBOARD')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-extrabold transition ${
+              className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-extrabold transition ${
                 mainView === 'DASHBOARD'
                   ? 'bg-[#D4B2FF] text-[#0D0D12] shadow-[0_0_20px_rgba(212,178,255,0.3)]'
                   : 'text-gray-400 hover:text-white hover:bg-[#1E1E2E]'
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
-              2. 도구 (과목·성적예측·친구·개인정보)
+              도구
               {friendData.incomingRequests.length > 0 && (
                 <span className="ml-1 px-1.5 py-0.5 text-[10px] rounded-full bg-[#FFB2D0] text-[#0D0D12] font-black">
                   {friendData.incomingRequests.length}
@@ -2260,17 +3231,17 @@ export default function App() {
         {/* 알림 메시지 바 */}
         {feedback.message && (
           <div
-            className={`p-4 rounded-2xl border flex items-center justify-between ${
+            className={`p-3 rounded-2xl border flex items-center justify-between ${
               feedback.type === 'error'
                 ? 'bg-[#FFB2D0]/10 border-[#FFB2D0] text-[#FFB2D0]'
                 : 'bg-[#A8FFDB]/10 border-[#A8FFDB] text-[#A8FFDB]'
             }`}
           >
-            <div className="flex items-center gap-2.5 text-sm font-semibold">
+            <div className="flex items-center gap-2.5 text-xs font-semibold">
               {feedback.type === 'error' ? (
-                <AlertCircle className="w-5 h-5 shrink-0" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
               ) : (
-                <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
               )}
               <span>{feedback.message}</span>
             </div>
@@ -2283,19 +3254,19 @@ export default function App() {
           </div>
         )}
 
-        {/* [메인 화면 1] 주간 시간표 화면 */}
+        {/* [메인 화면 1] 주간 시간표 화면 (<조건 1> 아래로 스크롤하지 않아도 한 화면에 다 보이도록 컴팩트 높이 적용 + <조건 3> 우측 상단 'v' 버튼) */}
         {mainView === 'TIMETABLE' && (
-          <div className="bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
+          <div className="bg-[#151521] border border-gray-800 rounded-2xl p-4 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h2 className="text-lg font-extrabold text-white flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-[#A8FFDB]" />
+                <h2 className="text-base font-extrabold text-white flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#A8FFDB]" />
                   {currentUser.currentYear || 2026}년 {currentUser.currentSemester || '1학기'} 주간
                   타임테이블 (09:00 ~ 21:00)
                 </h2>
-                <p className="text-xs text-gray-400">
+                <p className="text-[11px] text-gray-400">
                   현재 학기 강의와 세부정보로 설정한 기간 내의{' '}
-                  <strong className="text-[#FFE699]">기타 활동</strong>이 함께 표시됩니다.
+                  <strong className="text-[#FFE699]">기타 활동</strong>이 한 화면에 표시됩니다.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
@@ -2305,9 +3276,9 @@ export default function App() {
                     setMainView('DASHBOARD');
                     setActiveToolCategory('FRIEND');
                   }}
-                  className="px-3.5 py-2 rounded-xl bg-[#99E6FF]/15 text-[#99E6FF] border border-[#99E6FF]/40 text-xs font-bold hover:bg-[#99E6FF] hover:text-[#0D0D12] transition flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-xl bg-[#99E6FF]/15 text-[#99E6FF] border border-[#99E6FF]/40 text-xs font-bold hover:bg-[#99E6FF] hover:text-[#0D0D12] transition flex items-center gap-1"
                 >
-                  <Users className="w-4 h-4" /> 친구 시간표
+                  <Users className="w-3.5 h-3.5" /> 친구 시간표
                 </button>
                 <button
                   type="button"
@@ -2315,9 +3286,9 @@ export default function App() {
                     setMainView('DASHBOARD');
                     setActiveToolCategory('COURSE');
                   }}
-                  className="px-3.5 py-2 rounded-xl bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-bold hover:bg-[#A8FFDB] hover:text-[#0D0D12] transition flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-xl bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-bold hover:bg-[#A8FFDB] hover:text-[#0D0D12] transition flex items-center gap-1"
                 >
-                  <Plus className="w-4 h-4" /> 강의 추가
+                  <Plus className="w-3.5 h-3.5" /> 강의 추가
                 </button>
                 <button
                   type="button"
@@ -2325,195 +3296,208 @@ export default function App() {
                     setMainView('DASHBOARD');
                     setActiveToolCategory('ACTIVITY');
                   }}
-                  className="px-3.5 py-2 rounded-xl bg-[#FFE699]/15 text-[#FFE699] border border-[#FFE699]/40 text-xs font-bold hover:bg-[#FFE699] hover:text-[#0D0D12] transition flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-xl bg-[#FFE699]/15 text-[#FFE699] border border-[#FFE699]/40 text-xs font-bold hover:bg-[#FFE699] hover:text-[#0D0D12] transition flex items-center gap-1"
                 >
-                  <Briefcase className="w-4 h-4" /> 기타 활동 추가
+                  <Briefcase className="w-3.5 h-3.5" /> 기타 활동 추가
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toggleBoxCollapse('mainTimetable')}
+                  className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition"
+                  title="접기/펼치기"
+                >
+                  <span
+                    className={`inline-block transition-transform duration-200 ${
+                      collapsedBoxes['mainTimetable'] ? '-rotate-90' : ''
+                    }`}
+                  >
+                    v
+                  </span>
                 </button>
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <div className="min-w-[720px] border border-gray-800 rounded-2xl overflow-hidden bg-[#0D0D12]">
-                <div className="grid grid-cols-6 border-b border-gray-800 bg-[#1A1A28]">
-                  <div className="p-3 text-center text-xs font-bold text-gray-400 border-r border-gray-800">
-                    시간
-                  </div>
-                  {DAYS.map((day) => (
-                    <div
-                      key={day}
-                      className="p-3 text-center text-sm font-extrabold text-[#A8FFDB] border-r border-gray-800 last:border-r-0"
-                    >
-                      {day}요일
-                    </div>
-                  ))}
-                </div>
-
-                <div className="grid grid-cols-6 relative" style={{ height: '768px' }}>
-                  <div className="border-r border-gray-800">
-                    {Array.from({ length: 12 }, (_, idx) => 9 + idx).map((hour) => (
-                      <div
-                        key={hour}
-                        className="h-16 border-b border-gray-800/60 px-2 py-1 text-[11px] font-mono text-gray-400"
-                      >
-                        {String(hour).padStart(2, '0')}:00
+            {!collapsedBoxes['mainTimetable'] && (
+              <>
+                <div className="overflow-x-auto">
+                  <div className="min-w-[680px] border border-gray-800 rounded-2xl overflow-hidden bg-[#0D0D12]">
+                    <div className="grid grid-cols-6 border-b border-gray-800 bg-[#1A1A28]">
+                      <div className="py-1.5 px-2 text-center text-[11px] font-bold text-gray-400 border-r border-gray-800">
+                        시간
                       </div>
-                    ))}
+                      {DAYS.map((day) => (
+                        <div
+                          key={day}
+                          className="py-1.5 px-2 text-center text-xs font-extrabold text-[#A8FFDB] border-r border-gray-800 last:border-r-0"
+                        >
+                          {day}요일
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* <조건 1> 30분당 18px (1시간 36px, 총 12시간 = 432px)로 설정하여 스크롤 없이 한 화면에 표시 */}
+                    <div className="grid grid-cols-6 relative" style={{ height: '432px' }}>
+                      <div className="border-r border-gray-800">
+                        {Array.from({ length: 12 }, (_, idx) => 9 + idx).map((hour) => (
+                          <div
+                            key={hour}
+                            style={{ height: '36px' }}
+                            className="border-b border-gray-800/60 px-2 py-0.5 text-[10px] font-mono text-gray-400 flex items-start"
+                          >
+                            {String(hour).padStart(2, '0')}:00
+                          </div>
+                        ))}
+                      </div>
+
+                      {DAYS.map((day) => (
+                        <div key={day} className="relative border-r border-gray-800 last:border-r-0">
+                          {Array.from({ length: 24 }, (_, idx) => idx).map((halfIdx) => (
+                            <div
+                              key={halfIdx}
+                              style={{ height: '18px' }}
+                              className={`${
+                                halfIdx % 2 === 0
+                                  ? 'border-b border-gray-800/30'
+                                  : 'border-b border-gray-800/70'
+                              }`}
+                            />
+                          ))}
+
+                          {/* <조건 6> 강의 표시 체크박스가 켜져 있을 때만 강의 렌더링 */}
+                          {showCoursesOnTimetable &&
+                            currentTimetableCourses.map((course) =>
+                              (course.schedules || [])
+                                .filter((s) => s.day === day)
+                                .map((slot, sIdx) => {
+                                  const startMin = timeToMin(slot.startTime);
+                                  const endMin = timeToMin(slot.endTime);
+                                  const topPx = ((startMin - 540) / 30) * 18;
+                                  const heightPx = Math.max(((endMin - startMin) / 30) * 18, 18);
+
+                                  return (
+                                    <div
+                                      key={`course-${course.id}-${sIdx}`}
+                                      onClick={() => startEditCourse(course)}
+                                      style={{
+                                        top: `${topPx}px`,
+                                        height: `${heightPx}px`,
+                                        backgroundColor: `${course.color || '#A8FFDB'}22`,
+                                        borderColor: course.color || '#A8FFDB'
+                                      }}
+                                      className="absolute left-1 right-1 rounded-lg border-l-4 px-1.5 py-0.5 cursor-pointer hover:brightness-125 transition overflow-hidden shadow-md z-10"
+                                    >
+                                      <div
+                                        className="text-[11px] font-extrabold leading-tight truncate"
+                                        style={{ color: course.color || '#A8FFDB' }}
+                                      >
+                                        {course.courseName}
+                                      </div>
+                                      <div className="text-[9px] text-gray-300 font-mono leading-tight truncate">
+                                        {slot.startTime}-{slot.endTime} · {course.credits}학점
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                            )}
+
+                          {/* <조건 1, 2, 4, 6> 기타 활동 표시 체크박스가 켜져 있을 때 설정된 기간 내의 기타 활동 렌더링 */}
+                          {showActivitiesOnTimetable &&
+                            currentTimetableActivities.map((act) =>
+                              (act.schedules || [])
+                                .filter((s) => s.day === day)
+                                .map((slot, sIdx) => {
+                                  const startMin = timeToMin(slot.startTime);
+                                  const endMin = timeToMin(slot.endTime);
+                                  const topPx = ((startMin - 540) / 30) * 18;
+                                  const heightPx = Math.max(((endMin - startMin) / 30) * 18, 18);
+
+                                  return (
+                                    <div
+                                      key={`act-${act.id}-${sIdx}`}
+                                      onClick={() => startEditActivity(act)}
+                                      style={{
+                                        top: `${topPx}px`,
+                                        height: `${heightPx}px`,
+                                        backgroundColor: `${act.color || '#FFE699'}26`,
+                                        borderColor: act.color || '#FFE699'
+                                      }}
+                                      className="absolute left-1 right-1 rounded-lg border-l-4 border-dashed px-1.5 py-0.5 cursor-pointer hover:brightness-125 transition overflow-hidden shadow-md z-20"
+                                    >
+                                      <div className="flex items-center justify-between gap-1">
+                                        <span
+                                          className="text-[11px] font-extrabold leading-tight truncate"
+                                          style={{ color: act.color || '#FFE699' }}
+                                        >
+                                          ★ {act.title}
+                                        </span>
+                                        {act.isPrivate && (
+                                          <Lock className="w-2.5 h-2.5 text-[#FFB2D0] shrink-0" />
+                                        )}
+                                      </div>
+                                      <div className="text-[9px] text-gray-200 font-mono leading-tight truncate">
+                                        {slot.startTime}-{slot.endTime} [{act.category}]
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 타임테이블 하단: 강의 표시 체크박스 + 기타 활동 표시 체크박스 + 활동 기간 기준일 필터 */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2 border-t border-gray-800 bg-[#0D0D12] px-3.5 py-2.5 rounded-2xl">
+                  <div className="flex flex-wrap items-center gap-5">
+                    <label className="flex items-center gap-2 text-xs font-extrabold text-[#A8FFDB] cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={showCoursesOnTimetable}
+                        onChange={(e) => setShowCoursesOnTimetable(e.target.checked)}
+                        className="w-4 h-4 rounded accent-[#A8FFDB]"
+                      />
+                      📚 강의 시간표 보이기 ({currentTimetableCourses.length}개)
+                    </label>
+
+                    <label className="flex items-center gap-2 text-xs font-extrabold text-[#FFE699] cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={showActivitiesOnTimetable}
+                        onChange={(e) => setShowActivitiesOnTimetable(e.target.checked)}
+                        className="w-4 h-4 rounded accent-[#FFE699]"
+                      />
+                      ✨ 기타 활동 보이기 (기간 내 {currentTimetableActivities.length}개)
+                    </label>
                   </div>
 
-                  {DAYS.map((day) => (
-                    <div key={day} className="relative border-r border-gray-800 last:border-r-0">
-                      {Array.from({ length: 24 }, (_, idx) => idx).map((halfIdx) => (
-                        <div
-                          key={halfIdx}
-                          className={`h-8 ${
-                            halfIdx % 2 === 0
-                              ? 'border-b border-gray-800/30'
-                              : 'border-b border-gray-800/70'
-                          }`}
-                        />
-                      ))}
-
-                      {/* <조건 6> 강의 표시 체크박스가 켜져 있을 때만 강의 렌더링 */}
-                      {showCoursesOnTimetable &&
-                        currentTimetableCourses.map((course) =>
-                          (course.schedules || [])
-                            .filter((s) => s.day === day)
-                            .map((slot, sIdx) => {
-                              const startMin = timeToMin(slot.startTime);
-                              const endMin = timeToMin(slot.endTime);
-                              const topPx = ((startMin - 540) / 30) * 32;
-                              const heightPx = Math.max(((endMin - startMin) / 30) * 32, 32);
-
-                              return (
-                                <div
-                                  key={`course-${course.id}-${sIdx}`}
-                                  onClick={() => startEditCourse(course)}
-                                  style={{
-                                    top: `${topPx}px`,
-                                    height: `${heightPx}px`,
-                                    backgroundColor: `${course.color || '#A8FFDB'}22`,
-                                    borderColor: course.color || '#A8FFDB'
-                                  }}
-                                  className="absolute left-1 right-1 rounded-xl border-l-4 p-2 cursor-pointer hover:brightness-125 transition overflow-hidden shadow-md z-10"
-                                >
-                                  <div
-                                    className="text-xs font-extrabold leading-tight truncate"
-                                    style={{ color: course.color || '#A8FFDB' }}
-                                  >
-                                    {course.courseName}
-                                  </div>
-                                  <div className="text-[10px] text-gray-300 font-mono mt-0.5">
-                                    {slot.startTime} - {slot.endTime}
-                                  </div>
-                                  <div className="text-[10px] text-gray-400 mt-0.5">
-                                    {course.credits}학점 · {course.grade}
-                                  </div>
-                                </div>
-                              );
-                            })
-                        )}
-
-                      {/* <조건 1, 2, 4, 6> 기타 활동 표시 체크박스가 켜져 있을 때 설정된 기간 내의 기타 활동 렌더링 (학점/평점 없음) */}
-                      {showActivitiesOnTimetable &&
-                        currentTimetableActivities.map((act) =>
-                          (act.schedules || [])
-                            .filter((s) => s.day === day)
-                            .map((slot, sIdx) => {
-                              const startMin = timeToMin(slot.startTime);
-                              const endMin = timeToMin(slot.endTime);
-                              const topPx = ((startMin - 540) / 30) * 32;
-                              const heightPx = Math.max(((endMin - startMin) / 30) * 32, 32);
-
-                              return (
-                                <div
-                                  key={`act-${act.id}-${sIdx}`}
-                                  onClick={() => startEditActivity(act)}
-                                  style={{
-                                    top: `${topPx}px`,
-                                    height: `${heightPx}px`,
-                                    backgroundColor: `${act.color || '#FFE699'}26`,
-                                    borderColor: act.color || '#FFE699'
-                                  }}
-                                  className="absolute left-1 right-1 rounded-xl border-l-4 border-dashed p-2 cursor-pointer hover:brightness-125 transition overflow-hidden shadow-md z-20"
-                                >
-                                  <div className="flex items-center justify-between gap-1">
-                                    <span
-                                      className="text-xs font-extrabold leading-tight truncate"
-                                      style={{ color: act.color || '#FFE699' }}
-                                    >
-                                      ★ {act.title}
-                                    </span>
-                                    {act.isPrivate && (
-                                      <Lock className="w-3 h-3 text-[#FFB2D0] shrink-0" />
-                                    )}
-                                  </div>
-                                  <div className="text-[10px] text-gray-200 font-mono mt-0.5">
-                                    {slot.startTime} - {slot.endTime} · [{act.category}]
-                                  </div>
-                                  {act.description && (
-                                    <div className="text-[10px] text-gray-400 truncate mt-0.5">
-                                      {act.description}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })
-                        )}
-                    </div>
-                  ))}
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="text-gray-400 font-semibold">
+                      📅 타임테이블 기준 날짜 (기타 활동 기간 필터):
+                    </span>
+                    <input
+                      type="date"
+                      value={timetableReferenceDate}
+                      onChange={(e) => setTimetableReferenceDate(e.target.value)}
+                      className="rounded-lg bg-[#151521] border border-gray-700 px-2.5 py-1 text-xs font-mono text-white focus:border-[#FFE699] focus:outline-none"
+                    />
+                    {timetableReferenceDate && (
+                      <button
+                        type="button"
+                        onClick={() => setTimetableReferenceDate('')}
+                        className="text-[11px] text-gray-400 hover:text-white underline"
+                      >
+                        전체 기간 보기
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            {/* <조건 4, 6> 타임테이블 하단: 강의 표시 체크박스 + 기타 활동 표시 체크박스 + 활동 기간 기준일 필터 */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-3 border-t border-gray-800 bg-[#0D0D12] p-4 rounded-2xl">
-              <div className="flex flex-wrap items-center gap-5">
-                <label className="flex items-center gap-2.5 text-xs font-extrabold text-[#A8FFDB] cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={showCoursesOnTimetable}
-                    onChange={(e) => setShowCoursesOnTimetable(e.target.checked)}
-                    className="w-4 h-4 rounded accent-[#A8FFDB]"
-                  />
-                  📚 강의 시간표 보이기 ({currentTimetableCourses.length}개)
-                </label>
-
-                <label className="flex items-center gap-2.5 text-xs font-extrabold text-[#FFE699] cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={showActivitiesOnTimetable}
-                    onChange={(e) => setShowActivitiesOnTimetable(e.target.checked)}
-                    className="w-4 h-4 rounded accent-[#FFE699]"
-                  />
-                  ✨ 기타 활동 보이기 (기간 내 {currentTimetableActivities.length}개)
-                </label>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-gray-400 font-semibold">
-                  📅 타임테이블 기준 날짜 (기타 활동 기간 필터):
-                </span>
-                <input
-                  type="date"
-                  value={timetableReferenceDate}
-                  onChange={(e) => setTimetableReferenceDate(e.target.value)}
-                  className="rounded-lg bg-[#151521] border border-gray-700 px-2.5 py-1 text-xs font-mono text-white focus:border-[#FFE699] focus:outline-none"
-                />
-                {timetableReferenceDate && (
-                  <button
-                    type="button"
-                    onClick={() => setTimetableReferenceDate('')}
-                    className="text-[11px] text-gray-400 hover:text-white underline"
-                  >
-                    전체 기간 보기
-                  </button>
-                )}
-              </div>
-            </div>
+              </>
+            )}
           </div>
         )}
 
-        {/* [메인 화면 2] 도구 화면 (과목 관리 / 기타 활동 / 성적 예측 / 친구 / 개인정보 / ADMIN 관리) */}
+        {/* [메인 화면 2] 도구 화면 */}
         {mainView === 'DASHBOARD' && (
           <div className="space-y-6">
             {/* 도구 상단 카테고리 스위치 */}
@@ -2531,7 +3515,6 @@ export default function App() {
                 과목 및 성적 관리
               </button>
 
-              {/* <조건 1> 기타 활동 기능 따로 분류 */}
               <button
                 type="button"
                 onClick={() => setActiveToolCategory('ACTIVITY')}
@@ -2583,6 +3566,32 @@ export default function App() {
 
               <button
                 type="button"
+                onClick={() => setActiveToolCategory('GROUP')}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition ${
+                  activeToolCategory === 'GROUP'
+                    ? 'bg-[#A8FFDB] text-[#0D0D12] shadow-[0_0_15px_rgba(168,255,219,0.3)]'
+                    : 'text-gray-400 hover:text-white bg-[#0D0D12]'
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                그룹 ({studyGroups.length})
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveToolCategory('GRADUATION')}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition ${
+                  activeToolCategory === 'GRADUATION'
+                    ? 'bg-[#FFE699] text-[#0D0D12] shadow-[0_0_15px_rgba(255,230,153,0.35)]'
+                    : 'text-gray-400 hover:text-white bg-[#0D0D12]'
+                }`}
+              >
+                <GraduationCap className="w-4 h-4" />
+                졸업요건 (EPiC·학점)
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setActiveToolCategory('PROFILE')}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold transition ${
                   activeToolCategory === 'PROFILE'
@@ -2594,7 +3603,6 @@ export default function App() {
                 개인정보 설정
               </button>
 
-              {/* ADMIN 계정 전용 유저 및 친구 강제 관리 탭 */}
               {currentUser.role === 'ADMIN' && (
                 <button
                   type="button"
@@ -2610,7 +3618,6 @@ export default function App() {
                 </button>
               )}
 
-              {/* <조건 1> 피드백 기능은 모든 기능들 중 가장 마지막에 위치 */}
               <button
                 type="button"
                 onClick={() => setActiveToolCategory('FEEDBACK')}
@@ -2630,7 +3637,7 @@ export default function App() {
               </button>
             </div>
 
-            {/* 1. 과목 및 성적 관리 탭 */}
+            {/* 1. 과목 및 성적 관리 탭 (<조건 3> 각 박스 우측 상단 'v' 접기/펼치기 버튼) */}
             {activeToolCategory === 'COURSE' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-5 bg-[#151521] border border-[#D4B2FF]/30 rounded-2xl p-6 space-y-5 h-fit">
@@ -2639,243 +3646,261 @@ export default function App() {
                       <BookOpen className="w-5 h-5 text-[#D4B2FF]" />
                       {editingId ? '과목 및 성적 수정' : '과목 및 성적 등록'}
                     </h2>
-                    {editingId && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingId(null);
-                          setCourseForm({
-                            year: currentUser.currentYear || 2026,
-                            semester: currentUser.currentSemester || '1학기',
-                            courseName: '',
-                            credits: 3,
-                            grade: '현재 이수 중',
-                            isRetake: false,
-                            isWithdrawn: false,
-                            schedules: [{ day: '월', startTime: '09:00', endTime: '10:30' }]
-                          });
-                        }}
-                        className="text-xs text-[#FFB2D0] hover:underline"
-                      >
-                        수정 취소
-                      </button>
-                    )}
-                  </div>
-
-                  <form onSubmit={handleSaveCourse} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          수강 년도 (숫자)
-                        </label>
-                        <input
-                          type="number"
-                          min={1980}
-                          max={2050}
-                          value={courseForm.year}
-                          onChange={(e) => setCourseForm({ ...courseForm, year: e.target.value })}
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          수강 학기
-                        </label>
-                        <select
-                          value={courseForm.semester}
-                          onChange={(e) =>
-                            setCourseForm({ ...courseForm, semester: e.target.value })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
-                        >
-                          {SEMESTER_OPTIONS.map((sem) => (
-                            <option key={sem} value={sem}>
-                              {sem}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">
-                        과목명 <span className="text-[#FFB2D0]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={courseForm.courseName}
-                        onChange={(e) =>
-                          setCourseForm({ ...courseForm, courseName: e.target.value })
-                        }
-                        placeholder="예: 알고리즘, 컴퓨터네트워크"
-                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          학점 수 (1~4학점)
-                        </label>
-                        <select
-                          value={courseForm.credits}
-                          onChange={(e) =>
-                            setCourseForm({ ...courseForm, credits: Number(e.target.value) })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
-                        >
-                          {[1, 2, 3, 4].map((cr) => (
-                            <option key={cr} value={cr}>
-                              {cr}학점
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          성적 등급 (A+ ~ F)
-                        </label>
-                        <select
-                          value={courseForm.grade}
-                          onChange={(e) =>
-                            setCourseForm({ ...courseForm, grade: e.target.value })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
-                        >
-                          {GRADE_OPTIONS.map((g) => (
-                            <option key={g} value={g}>
-                              {g} {GRADE_POINTS[g] !== undefined ? `(${GRADE_POINTS[g]})` : ''}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2.5 pt-1">
-                      <label
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${
-                          courseForm.isRetake
-                            ? 'bg-[#A8FFDB]/15 border-[#A8FFDB] text-[#A8FFDB]'
-                            : 'bg-[#0D0D12] border-gray-800 text-gray-400'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={courseForm.isRetake}
-                          onChange={(e) =>
-                            setCourseForm({ ...courseForm, isRetake: e.target.checked })
-                          }
-                          className="accent-[#A8FFDB]"
-                        />
-                        <RotateCcw className="w-3.5 h-3.5" />
-                        재수강 과목
-                      </label>
-
-                      <label
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${
-                          courseForm.isWithdrawn
-                            ? 'bg-[#FFB2D0]/15 border-[#FFB2D0] text-[#FFB2D0]'
-                            : 'bg-[#0D0D12] border-gray-800 text-gray-400'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={courseForm.isWithdrawn}
-                          onChange={(e) =>
-                            setCourseForm({ ...courseForm, isWithdrawn: e.target.checked })
-                          }
-                          className="accent-[#FFB2D0]"
-                        />
-                        <Ban className="w-3.5 h-3.5" />
-                        수강포기(W)
-                      </label>
-                    </div>
-
-                    <div className="space-y-2.5 pt-2 border-t border-gray-800">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-[#A8FFDB]">
-                          수업 요일 및 시간 (30분 단위)
-                        </label>
+                    <div className="flex items-center gap-2">
+                      {editingId && (
                         <button
                           type="button"
-                          onClick={addScheduleSlot}
-                          className="text-xs px-2.5 py-1 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] hover:bg-[#A8FFDB]/25 font-bold flex items-center gap-1"
+                          onClick={() => {
+                            setEditingId(null);
+                            setCourseForm({
+                              year: currentUser.currentYear || 2026,
+                              semester: currentUser.currentSemester || '1학기',
+                              courseName: '',
+                              credits: 3,
+                              grade: '현재 이수 중',
+                              isRetake: false,
+                              isWithdrawn: false,
+                              schedules: [{ day: '월', startTime: '09:00', endTime: '10:30' }]
+                            });
+                          }}
+                          className="text-xs text-[#FFB2D0] hover:underline"
                         >
-                          <Plus className="w-3.5 h-3.5" /> 시간 추가
+                          수정 취소
                         </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('courseFormBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#D4B2FF] hover:border-[#D4B2FF] flex items-center justify-center transition"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['courseFormBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {!collapsedBoxes['courseFormBox'] && (
+                    <form onSubmit={handleSaveCourse} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            수강 년도 (숫자)
+                          </label>
+                          <input
+                            type="number"
+                            min={1980}
+                            max={2050}
+                            value={courseForm.year}
+                            onChange={(e) => setCourseForm({ ...courseForm, year: e.target.value })}
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            수강 학기
+                          </label>
+                          <select
+                            value={courseForm.semester}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, semester: e.target.value })
+                            }
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                          >
+                            {SEMESTER_OPTIONS.map((sem) => (
+                              <option key={sem} value={sem}>
+                                {sem}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
 
-                      {courseForm.schedules.map((slot, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 bg-[#0D0D12] p-2.5 rounded-xl border border-gray-800"
-                        >
-                          <select
-                            value={slot.day}
-                            onChange={(e) => updateScheduleSlot(index, 'day', e.target.value)}
-                            className="rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs text-white"
-                          >
-                            {DAYS.map((d) => (
-                              <option key={d} value={d}>
-                                {d}요일
-                              </option>
-                            ))}
-                          </select>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-300 mb-1">
+                          과목명 <span className="text-[#FFB2D0]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={courseForm.courseName}
+                          onChange={(e) =>
+                            setCourseForm({ ...courseForm, courseName: e.target.value })
+                          }
+                          placeholder="예: 알고리즘, 컴퓨터네트워크"
+                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                        />
+                      </div>
 
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            학점 수 (1~4학점)
+                          </label>
                           <select
-                            value={slot.startTime}
+                            value={courseForm.credits}
                             onChange={(e) =>
-                              updateScheduleSlot(index, 'startTime', e.target.value)
+                              setCourseForm({ ...courseForm, credits: Number(e.target.value) })
                             }
-                            className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
                           >
-                            {TIME_OPTIONS.slice(0, -1).map((t) => (
-                              <option key={t} value={t}>
-                                {t}
+                            {[1, 2, 3, 4].map((cr) => (
+                              <option key={cr} value={cr}>
+                                {cr}학점
                               </option>
                             ))}
                           </select>
-
-                          <span className="text-gray-500 text-xs">~</span>
-
-                          <select
-                            value={slot.endTime}
-                            onChange={(e) => updateScheduleSlot(index, 'endTime', e.target.value)}
-                            className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
-                          >
-                            {TIME_OPTIONS.slice(1).map((t) => (
-                              <option key={t} value={t}>
-                                {t}
-                              </option>
-                            ))}
-                          </select>
-
-                          {courseForm.schedules.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => removeScheduleSlot(index)}
-                              className="ml-auto p-1.5 text-gray-400 hover:text-[#FFB2D0]"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
                         </div>
-                      ))}
-                    </div>
 
-                    <button
-                      type="submit"
-                      className="w-full py-3 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#A8FFDB] to-[#D4B2FF] text-[#0D0D12] hover:opacity-95 transition shadow-lg"
-                    >
-                      {editingId ? '과목 수정 내용 저장' : '과목 및 성적 저장하기'}
-                    </button>
-                  </form>
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            성적 등급 (A+ ~ F)
+                          </label>
+                          <select
+                            value={courseForm.grade}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, grade: e.target.value })
+                            }
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                          >
+                            {GRADE_OPTIONS.map((g) => (
+                              <option key={g} value={g}>
+                                {g} {GRADE_POINTS[g] !== undefined ? `(${GRADE_POINTS[g]})` : ''}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2.5 pt-1">
+                        <label
+                          className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${
+                            courseForm.isRetake
+                              ? 'bg-[#A8FFDB]/15 border-[#A8FFDB] text-[#A8FFDB]'
+                              : 'bg-[#0D0D12] border-gray-800 text-gray-400'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={courseForm.isRetake}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, isRetake: e.target.checked })
+                            }
+                            className="accent-[#A8FFDB]"
+                          />
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          재수강 과목
+                        </label>
+
+                        <label
+                          className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition ${
+                            courseForm.isWithdrawn
+                              ? 'bg-[#FFB2D0]/15 border-[#FFB2D0] text-[#FFB2D0]'
+                              : 'bg-[#0D0D12] border-gray-800 text-gray-400'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={courseForm.isWithdrawn}
+                            onChange={(e) =>
+                              setCourseForm({ ...courseForm, isWithdrawn: e.target.checked })
+                            }
+                            className="accent-[#FFB2D0]"
+                          />
+                          <Ban className="w-3.5 h-3.5" />
+                          수강포기(W)
+                        </label>
+                      </div>
+
+                      <div className="space-y-2.5 pt-2 border-t border-gray-800">
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs font-bold text-[#A8FFDB]">
+                            수업 요일 및 시간 (30분 단위)
+                          </label>
+                          <button
+                            type="button"
+                            onClick={addScheduleSlot}
+                            className="text-xs px-2.5 py-1 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] hover:bg-[#A8FFDB]/25 font-bold flex items-center gap-1"
+                          >
+                            <Plus className="w-3.5 h-3.5" /> 시간 추가
+                          </button>
+                        </div>
+
+                        {courseForm.schedules.map((slot, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 bg-[#0D0D12] p-2.5 rounded-xl border border-gray-800"
+                          >
+                            <select
+                              value={slot.day}
+                              onChange={(e) => updateScheduleSlot(index, 'day', e.target.value)}
+                              className="rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs text-white"
+                            >
+                              {DAYS.map((d) => (
+                                <option key={d} value={d}>
+                                  {d}요일
+                                </option>
+                              ))}
+                            </select>
+
+                            <select
+                              value={slot.startTime}
+                              onChange={(e) =>
+                                updateScheduleSlot(index, 'startTime', e.target.value)
+                              }
+                              className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
+                            >
+                              {TIME_OPTIONS.slice(0, -1).map((t) => (
+                                <option key={t} value={t}>
+                                  {t}
+                                </option>
+                              ))}
+                            </select>
+
+                            <span className="text-gray-500 text-xs">~</span>
+
+                            <select
+                              value={slot.endTime}
+                              onChange={(e) => updateScheduleSlot(index, 'endTime', e.target.value)}
+                              className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
+                            >
+                              {TIME_OPTIONS.slice(1).map((t) => (
+                                <option key={t} value={t}>
+                                  {t}
+                                </option>
+                              ))}
+                            </select>
+
+                            {courseForm.schedules.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeScheduleSlot(index)}
+                                className="ml-auto p-1.5 text-gray-400 hover:text-[#FFB2D0]"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-3 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#A8FFDB] to-[#D4B2FF] text-[#0D0D12] hover:opacity-95 transition shadow-lg"
+                      >
+                        {editingId ? '과목 수정 내용 저장' : '과목 및 성적 저장하기'}
+                      </button>
+                    </form>
+                  )}
                 </div>
 
                 {/* 오른쪽: 전체 과목 목록 */}
-                <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
+                <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-base font-extrabold text-white">
@@ -2886,108 +3911,123 @@ export default function App() {
                         제외됩니다.
                       </p>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleBoxCollapse('courseListBox')}
+                      className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                      title="접기/펼치기"
+                    >
+                      <span
+                        className={`inline-block transition-transform duration-200 ${
+                          collapsedBoxes['courseListBox'] ? '-rotate-90' : ''
+                        }`}
+                      >
+                        v
+                      </span>
+                    </button>
                   </div>
 
-                  <div className="space-y-3">
-                    {courses.map((course) => {
-                      const isReplacedByRetake = academicStats.activeRetakeReplacedIds.has(
-                        course.id
-                      );
-                      return (
-                        <div
-                          key={course.id}
-                          className={`p-4 rounded-2xl bg-[#0D0D12] border transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                            course.isWithdrawn || isReplacedByRetake
-                              ? 'border-gray-800/50 opacity-60'
-                              : 'border-gray-800 hover:border-gray-700'
-                          }`}
-                        >
-                          <div className="space-y-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span
-                                className="w-3 h-3 rounded-full"
-                                style={{ backgroundColor: course.color || '#A8FFDB' }}
-                              />
-                              <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-gray-800 text-gray-300">
-                                {course.year}년 {course.semester}
-                              </span>
-                              <h3 className="text-sm font-extrabold text-white">
-                                {course.courseName}
-                              </h3>
-                              <span className="text-xs text-gray-400">({course.credits}학점)</span>
-
-                              {course.isRetake && (
-                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40">
-                                  재수강
-                                </span>
-                              )}
-                              {course.isWithdrawn && (
-                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40">
-                                  수강포기(W) · 학점/GPA 제외
-                                </span>
-                              )}
-                              {isReplacedByRetake && !course.isWithdrawn && (
-                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-gray-800 text-gray-400">
-                                  재수강 완료로 GPA 계산 제외됨
-                                </span>
-                              )}
-                            </div>
-
-                            <div className="flex flex-wrap gap-1.5 pt-1">
-                              {(course.schedules || []).map((s, idx) => (
+                  {!collapsedBoxes['courseListBox'] && (
+                    <div className="space-y-3">
+                      {courses.map((course) => {
+                        const isReplacedByRetake = academicStats.activeRetakeReplacedIds.has(
+                          course.id
+                        );
+                        return (
+                          <div
+                            key={course.id}
+                            className={`p-4 rounded-2xl bg-[#0D0D12] border transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                              course.isWithdrawn || isReplacedByRetake
+                                ? 'border-gray-800/50 opacity-60'
+                                : 'border-gray-800 hover:border-gray-700'
+                            }`}
+                          >
+                            <div className="space-y-1">
+                              <div className="flex flex-wrap items-center gap-2">
                                 <span
-                                  key={idx}
-                                  className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#161622] text-gray-300 border border-gray-800"
-                                >
-                                  {s.day} {s.startTime}~{s.endTime}
+                                  className="w-3 h-3 rounded-full"
+                                  style={{ backgroundColor: course.color || '#A8FFDB' }}
+                                />
+                                <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-gray-800 text-gray-300">
+                                  {course.year}년 {course.semester}
                                 </span>
-                              ))}
+                                <h3 className="text-sm font-extrabold text-white">
+                                  {course.courseName}
+                                </h3>
+                                <span className="text-xs text-gray-400">({course.credits}학점)</span>
+
+                                {course.isRetake && (
+                                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40">
+                                    재수강
+                                  </span>
+                                )}
+                                {course.isWithdrawn && (
+                                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40">
+                                    수강포기(W) · 학점/GPA 제외
+                                  </span>
+                                )}
+                                {isReplacedByRetake && !course.isWithdrawn && (
+                                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-gray-800 text-gray-400">
+                                    재수강 완료로 GPA 계산 제외됨
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="flex flex-wrap gap-1.5 pt-1">
+                                {(course.schedules || []).map((s, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#161622] text-gray-300 border border-gray-800"
+                                  >
+                                    {s.day} {s.startTime}~{s.endTime}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 self-end sm:self-center">
+                              <div
+                                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold border ${
+                                  course.grade === '현재 이수 중'
+                                    ? 'bg-[#D4B2FF]/10 text-[#D4B2FF] border-[#D4B2FF]/40'
+                                    : course.grade === 'F'
+                                    ? 'bg-[#FFB2D0]/10 text-[#FFB2D0] border-[#FFB2D0]/40'
+                                    : 'bg-[#A8FFDB]/10 text-[#A8FFDB] border-[#A8FFDB]/40'
+                                }`}
+                              >
+                                {course.grade}
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => startEditCourse(course)}
+                                className="p-2 rounded-xl bg-[#161622] hover:bg-gray-800 text-gray-300 hover:text-[#A8FFDB] transition"
+                                title="과목 수정"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteCourse(course.id, course.courseName)}
+                                className="p-2 rounded-xl bg-[#161622] hover:bg-gray-800 text-gray-300 hover:text-[#FFB2D0] transition"
+                                title="과목 삭제"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
                             </div>
                           </div>
-
-                          <div className="flex items-center gap-3 self-end sm:self-center">
-                            <div
-                              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold border ${
-                                course.grade === '현재 이수 중'
-                                  ? 'bg-[#D4B2FF]/10 text-[#D4B2FF] border-[#D4B2FF]/40'
-                                  : course.grade === 'F'
-                                  ? 'bg-[#FFB2D0]/10 text-[#FFB2D0] border-[#FFB2D0]/40'
-                                  : 'bg-[#A8FFDB]/10 text-[#A8FFDB] border-[#A8FFDB]/40'
-                              }`}
-                            >
-                              {course.grade}
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={() => startEditCourse(course)}
-                              className="p-2 rounded-xl bg-[#161622] hover:bg-gray-800 text-gray-300 hover:text-[#A8FFDB] transition"
-                              title="과목 수정"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteCourse(course.id, course.courseName)}
-                              className="p-2 rounded-xl bg-[#161622] hover:bg-gray-800 text-gray-300 hover:text-[#FFB2D0] transition"
-                              title="과목 삭제"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* 1-1. 기타 활동 전용 탭 (<조건 1 ~ 7> 완벽 구현) */}
+            {/* 1-1. 기타 활동 전용 탭 (<조건 3> 박스 우측 상단 'v' 접기/펼치기 버튼) */}
             {activeToolCategory === 'ACTIVITY' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* 좌측 5칸: 기타 활동 등록 및 세부정보 수정 폼 (학점/평점 없음) */}
                 <div className="lg:col-span-5 bg-[#151521] border border-[#B8FF99]/35 rounded-2xl p-6 space-y-5 h-fit">
                   <div className="flex items-center justify-between">
                     <div>
@@ -3000,266 +4040,281 @@ export default function App() {
                         설정할 수 있습니다.
                       </p>
                     </div>
-                    {editingActivityId && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingActivityId(null);
-                          setActivityForm({
-                            title: '',
-                            category: myActivityCategories[0] || '동아리/스터디',
-                            description: '',
-                            link: '',
-                            startDate: '2026-03-02',
-                            endDate: '2026-06-21',
-                            color: '#FFE699',
-                            isPrivate: false,
-                            schedules: [{ day: '수', startTime: '15:00', endTime: '16:30' }]
-                          });
-                        }}
-                        className="text-xs text-[#FFB2D0] hover:underline shrink-0"
-                      >
-                        수정 취소
-                      </button>
-                    )}
-                  </div>
-
-                  {/* <조건 5> 사용자 정의 카테고리 생성 바 */}
-                  <div className="p-3.5 rounded-xl bg-[#0D0D12] border border-gray-800 space-y-2">
-                    <label className="block text-xs font-bold text-[#B8FF99]">
-                      📁 나만의 기타 활동 카테고리 추가
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={newCategoryInput}
-                        onChange={(e) => setNewCategoryInput(e.target.value)}
-                        placeholder="예: 운동/헬스, 학부연구생, 자격증..."
-                        className="flex-1 rounded-lg bg-[#161622] border border-gray-700 px-3 py-1.5 text-xs text-white focus:border-[#B8FF99] focus:outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAddActivityCategory}
-                        className="px-3 py-1.5 rounded-lg bg-[#B8FF99]/20 text-[#B8FF99] border border-[#B8FF99]/40 text-xs font-extrabold hover:bg-[#B8FF99] hover:text-[#0D0D12] transition flex items-center gap-1"
-                      >
-                        <FolderPlus className="w-3.5 h-3.5" /> 추가
-                      </button>
-                    </div>
-                  </div>
-
-                  <form onSubmit={handleSaveActivity} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                      <div className="sm:col-span-5">
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          카테고리 분류
-                        </label>
-                        <select
-                          value={activityForm.category}
-                          onChange={(e) =>
-                            setActivityForm({ ...activityForm, category: e.target.value })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
-                        >
-                          {myActivityCategories.map((cat) => (
-                            <option key={cat} value={cat}>
-                              {cat}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="sm:col-span-7">
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          기타 활동명 <span className="text-[#FFB2D0]">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={activityForm.title}
-                          onChange={(e) =>
-                            setActivityForm({ ...activityForm, title: e.target.value })
-                          }
-                          placeholder="예: 알고리즘 스터디, 근로장학생"
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <조건 3> 기타 활동에 대한 간략한 내용 혹은 링크 세부정보 등록 */}
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">
-                        세부정보 · 간략한 내용 설명
-                      </label>
-                      <input
-                        type="text"
-                        value={activityForm.description}
-                        onChange={(e) =>
-                          setActivityForm({ ...activityForm, description: e.target.value })
-                        }
-                        placeholder="예: 매주 백준 3문제 풀이 및 발표"
-                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">
-                        세부정보 · 관련 링크 (URL)
-                      </label>
-                      <input
-                        type="text"
-                        value={activityForm.link}
-                        onChange={(e) =>
-                          setActivityForm({ ...activityForm, link: e.target.value })
-                        }
-                        placeholder="예: https://github.com/... 또는 오픈채팅/노션 링크"
-                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
-                      />
-                    </div>
-
-                    {/* <조건 4> 타임테이블에 표시될 활동 기간 설정 */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-[#FFE699] mb-1">
-                          활동 시작일 (기간 설정)
-                        </label>
-                        <input
-                          type="date"
-                          value={activityForm.startDate}
-                          onChange={(e) =>
-                            setActivityForm({ ...activityForm, startDate: e.target.value })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs font-mono text-white focus:border-[#FFE699] focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-[#FFE699] mb-1">
-                          활동 종료일 (기간 설정)
-                        </label>
-                        <input
-                          type="date"
-                          value={activityForm.endDate}
-                          onChange={(e) =>
-                            setActivityForm({ ...activityForm, endDate: e.target.value })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs font-mono text-white focus:border-[#FFE699] focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    {/* <조건 7> 특정 기타 활동은 설정하면 친구에게 안 보이도록 설정 (단 ADMIN은 확인 가능) */}
-                    <label
-                      className={`flex items-center justify-between p-3 rounded-xl border text-xs font-bold cursor-pointer transition ${
-                        activityForm.isPrivate
-                          ? 'bg-[#FFB2D0]/15 border-[#FFB2D0] text-[#FFB2D0]'
-                          : 'bg-[#0D0D12] border-gray-800 text-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={activityForm.isPrivate}
-                          onChange={(e) =>
-                            setActivityForm({ ...activityForm, isPrivate: e.target.checked })
-                          }
-                          className="accent-[#FFB2D0]"
-                        />
-                        {activityForm.isPrivate ? (
-                          <Lock className="w-4 h-4 text-[#FFB2D0]" />
-                        ) : (
-                          <Unlock className="w-4 h-4 text-gray-400" />
-                        )}
-                        <span>친구에게 비공개 설정 (내 시간표와 ADMIN에게만 표시)</span>
-                      </div>
-                    </label>
-
-                    {/* 기타 활동 요일 및 시간 슬롯 */}
-                    <div className="space-y-2.5 pt-2 border-t border-gray-800">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-[#B8FF99]">
-                          활동 요일 및 시간 (30분 단위)
-                        </label>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {editingActivityId && (
                         <button
                           type="button"
-                          onClick={addActivityScheduleSlot}
-                          className="text-xs px-2.5 py-1 rounded-lg bg-[#B8FF99]/15 text-[#B8FF99] hover:bg-[#B8FF99]/25 font-bold flex items-center gap-1"
+                          onClick={() => {
+                            setEditingActivityId(null);
+                            setActivityForm({
+                              title: '',
+                              category: myActivityCategories[0] || '동아리/스터디',
+                              description: '',
+                              link: '',
+                              startDate: '2026-03-02',
+                              endDate: '2026-06-21',
+                              color: '#FFE699',
+                              isPrivate: false,
+                              schedules: [{ day: '수', startTime: '15:00', endTime: '16:30' }]
+                            });
+                          }}
+                          className="text-xs text-[#FFB2D0] hover:underline"
                         >
-                          <Plus className="w-3.5 h-3.5" /> 시간 추가
+                          수정 취소
                         </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('activityFormBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#B8FF99] hover:border-[#B8FF99] flex items-center justify-center transition"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['activityFormBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {!collapsedBoxes['activityFormBox'] && (
+                    <>
+                      <div className="p-3.5 rounded-xl bg-[#0D0D12] border border-gray-800 space-y-2">
+                        <label className="block text-xs font-bold text-[#B8FF99]">
+                          📁 나만의 기타 활동 카테고리 추가
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={newCategoryInput}
+                            onChange={(e) => setNewCategoryInput(e.target.value)}
+                            placeholder="예: 운동/헬스, 학부연구생, 자격증..."
+                            className="flex-1 rounded-lg bg-[#161622] border border-gray-700 px-3 py-1.5 text-xs text-white focus:border-[#B8FF99] focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleAddActivityCategory}
+                            className="px-3 py-1.5 rounded-lg bg-[#B8FF99]/20 text-[#B8FF99] border border-[#B8FF99]/40 text-xs font-extrabold hover:bg-[#B8FF99] hover:text-[#0D0D12] transition flex items-center gap-1"
+                          >
+                            <FolderPlus className="w-3.5 h-3.5" /> 추가
+                          </button>
+                        </div>
                       </div>
 
-                      {activityForm.schedules.map((slot, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 bg-[#0D0D12] p-2.5 rounded-xl border border-gray-800"
+                      <form onSubmit={handleSaveActivity} className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                          <div className="sm:col-span-5">
+                            <label className="block text-xs font-semibold text-gray-300 mb-1">
+                              카테고리 분류
+                            </label>
+                            <select
+                              value={activityForm.category}
+                              onChange={(e) =>
+                                setActivityForm({ ...activityForm, category: e.target.value })
+                              }
+                              className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
+                            >
+                              {myActivityCategories.map((cat) => (
+                                <option key={cat} value={cat}>
+                                  {cat}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="sm:col-span-7">
+                            <label className="block text-xs font-semibold text-gray-300 mb-1">
+                              기타 활동명 <span className="text-[#FFB2D0]">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={activityForm.title}
+                              onChange={(e) =>
+                                setActivityForm({ ...activityForm, title: e.target.value })
+                              }
+                              placeholder="예: 알고리즘 스터디, 근로장학생"
+                              className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            세부정보 · 간략한 내용 설명
+                          </label>
+                          <input
+                            type="text"
+                            value={activityForm.description}
+                            onChange={(e) =>
+                              setActivityForm({ ...activityForm, description: e.target.value })
+                            }
+                            placeholder="예: 매주 백준 3문제 풀이 및 발표"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            세부정보 · 관련 링크 (URL)
+                          </label>
+                          <input
+                            type="text"
+                            value={activityForm.link}
+                            onChange={(e) =>
+                              setActivityForm({ ...activityForm, link: e.target.value })
+                            }
+                            placeholder="예: https://github.com/... 또는 오픈채팅/노션 링크"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#B8FF99] focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-semibold text-[#FFE699] mb-1">
+                              활동 시작일 (기간 설정)
+                            </label>
+                            <input
+                              type="date"
+                              value={activityForm.startDate}
+                              onChange={(e) =>
+                                setActivityForm({ ...activityForm, startDate: e.target.value })
+                              }
+                              className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs font-mono text-white focus:border-[#FFE699] focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-[#FFE699] mb-1">
+                              활동 종료일 (기간 설정)
+                            </label>
+                            <input
+                              type="date"
+                              value={activityForm.endDate}
+                              onChange={(e) =>
+                                setActivityForm({ ...activityForm, endDate: e.target.value })
+                              }
+                              className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs font-mono text-white focus:border-[#FFE699] focus:outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        <label
+                          className={`flex items-center justify-between p-3 rounded-xl border text-xs font-bold cursor-pointer transition ${
+                            activityForm.isPrivate
+                              ? 'bg-[#FFB2D0]/15 border-[#FFB2D0] text-[#FFB2D0]'
+                              : 'bg-[#0D0D12] border-gray-800 text-gray-300'
+                          }`}
                         >
-                          <select
-                            value={slot.day}
-                            onChange={(e) =>
-                              updateActivityScheduleSlot(index, 'day', e.target.value)
-                            }
-                            className="rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs text-white"
-                          >
-                            {DAYS.map((d) => (
-                              <option key={d} value={d}>
-                                {d}요일
-                              </option>
-                            ))}
-                          </select>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={activityForm.isPrivate}
+                              onChange={(e) =>
+                                setActivityForm({ ...activityForm, isPrivate: e.target.checked })
+                              }
+                              className="accent-[#FFB2D0]"
+                            />
+                            {activityForm.isPrivate ? (
+                              <Lock className="w-4 h-4 text-[#FFB2D0]" />
+                            ) : (
+                              <Unlock className="w-4 h-4 text-gray-400" />
+                            )}
+                            <span>친구에게 비공개 설정 (내 시간표와 ADMIN에게만 표시)</span>
+                          </div>
+                        </label>
 
-                          <select
-                            value={slot.startTime}
-                            onChange={(e) =>
-                              updateActivityScheduleSlot(index, 'startTime', e.target.value)
-                            }
-                            className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
-                          >
-                            {TIME_OPTIONS.slice(0, -1).map((t) => (
-                              <option key={t} value={t}>
-                                {t}
-                              </option>
-                            ))}
-                          </select>
-
-                          <span className="text-gray-500 text-xs">~</span>
-
-                          <select
-                            value={slot.endTime}
-                            onChange={(e) =>
-                              updateActivityScheduleSlot(index, 'endTime', e.target.value)
-                            }
-                            className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
-                          >
-                            {TIME_OPTIONS.slice(1).map((t) => (
-                              <option key={t} value={t}>
-                                {t}
-                              </option>
-                            ))}
-                          </select>
-
-                          {activityForm.schedules.length > 1 && (
+                        <div className="space-y-2.5 pt-2 border-t border-gray-800">
+                          <div className="flex items-center justify-between">
+                            <label className="text-xs font-bold text-[#B8FF99]">
+                              활동 요일 및 시간 (30분 단위)
+                            </label>
                             <button
                               type="button"
-                              onClick={() => removeActivityScheduleSlot(index)}
-                              className="ml-auto p-1.5 text-gray-400 hover:text-[#FFB2D0]"
+                              onClick={addActivityScheduleSlot}
+                              className="text-xs px-2.5 py-1 rounded-lg bg-[#B8FF99]/15 text-[#B8FF99] hover:bg-[#B8FF99]/25 font-bold flex items-center gap-1"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Plus className="w-3.5 h-3.5" /> 시간 추가
                             </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                          </div>
 
-                    <button
-                      type="submit"
-                      className="w-full py-3 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#B8FF99] to-[#FFE699] text-[#0D0D12] hover:opacity-95 transition shadow-lg"
-                    >
-                      {editingActivityId ? '기타 활동 세부정보 수정 저장' : '기타 활동 저장하기'}
-                    </button>
-                  </form>
+                          {activityForm.schedules.map((slot, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 bg-[#0D0D12] p-2.5 rounded-xl border border-gray-800"
+                            >
+                              <select
+                                value={slot.day}
+                                onChange={(e) =>
+                                  updateActivityScheduleSlot(index, 'day', e.target.value)
+                                }
+                                className="rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs text-white"
+                              >
+                                {DAYS.map((d) => (
+                                  <option key={d} value={d}>
+                                    {d}요일
+                                  </option>
+                                ))}
+                              </select>
+
+                              <select
+                                value={slot.startTime}
+                                onChange={(e) =>
+                                  updateActivityScheduleSlot(index, 'startTime', e.target.value)
+                                }
+                                className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
+                              >
+                                {TIME_OPTIONS.slice(0, -1).map((t) => (
+                                  <option key={t} value={t}>
+                                    {t}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <span className="text-gray-500 text-xs">~</span>
+
+                              <select
+                                value={slot.endTime}
+                                onChange={(e) =>
+                                  updateActivityScheduleSlot(index, 'endTime', e.target.value)
+                                }
+                                className="rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
+                              >
+                                {TIME_OPTIONS.slice(1).map((t) => (
+                                  <option key={t} value={t}>
+                                    {t}
+                                  </option>
+                                ))}
+                              </select>
+
+                              {activityForm.schedules.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeActivityScheduleSlot(index)}
+                                  className="ml-auto p-1.5 text-gray-400 hover:text-[#FFB2D0]"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="w-full py-3 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#B8FF99] to-[#FFE699] text-[#0D0D12] hover:opacity-95 transition shadow-lg"
+                        >
+                          {editingActivityId ? '기타 활동 세부정보 수정 저장' : '기타 활동 저장하기'}
+                        </button>
+                      </form>
+                    </>
+                  )}
                 </div>
 
-                {/* 우측 7칸: 카테고리별 기타 활동 목록 & 활동명 클릭 시 세부정보 수정 (<조건 5>) */}
-                <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                {/* 우측 7칸: 카테고리별 기타 활동 목록 */}
+                <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                  <div className="flex items-center justify-between gap-2">
                     <div>
                       <h2 className="text-base font-extrabold text-white">
                         등록된 기타 활동 목록 ({myActivities.length}건)
@@ -3269,140 +4324,155 @@ export default function App() {
                         입력폼으로 불러와 세부정보(설명·링크·기간·비공개)를 즉시 수정할 수 있습니다.
                       </p>
                     </div>
-                  </div>
-
-                  {/* 카테고리 필터 버튼 바 */}
-                  <div className="flex flex-wrap items-center gap-1.5 pb-2 border-b border-gray-800">
                     <button
                       type="button"
-                      onClick={() => setSelectedActivityCategoryFilter('ALL')}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${
-                        selectedActivityCategoryFilter === 'ALL'
-                          ? 'bg-[#B8FF99] text-[#0D0D12]'
-                          : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
-                      }`}
+                      onClick={() => toggleBoxCollapse('activityListBox')}
+                      className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#B8FF99] hover:border-[#B8FF99] flex items-center justify-center transition shrink-0"
+                      title="접기/펼치기"
                     >
-                      전체 ({myActivities.length})
+                      <span
+                        className={`inline-block transition-transform duration-200 ${
+                          collapsedBoxes['activityListBox'] ? '-rotate-90' : ''
+                        }`}
+                      >
+                        v
+                      </span>
                     </button>
-                    {myActivityCategories.map((cat) => {
-                      const count = myActivities.filter((a) => a.category === cat).length;
-                      return (
+                  </div>
+
+                  {!collapsedBoxes['activityListBox'] && (
+                    <>
+                      <div className="flex flex-wrap items-center gap-1.5 pb-2 border-b border-gray-800">
                         <button
-                          key={cat}
                           type="button"
-                          onClick={() => setSelectedActivityCategoryFilter(cat)}
+                          onClick={() => setSelectedActivityCategoryFilter('ALL')}
                           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${
-                            selectedActivityCategoryFilter === cat
+                            selectedActivityCategoryFilter === 'ALL'
                               ? 'bg-[#B8FF99] text-[#0D0D12]'
                               : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
                           }`}
                         >
-                          {cat} ({count})
+                          전체 ({myActivities.length})
                         </button>
-                      );
-                    })}
-                  </div>
+                        {myActivityCategories.map((cat) => {
+                          const count = myActivities.filter((a) => a.category === cat).length;
+                          return (
+                            <button
+                              key={cat}
+                              type="button"
+                              onClick={() => setSelectedActivityCategoryFilter(cat)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${
+                                selectedActivityCategoryFilter === cat
+                                  ? 'bg-[#B8FF99] text-[#0D0D12]'
+                                  : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
+                              }`}
+                            >
+                              {cat} ({count})
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                  <div className="space-y-3">
-                    {myActivities
-                      .filter(
-                        (a) =>
-                          selectedActivityCategoryFilter === 'ALL' ||
-                          a.category === selectedActivityCategoryFilter
-                      )
-                      .map((act) => (
-                        <div
-                          key={act.id}
-                          className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 hover:border-[#B8FF99]/60 transition space-y-2"
-                        >
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span
-                                className="w-3 h-3 rounded-full"
-                                style={{ backgroundColor: act.color || '#FFE699' }}
-                              />
-                              <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-[#B8FF99]/15 text-[#B8FF99] border border-[#B8FF99]/30">
-                                {act.category}
-                              </span>
-                              {/* <조건 5> 활동명 클릭 시 세부정보 수정 */}
-                              <button
-                                type="button"
-                                onClick={() => startEditActivity(act)}
-                                className="text-sm font-extrabold text-white hover:text-[#B8FF99] underline-offset-4 hover:underline text-left flex items-center gap-1.5"
-                                title="클릭하여 기타 활동 세부정보 수정"
-                              >
-                                {act.title}
-                                <Edit3 className="w-3.5 h-3.5 text-gray-400" />
-                              </button>
-                              {act.isPrivate ? (
-                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40 flex items-center gap-1">
-                                  <Lock className="w-3 h-3" /> 친구 비공개 (ADMIN만 열람 가능)
-                                </span>
-                              ) : (
-                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-gray-800 text-gray-300">
-                                  친구 공개
-                                </span>
+                      <div className="space-y-3">
+                        {myActivities
+                          .filter(
+                            (a) =>
+                              selectedActivityCategoryFilter === 'ALL' ||
+                              a.category === selectedActivityCategoryFilter
+                          )
+                          .map((act) => (
+                            <div
+                              key={act.id}
+                              className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 hover:border-[#B8FF99]/60 transition space-y-2"
+                            >
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span
+                                    className="w-3 h-3 rounded-full"
+                                    style={{ backgroundColor: act.color || '#FFE699' }}
+                                  />
+                                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-[#B8FF99]/15 text-[#B8FF99] border border-[#B8FF99]/30">
+                                    {act.category}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => startEditActivity(act)}
+                                    className="text-sm font-extrabold text-white hover:text-[#B8FF99] underline-offset-4 hover:underline text-left flex items-center gap-1.5"
+                                    title="클릭하여 기타 활동 세부정보 수정"
+                                  >
+                                    {act.title}
+                                    <Edit3 className="w-3.5 h-3.5 text-gray-400" />
+                                  </button>
+                                  {act.isPrivate ? (
+                                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40 flex items-center gap-1">
+                                      <Lock className="w-3 h-3" /> 친구 비공개 (ADMIN만 열람 가능)
+                                    </span>
+                                  ) : (
+                                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-gray-800 text-gray-300">
+                                      친구 공개
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center gap-2 self-end sm:self-center">
+                                  <span className="text-[11px] font-mono text-[#FFE699] bg-[#FFE699]/10 px-2.5 py-1 rounded-lg border border-[#FFE699]/30">
+                                    기간: {act.startDate} ~ {act.endDate}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteActivity(act.id, act.title)}
+                                    className="p-2 rounded-xl bg-[#161622] hover:bg-gray-800 text-gray-300 hover:text-[#FFB2D0] transition"
+                                    title="기타 활동 삭제"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              {act.description && (
+                                <p className="text-xs text-gray-300 pl-1">📝 {act.description}</p>
                               )}
+
+                              {act.link && (
+                                <div className="pl-1">
+                                  <a
+                                    href={
+                                      act.link.startsWith('http') ? act.link : `https://${act.link}`
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1 text-xs text-[#99E6FF] hover:underline font-mono"
+                                  >
+                                    <Link2 className="w-3.5 h-3.5" />
+                                    {act.link}
+                                  </a>
+                                </div>
+                              )}
+
+                              <div className="flex flex-wrap gap-1.5 pt-1">
+                                {(act.schedules || []).map((s, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#161622] text-gray-300 border border-gray-800"
+                                  >
+                                    {s.day} {s.startTime}~{s.endTime}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-
-                            <div className="flex items-center gap-2 self-end sm:self-center">
-                              <span className="text-[11px] font-mono text-[#FFE699] bg-[#FFE699]/10 px-2.5 py-1 rounded-lg border border-[#FFE699]/30">
-                                기간: {act.startDate} ~ {act.endDate}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteActivity(act.id, act.title)}
-                                className="p-2 rounded-xl bg-[#161622] hover:bg-gray-800 text-gray-300 hover:text-[#FFB2D0] transition"
-                                title="기타 활동 삭제"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-
-                          {act.description && (
-                            <p className="text-xs text-gray-300 pl-1">📝 {act.description}</p>
-                          )}
-
-                          {act.link && (
-                            <div className="pl-1">
-                              <a
-                                href={
-                                  act.link.startsWith('http') ? act.link : `https://${act.link}`
-                                }
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-1 text-xs text-[#99E6FF] hover:underline font-mono"
-                              >
-                                <Link2 className="w-3.5 h-3.5" />
-                                {act.link}
-                              </a>
-                            </div>
-                          )}
-
-                          <div className="flex flex-wrap gap-1.5 pt-1">
-                            {(act.schedules || []).map((s, idx) => (
-                              <span
-                                key={idx}
-                                className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#161622] text-gray-300 border border-gray-800"
-                              >
-                                {s.day} {s.startTime}~{s.endTime}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                  </div>
+                          ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* 1-2. 성적 예측 전용 탭 (<조건 1 ~ 6> 완벽 구현) */}
+            {/* 1-2. 성적 예측 전용 탭 (<조건 3> 각 박스 우측 상단 'v' 버튼) */}
             {activeToolCategory === 'PREDICTION' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* 좌측 7칸: 과목/수강인원(기본 50명) + 시험/출석 점수 입력 + 성적 비율 입력 */}
-                <div className="lg:col-span-7 bg-[#151521] border border-[#FFE699]/35 rounded-2xl p-6 space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-800 pb-4">
+                <div className="lg:col-span-7 bg-[#151521] border border-[#FFE699]/35 rounded-2xl p-6 space-y-6 h-fit">
+                  <div className="flex items-center justify-between gap-2 border-b border-gray-800 pb-4">
                     <div>
                       <h2 className="text-base font-extrabold text-white flex items-center gap-2">
                         <Calculator className="w-5 h-5 text-[#FFE699]" />
@@ -3414,472 +4484,503 @@ export default function App() {
                         정밀 계산하여 저장합니다.
                       </p>
                     </div>
-                    {editingPredictionId && (
+                    <div className="flex items-center gap-2 shrink-0">
+                      {editingPredictionId && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingPredictionId(null);
+                            setPredictionForm({
+                              courseName: '',
+                              credits: 3,
+                              totalStudents: 50,
+                              evaluationItems: DEFAULT_EVALUATION_ITEMS,
+                              gradeCutoffs: DEFAULT_GRADE_CUTOFFS
+                            });
+                          }}
+                          className="text-xs text-[#FFB2D0] hover:underline"
+                        >
+                          새 예측 작성
+                        </button>
+                      )}
                       <button
                         type="button"
-                        onClick={() => {
-                          setEditingPredictionId(null);
-                          setPredictionForm({
-                            courseName: '',
-                            credits: 3,
-                            totalStudents: 50,
-                            evaluationItems: DEFAULT_EVALUATION_ITEMS,
-                            gradeCutoffs: DEFAULT_GRADE_CUTOFFS
-                          });
-                        }}
-                        className="text-xs text-[#FFB2D0] hover:underline shrink-0"
+                        onClick={() => toggleBoxCollapse('predictionSimulatorBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#FFE699] hover:border-[#FFE699] flex items-center justify-center transition"
+                        title="접기/펼치기"
                       >
-                        새 예측 작성으로 전환
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['predictionSimulatorBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
                       </button>
-                    )}
+                    </div>
                   </div>
 
-                  <form onSubmit={handleSavePrediction} className="space-y-6">
-                    {/* 과목 선택/입력 및 <조건 4> 수강 인원 설정 (Default: 50명) */}
-                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                      <div className="sm:col-span-6">
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          예측할 과목명 (직접 입력 또는 내 수강과목 선택)
-                        </label>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={predictionForm.courseName}
-                            onChange={(e) =>
-                              setPredictionForm({ ...predictionForm, courseName: e.target.value })
-                            }
-                            placeholder="예: 운영체제, 알고리즘"
-                            className="flex-1 rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#FFE699] focus:outline-none"
-                          />
-                          {courses.length > 0 && (
-                            <select
-                              value=""
-                              onChange={(e) => {
-                                const selected = courses.find(
-                                  (c) => String(c.id) === e.target.value
-                                );
-                                if (selected) {
-                                  setPredictionForm((prev) => ({
-                                    ...prev,
-                                    courseName: selected.courseName,
-                                    credits: selected.credits
-                                  }));
-                                }
-                              }}
-                              className="rounded-xl bg-[#0D0D12] border border-gray-700 px-2.5 py-2 text-xs text-gray-300 focus:border-[#FFE699] focus:outline-none"
-                            >
-                              <option value="">내 과목 불러오기</option>
-                              {courses.map((c) => (
-                                <option key={c.id} value={c.id}>
-                                  {c.courseName} ({c.credits}학점)
-                                </option>
-                              ))}
-                            </select>
-                          )}
+                  {!collapsedBoxes['predictionSimulatorBox'] && (
+                    <form onSubmit={handleSavePrediction} className="space-y-6">
+                      {/* 과목 선택/입력 및 <조건 4> 수강 인원 설정 (Default: 50명) */}
+                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                        <div className="sm:col-span-6">
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            예측할 과목명 (직접 입력 또는 내 수강과목 선택)
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={predictionForm.courseName}
+                              onChange={(e) =>
+                                setPredictionForm({ ...predictionForm, courseName: e.target.value })
+                              }
+                              placeholder="예: 운영체제, 알고리즘"
+                              className="flex-1 rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#FFE699] focus:outline-none"
+                            />
+                            {courses.length > 0 && (
+                              <select
+                                value=""
+                                onChange={(e) => {
+                                  const selected = courses.find(
+                                    (c) => String(c.id) === e.target.value
+                                  );
+                                  if (selected) {
+                                    setPredictionForm((prev) => ({
+                                      ...prev,
+                                      courseName: selected.courseName,
+                                      credits: selected.credits
+                                    }));
+                                  }
+                                }}
+                                className="rounded-xl bg-[#0D0D12] border border-gray-700 px-2.5 py-2 text-xs text-gray-300 focus:border-[#FFE699] focus:outline-none"
+                              >
+                                <option value="">내 과목 불러오기</option>
+                                {courses.map((c) => (
+                                  <option key={c.id} value={c.id}>
+                                    {c.courseName} ({c.credits}학점)
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="sm:col-span-3">
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          학점 수
-                        </label>
-                        <select
-                          value={predictionForm.credits}
-                          onChange={(e) =>
-                            setPredictionForm({
-                              ...predictionForm,
-                              credits: Number(e.target.value)
-                            })
-                          }
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2.5 text-sm text-white focus:border-[#FFE699] focus:outline-none"
-                        >
-                          {[1, 2, 3, 4].map((cr) => (
-                            <option key={cr} value={cr}>
-                              {cr}학점
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* <조건 4> 수강 인원 default 50명, 직접 설정 가능 */}
-                      <div className="sm:col-span-3">
-                        <label className="block text-xs font-semibold text-[#FFE699] mb-1">
-                          수강 인원 (기본 50명)
-                        </label>
-                        <div className="flex items-center gap-1.5">
-                          <input
-                            type="number"
-                            min={1}
-                            max={500}
-                            value={predictionForm.totalStudents}
+                        <div className="sm:col-span-3">
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            학점 수
+                          </label>
+                          <select
+                            value={predictionForm.credits}
                             onChange={(e) =>
                               setPredictionForm({
                                 ...predictionForm,
-                                totalStudents: e.target.value
+                                credits: Number(e.target.value)
                               })
                             }
-                            className="w-full rounded-xl bg-[#0D0D12] border border-[#FFE699]/50 px-3 py-2.5 text-sm font-mono font-bold text-white focus:border-[#FFE699] focus:outline-none"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setPredictionForm((prev) => ({ ...prev, totalStudents: 50 }))
-                            }
-                            className="px-2 py-2 rounded-lg bg-[#0D0D12] border border-gray-700 text-[10px] text-gray-400 hover:text-white shrink-0"
-                            title="기본값 50명으로 초기화"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2.5 text-sm text-white focus:border-[#FFE699] focus:outline-none"
                           >
-                            50명
-                          </button>
+                            {[1, 2, 3, 4].map((cr) => (
+                              <option key={cr} value={cr}>
+                                {cr}학점
+                              </option>
+                            ))}
+                          </select>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* <조건 2, 5> 시험 점수, 출석 점수, 과제 점수 및 시험 평균/표준편차 입력 */}
-                    <div className="space-y-3 pt-2 border-t border-gray-800">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div>
-                          <label className="text-xs font-extrabold text-[#A8FFDB]">
-                            📊 평가 항목별 점수 및 반영 비율 입력 (현재 반영 비율 합계:{' '}
-                            <span
-                              className={
-                                livePredictionCalculation.totalWeightSum === 100
-                                  ? 'text-[#A8FFDB]'
-                                  : 'text-[#FFB2D0]'
-                              }
-                            >
-                              {livePredictionCalculation.totalWeightSum}%
-                            </span>
-                            )
+                        <div className="sm:col-span-3">
+                          <label className="block text-xs font-semibold text-[#FFE699] mb-1">
+                            수강 인원 (기본 50명)
                           </label>
-                          <p className="text-[11px] text-gray-400">
-                            💡 <strong>시험(EXAM)</strong> 항목에{' '}
-                            <strong className="text-[#FFE699]">평균과 표준편차</strong>를 입력하면
-                            출석/과제를 제외하고 <strong>오직 시험 성적만으로 예상 백분위</strong>를
-                            산출합니다.
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => handleAddEvaluationItem('EXAM')}
-                            className="px-2.5 py-1.5 rounded-lg bg-[#FFE699]/15 text-[#FFE699] border border-[#FFE699]/40 text-xs font-bold hover:bg-[#FFE699] hover:text-[#0D0D12] transition"
-                          >
-                            + 시험 항목 추가
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleAddEvaluationItem('ATTENDANCE')}
-                            className="px-2.5 py-1.5 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-bold hover:bg-[#A8FFDB] hover:text-[#0D0D12] transition"
-                          >
-                            + 출석/과제 추가
-                          </button>
+                          <div className="flex items-center gap-1.5">
+                            <input
+                              type="number"
+                              min={1}
+                              max={500}
+                              value={predictionForm.totalStudents}
+                              onChange={(e) =>
+                                setPredictionForm({
+                                  ...predictionForm,
+                                  totalStudents: e.target.value
+                                })
+                              }
+                              className="w-full rounded-xl bg-[#0D0D12] border border-[#FFE699]/50 px-3 py-2.5 text-sm font-mono font-bold text-white focus:border-[#FFE699] focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setPredictionForm((prev) => ({ ...prev, totalStudents: 50 }))
+                              }
+                              className="px-2 py-2 rounded-lg bg-[#0D0D12] border border-gray-700 text-[10px] text-gray-400 hover:text-white shrink-0"
+                              title="기본값 50명으로 초기화"
+                            >
+                              50명
+                            </button>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="space-y-2.5">
-                        {predictionForm.evaluationItems.map((item, idx) => (
-                          <div
-                            key={item.id || idx}
-                            className="p-3.5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2.5"
-                          >
-                            <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
-                              <div className="sm:col-span-3">
-                                <label className="block text-[10px] text-gray-400 mb-0.5">
-                                  구분
-                                </label>
-                                <select
-                                  value={item.category}
-                                  onChange={(e) =>
-                                    handleUpdateEvaluationItem(idx, 'category', e.target.value)
-                                  }
-                                  className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs font-bold text-white"
-                                >
-                                  <option value="EXAM">🎯 시험 (백분위 반영)</option>
-                                  <option value="ATTENDANCE">✅ 출석 점수</option>
-                                  <option value="ASSIGNMENT">📁 과제 / 기타</option>
-                                </select>
-                              </div>
+                      <div className="space-y-3 pt-2 border-t border-gray-800">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div>
+                            <label className="text-xs font-extrabold text-[#A8FFDB]">
+                              📊 평가 항목별 점수 및 반영 비율 입력 (현재 반영 비율 합계:{' '}
+                              <span
+                                className={
+                                  livePredictionCalculation.totalWeightSum === 100
+                                    ? 'text-[#A8FFDB]'
+                                    : 'text-[#FFB2D0]'
+                                }
+                              >
+                                {livePredictionCalculation.totalWeightSum}%
+                              </span>
+                              )
+                            </label>
+                            <p className="text-[11px] text-gray-400">
+                              💡 <strong>시험(EXAM)</strong> 항목에{' '}
+                              <strong className="text-[#FFE699]">평균과 표준편차</strong>를 입력하면
+                              출석/과제를 제외하고 <strong>오직 시험 성적만으로 예상 백분위</strong>를
+                              산출합니다.
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleAddEvaluationItem('EXAM')}
+                              className="px-2.5 py-1.5 rounded-lg bg-[#FFE699]/15 text-[#FFE699] border border-[#FFE699]/40 text-xs font-bold hover:bg-[#FFE699] hover:text-[#0D0D12] transition"
+                            >
+                              + 시험 항목 추가
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleAddEvaluationItem('ATTENDANCE')}
+                              className="px-2.5 py-1.5 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-bold hover:bg-[#A8FFDB] hover:text-[#0D0D12] transition"
+                            >
+                              + 출석/과제 추가
+                            </button>
+                          </div>
+                        </div>
 
-                              <div className="sm:col-span-3">
-                                <label className="block text-[10px] text-gray-400 mb-0.5">
-                                  항목명
-                                </label>
-                                <input
-                                  type="text"
-                                  value={item.label}
-                                  onChange={(e) =>
-                                    handleUpdateEvaluationItem(idx, 'label', e.target.value)
-                                  }
-                                  className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs text-white"
-                                />
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label className="block text-[10px] text-gray-400 mb-0.5">
-                                  내 점수
-                                </label>
-                                <input
-                                  type="number"
-                                  step="0.1"
-                                  value={item.score}
-                                  onChange={(e) =>
-                                    handleUpdateEvaluationItem(idx, 'score', e.target.value)
-                                  }
-                                  className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs font-mono text-[#A8FFDB] font-bold"
-                                />
-                              </div>
-
-                              <div className="sm:col-span-2">
-                                <label className="block text-[10px] text-gray-400 mb-0.5">
-                                  만점 기준
-                                </label>
-                                <input
-                                  type="number"
-                                  min={1}
-                                  value={item.maxScore}
-                                  onChange={(e) =>
-                                    handleUpdateEvaluationItem(idx, 'maxScore', e.target.value)
-                                  }
-                                  className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs font-mono text-gray-300"
-                                />
-                              </div>
-
-                              <div className="sm:col-span-2 flex items-end gap-1">
-                                <div className="flex-1">
+                        <div className="space-y-2.5">
+                          {predictionForm.evaluationItems.map((item, idx) => (
+                            <div
+                              key={item.id || idx}
+                              className="p-3.5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2.5"
+                            >
+                              <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+                                <div className="sm:col-span-3">
                                   <label className="block text-[10px] text-gray-400 mb-0.5">
-                                    반영비율(%)
+                                    구분
+                                  </label>
+                                  <select
+                                    value={item.category}
+                                    onChange={(e) =>
+                                      handleUpdateEvaluationItem(idx, 'category', e.target.value)
+                                    }
+                                    className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs font-bold text-white"
+                                  >
+                                    <option value="EXAM">🎯 시험 (백분위 반영)</option>
+                                    <option value="ATTENDANCE">✅ 출석 점수</option>
+                                    <option value="ASSIGNMENT">📁 과제 / 기타</option>
+                                  </select>
+                                </div>
+
+                                <div className="sm:col-span-3">
+                                  <label className="block text-[10px] text-gray-400 mb-0.5">
+                                    항목명
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={item.label}
+                                    onChange={(e) =>
+                                      handleUpdateEvaluationItem(idx, 'label', e.target.value)
+                                    }
+                                    className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs text-white"
+                                  />
+                                </div>
+
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[10px] text-gray-400 mb-0.5">
+                                    내 점수
                                   </label>
                                   <input
                                     type="number"
-                                    min={0}
-                                    max={100}
-                                    value={item.weight}
+                                    step="0.1"
+                                    value={item.score}
                                     onChange={(e) =>
-                                      handleUpdateEvaluationItem(idx, 'weight', e.target.value)
+                                      handleUpdateEvaluationItem(idx, 'score', e.target.value)
                                     }
-                                    className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-[#D4B2FF] font-bold"
+                                    className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs font-mono text-[#A8FFDB] font-bold"
                                   />
                                 </div>
-                                {predictionForm.evaluationItems.length > 1 && (
-                                  <button
-                                    type="button"
-                                    onClick={() => handleRemoveEvaluationItem(idx)}
-                                    className="p-1.5 text-gray-500 hover:text-[#FFB2D0]"
-                                    title="항목 삭제"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                )}
+
+                                <div className="sm:col-span-2">
+                                  <label className="block text-[10px] text-gray-400 mb-0.5">
+                                    만점 기준
+                                  </label>
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    value={item.maxScore}
+                                    onChange={(e) =>
+                                      handleUpdateEvaluationItem(idx, 'maxScore', e.target.value)
+                                    }
+                                    className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2.5 py-1.5 text-xs font-mono text-gray-300"
+                                  />
+                                </div>
+
+                                <div className="sm:col-span-2 flex items-end gap-1">
+                                  <div className="flex-1">
+                                    <label className="block text-[10px] text-gray-400 mb-0.5">
+                                      반영비율(%)
+                                    </label>
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      max={100}
+                                      value={item.weight}
+                                      onChange={(e) =>
+                                        handleUpdateEvaluationItem(idx, 'weight', e.target.value)
+                                      }
+                                      className="w-full rounded-lg bg-[#161622] border border-gray-700 px-2 py-1.5 text-xs font-mono text-[#D4B2FF] font-bold"
+                                    />
+                                  </div>
+                                  {predictionForm.evaluationItems.length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveEvaluationItem(idx)}
+                                      className="p-1.5 text-gray-500 hover:text-[#FFB2D0]"
+                                      title="항목 삭제"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
+
+                              {item.category === 'EXAM' && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-gray-800/80 bg-[#151521]/60 p-2.5 rounded-xl">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-[11px] font-bold text-[#FFE699]">
+                                      📐 시험 평균 (선택 입력):
+                                    </span>
+                                    <input
+                                      type="number"
+                                      step="0.1"
+                                      placeholder="미입력 시 비워둠 (예: 74)"
+                                      value={item.mean}
+                                      onChange={(e) =>
+                                        handleUpdateEvaluationItem(idx, 'mean', e.target.value)
+                                      }
+                                      className="w-36 rounded-lg bg-[#0D0D12] border border-[#FFE699]/40 px-2.5 py-1 text-xs font-mono text-white"
+                                    />
+                                  </div>
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-[11px] font-bold text-[#FFE699]">
+                                      📏 시험 표준편차 (선택 입력):
+                                    </span>
+                                    <input
+                                      type="number"
+                                      step="0.1"
+                                      min="0.1"
+                                      placeholder="미입력 시 비워둠 (예: 11)"
+                                      value={item.stdDev}
+                                      onChange={(e) =>
+                                        handleUpdateEvaluationItem(idx, 'stdDev', e.target.value)
+                                      }
+                                      className="w-36 rounded-lg bg-[#0D0D12] border border-[#FFE699]/40 px-2.5 py-1 text-xs font-mono text-white"
+                                    />
+                                  </div>
+                                </div>
+                              )}
                             </div>
-
-                            {/* <조건 5> 시험(EXAM) 카테고리일 때 시험 평균과 표준편차 입력란 표시 */}
-                            {item.category === 'EXAM' && (
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-gray-800/80 bg-[#151521]/60 p-2.5 rounded-xl">
-                                <div className="flex items-center justify-between gap-2">
-                                  <span className="text-[11px] font-bold text-[#FFE699]">
-                                    📐 시험 평균 (선택 입력):
-                                  </span>
-                                  <input
-                                    type="number"
-                                    step="0.1"
-                                    placeholder="미입력 시 비워둠 (예: 74)"
-                                    value={item.mean}
-                                    onChange={(e) =>
-                                      handleUpdateEvaluationItem(idx, 'mean', e.target.value)
-                                    }
-                                    className="w-36 rounded-lg bg-[#0D0D12] border border-[#FFE699]/40 px-2.5 py-1 text-xs font-mono text-white"
-                                  />
-                                </div>
-                                <div className="flex items-center justify-between gap-2">
-                                  <span className="text-[11px] font-bold text-[#FFE699]">
-                                    📏 시험 표준편차 (선택 입력):
-                                  </span>
-                                  <input
-                                    type="number"
-                                    step="0.1"
-                                    min="0.1"
-                                    placeholder="미입력 시 비워둠 (예: 11)"
-                                    value={item.stdDev}
-                                    onChange={(e) =>
-                                      handleUpdateEvaluationItem(idx, 'stdDev', e.target.value)
-                                    }
-                                    className="w-36 rounded-lg bg-[#0D0D12] border border-[#FFE699]/40 px-2.5 py-1 text-xs font-mono text-white"
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* <조건 3> 성적 비율(상위 누적 %) 사용자 입력 */}
-                    <div className="space-y-3 pt-2 border-t border-gray-800">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <label className="text-xs font-extrabold text-[#D4B2FF]">
-                            🏅 등급별 성적 비율 설정 (상위 누적 % 기준)
-                          </label>
-                          <p className="text-[11px] text-gray-400">
-                            교수님 강의계획서의 상대평가/절대평가 등급 컷 비율(%)을 직접 조정할 수
-                            있습니다. (예: A+ 상위 15%, A 상위 30%, B+ 상위 50%...)
-                          </p>
+                          ))}
                         </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setPredictionForm((prev) => ({
-                              ...prev,
-                              gradeCutoffs: DEFAULT_GRADE_CUTOFFS
-                            }))
-                          }
-                          className="text-[11px] text-gray-400 hover:text-white underline"
-                        >
-                          기본 비율로 초기화
-                        </button>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                        {['A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D'].map((gradeKey) => (
-                          <div
-                            key={gradeKey}
-                            className="p-2.5 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-2"
-                          >
-                            <span className="text-xs font-extrabold text-[#A8FFDB]">
-                              {gradeKey} 컷
-                            </span>
-                            <div className="flex items-center gap-1">
-                              <span className="text-[10px] text-gray-400">상위</span>
-                              <input
-                                type="number"
-                                min={1}
-                                max={100}
-                                value={predictionForm.gradeCutoffs[gradeKey] ?? 100}
-                                onChange={(e) =>
-                                  setPredictionForm((prev) => ({
-                                    ...prev,
-                                    gradeCutoffs: {
-                                      ...prev.gradeCutoffs,
-                                      [gradeKey]: Number(e.target.value)
-                                    }
-                                  }))
-                                }
-                                className="w-14 rounded-lg bg-[#161622] border border-gray-700 px-2 py-1 text-xs font-mono text-right text-white"
-                              />
-                              <span className="text-xs text-gray-400">%</span>
-                            </div>
+                      <div className="space-y-3 pt-2 border-t border-gray-800">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <label className="text-xs font-extrabold text-[#D4B2FF]">
+                              🏅 등급별 성적 비율 설정 (상위 누적 % 기준)
+                            </label>
+                            <p className="text-[11px] text-gray-400">
+                              교수님 강의계획서의 상대평가/절대평가 등급 컷 비율(%)을 직접 조정할 수
+                              있습니다.
+                            </p>
                           </div>
-                        ))}
-                      </div>
-                    </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setPredictionForm((prev) => ({
+                                ...prev,
+                                gradeCutoffs: DEFAULT_GRADE_CUTOFFS
+                              }))
+                            }
+                            className="text-[11px] text-gray-400 hover:text-white underline"
+                          >
+                            기본 비율로 초기화
+                          </button>
+                        </div>
 
-                    {/* <조건 6> 계산하거나 등록한 내용 저장 버튼 */}
-                    <button
-                      type="submit"
-                      className="w-full py-3.5 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#FFE699] via-[#A8FFDB] to-[#D4B2FF] text-[#0D0D12] hover:opacity-95 transition shadow-lg flex items-center justify-center gap-2"
-                    >
-                      <Save className="w-4 h-4" />
-                      {editingPredictionId
-                        ? '성적 예측 수정 내용 저장하기'
-                        : '계산된 성적 예측 결과 저장하기'}
-                    </button>
-                  </form>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                          {['A+', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D'].map((gradeKey) => (
+                            <div
+                              key={gradeKey}
+                              className="p-2.5 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-2"
+                            >
+                              <span className="text-xs font-extrabold text-[#A8FFDB]">
+                                {gradeKey} 컷
+                              </span>
+                              <div className="flex items-center gap-1">
+                                <span className="text-[10px] text-gray-400">상위</span>
+                                <input
+                                  type="number"
+                                  min={1}
+                                  max={100}
+                                  value={predictionForm.gradeCutoffs[gradeKey] ?? 100}
+                                  onChange={(e) =>
+                                    setPredictionForm((prev) => ({
+                                      ...prev,
+                                      gradeCutoffs: {
+                                        ...prev.gradeCutoffs,
+                                        [gradeKey]: Number(e.target.value)
+                                      }
+                                    }))
+                                  }
+                                  className="w-14 rounded-lg bg-[#161622] border border-gray-700 px-2 py-1 text-xs font-mono text-right text-white"
+                                />
+                                <span className="text-xs text-gray-400">%</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-3.5 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#FFE699] via-[#A8FFDB] to-[#D4B2FF] text-[#0D0D12] hover:opacity-95 transition shadow-lg flex items-center justify-center gap-2"
+                      >
+                        <Save className="w-4 h-4" />
+                        {editingPredictionId
+                          ? '성적 예측 수정 내용 저장하기'
+                          : '계산된 성적 예측 결과 저장하기'}
+                      </button>
+                    </form>
+                  )}
                 </div>
 
                 {/* 우측 5칸: 실시간 예측 결과 대시보드 & 저장된 성적 예측 목록 */}
                 <div className="lg:col-span-5 space-y-6">
-                  {/* 실시간 분석 카드 */}
                   <div className="bg-[#151521] border border-[#A8FFDB]/40 rounded-2xl p-6 space-y-5 shadow-[0_0_30px_rgba(168,255,219,0.06)]">
                     <div className="flex items-center justify-between">
                       <h3 className="text-base font-extrabold text-white flex items-center gap-2">
                         <TrendingUp className="w-5 h-5 text-[#A8FFDB]" />
                         실시간 성적 예측 분석 결과
                       </h3>
-                      <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#FFE699]/15 text-[#FFE699] border border-[#FFE699]/40">
-                        수강 인원 {livePredictionCalculation.totalStudents}명 기준
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#A8FFDB]/40 text-center space-y-1">
-                        <div className="text-xs text-gray-400">예상 최종 성적 등급</div>
-                        <div className="text-3xl font-black text-[#A8FFDB]">
-                          {livePredictionCalculation.predictedGrade}
-                        </div>
-                        <div className="text-[11px] text-gray-400">
-                          평점 {livePredictionCalculation.predictedGradePoint.toFixed(1)} / 4.5
-                        </div>
-                      </div>
-
-                      <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#FFE699]/40 text-center space-y-1">
-                        <div className="text-xs text-gray-400">
-                          {livePredictionCalculation.usedExamStat
-                            ? '시험 단독 예상 백분위'
-                            : '예상 상위 백분위'}
-                        </div>
-                        <div className="text-2xl font-black text-[#FFE699]">
-                          상위 {livePredictionCalculation.examOnlyTopPercentile}%
-                        </div>
-                        <div className="text-[11px] text-gray-300 font-semibold">
-                          약 {livePredictionCalculation.totalStudents}명 중{' '}
-                          <span className="text-white font-extrabold">
-                            {livePredictionCalculation.estimatedRank}등
-                          </span>{' '}
-                          예상
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2.5 text-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-400">총점 환산 점수 (출석·과제·시험 합산)</span>
-                        <span className="font-mono font-extrabold text-white text-sm">
-                          {livePredictionCalculation.calculatedTotalScore}점 /{' '}
-                          {livePredictionCalculation.totalWeightSum}점
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#FFE699]/15 text-[#FFE699] border border-[#FFE699]/40">
+                          수강 인원 {livePredictionCalculation.totalStudents}명 기준
                         </span>
-                      </div>
-
-                      {/* <조건 5> 시험 성적만으로 백분위가 계산되었음을 명확히 표시 */}
-                      <div className="pt-2 border-t border-gray-800 space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[#FFE699] font-bold">
-                            📌 백분위 산출 방식 (조건 5 적용)
+                        <button
+                          type="button"
+                          onClick={() => toggleBoxCollapse('predictionLiveResultBox')}
+                          className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition"
+                          title="접기/펼치기"
+                        >
+                          <span
+                            className={`inline-block transition-transform duration-200 ${
+                              collapsedBoxes['predictionLiveResultBox'] ? '-rotate-90' : ''
+                            }`}
+                          >
+                            v
                           </span>
-                          <span className="px-2 py-0.5 rounded bg-[#FFE699]/15 text-[#FFE699] font-bold text-[11px]">
-                            {livePredictionCalculation.usedExamStat
-                              ? '정규분포(Z-score) 시험 성적 단독 계산'
-                              : '시험 평균·표준편차 미입력 (득점률 추정)'}
-                          </span>
-                        </div>
-                        {livePredictionCalculation.usedExamStat && (
-                          <p className="text-[11px] text-gray-400 leading-relaxed">
-                            입력하신 시험 평균과 표준편차를 바탕으로 출석·과제 점수를 배제하고{' '}
-                            <strong className="text-white">
-                              오직 시험 성적(종합 Z-점수: {livePredictionCalculation.compositeZScore}
-                              )만으로 계산된 상위 백분위
-                            </strong>
-                            입니다.
-                          </p>
-                        )}
-
-                        {livePredictionCalculation.examDetails.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 pt-1">
-                            {livePredictionCalculation.examDetails.map((ed, i) => (
-                              <span
-                                key={i}
-                                className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-gray-300 border border-gray-800"
-                              >
-                                {ed.label}: Z={ed.zScore} (상위 {ed.topPercentile}%)
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                        </button>
                       </div>
                     </div>
+
+                    {!collapsedBoxes['predictionLiveResultBox'] && (
+                      <>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#A8FFDB]/40 text-center space-y-1">
+                            <div className="text-xs text-gray-400">예상 최종 성적 등급</div>
+                            <div className="text-3xl font-black text-[#A8FFDB]">
+                              {livePredictionCalculation.predictedGrade}
+                            </div>
+                            <div className="text-[11px] text-gray-400">
+                              평점 {livePredictionCalculation.predictedGradePoint.toFixed(1)} / 4.5
+                            </div>
+                          </div>
+
+                          <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#FFE699]/40 text-center space-y-1">
+                            <div className="text-xs text-gray-400">
+                              {livePredictionCalculation.usedExamStat
+                                ? '시험 단독 예상 백분위'
+                                : '예상 상위 백분위'}
+                            </div>
+                            <div className="text-2xl font-black text-[#FFE699]">
+                              상위 {livePredictionCalculation.examOnlyTopPercentile}%
+                            </div>
+                            <div className="text-[11px] text-gray-300 font-semibold">
+                              약 {livePredictionCalculation.totalStudents}명 중{' '}
+                              <span className="text-white font-extrabold">
+                                {livePredictionCalculation.estimatedRank}등
+                              </span>{' '}
+                              예상
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2.5 text-xs">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-400">총점 환산 점수 (출석·과제·시험 합산)</span>
+                            <span className="font-mono font-extrabold text-white text-sm">
+                              {livePredictionCalculation.calculatedTotalScore}점 /{' '}
+                              {livePredictionCalculation.totalWeightSum}점
+                            </span>
+                          </div>
+
+                          <div className="pt-2 border-t border-gray-800 space-y-1.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[#FFE699] font-bold">
+                                📌 백분위 산출 방식 (조건 5 적용)
+                              </span>
+                              <span className="px-2 py-0.5 rounded bg-[#FFE699]/15 text-[#FFE699] font-bold text-[11px]">
+                                {livePredictionCalculation.usedExamStat
+                                  ? '정규분포(Z-score) 시험 성적 단독 계산'
+                                  : '시험 평균·표준편차 미입력 (득점률 추정)'}
+                              </span>
+                            </div>
+                            {livePredictionCalculation.usedExamStat && (
+                              <p className="text-[11px] text-gray-400 leading-relaxed">
+                                입력하신 시험 평균과 표준편차를 바탕으로 출석·과제 점수를 배제하고{' '}
+                                <strong className="text-white">
+                                  오직 시험 성적(종합 Z-점수: {livePredictionCalculation.compositeZScore}
+                                  )만으로 계산된 상위 백분위
+                                </strong>
+                                입니다.
+                              </p>
+                            )}
+
+                            {livePredictionCalculation.examDetails.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5 pt-1">
+                                {livePredictionCalculation.examDetails.map((ed, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#161622] text-gray-300 border border-gray-800"
+                                  >
+                                    {ed.label}: Z={ed.zScore} (상위 {ed.topPercentile}%)
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
 
-                  {/* <조건 6> 저장된 성적 예측 목록 */}
+                  {/* 저장된 성적 예측 목록 */}
                   <div className="bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3893,123 +4994,154 @@ export default function App() {
                           / 4.5
                         </p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('predictionSavedListBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#D4B2FF] hover:border-[#D4B2FF] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['predictionSavedListBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
                     </div>
 
-                    {savedPredictions.length === 0 ? (
-                      <div className="p-8 rounded-2xl bg-[#0D0D12] border border-gray-800 text-center text-xs text-gray-500">
-                        아직 저장된 성적 예측 내역이 없습니다. 좌측에서 점수와 비율을 입력한 뒤{' '}
-                        <strong className="text-gray-300">저장하기</strong>를 눌러보세요!
-                      </div>
-                    ) : (
-                      <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
-                        {savedPredictions.map((pred) => (
-                          <div
-                            key={pred.id}
-                            className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 hover:border-[#FFE699]/50 transition space-y-2.5"
-                          >
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-extrabold text-white">
-                                  {pred.courseName}
-                                </span>
-                                <span className="text-xs text-gray-400">({pred.credits}학점)</span>
-                                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-300">
-                                  수강인원 {pred.totalStudents}명
-                                </span>
-                              </div>
-
-                              <span className="px-3 py-1 rounded-xl bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-black">
-                                예상 {pred.predictedGrade}
-                              </span>
-                            </div>
-
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-300">
-                              <span className="px-2 py-0.5 rounded bg-[#FFE699]/10 text-[#FFE699] font-mono">
-                                시험 상위 {pred.examOnlyTopPercentile}% (약 {pred.estimatedRank}등/
-                                {pred.totalStudents}명)
-                              </span>
-                              <span className="px-2 py-0.5 rounded bg-[#D4B2FF]/10 text-[#D4B2FF] font-mono">
-                                총 환산점수 {pred.calculatedTotalScore}점
-                              </span>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-1 border-t border-gray-800/80">
-                              <span className="text-[11px] text-gray-500">
-                                저장 시각: {pred.updatedAt || '방금 전'}
-                              </span>
-                              <div className="flex items-center gap-1.5">
-                                <button
-                                  type="button"
-                                  onClick={() => handleApplyPredictedGradeToCourse(pred)}
-                                  className="px-2.5 py-1 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] hover:bg-[#A8FFDB] hover:text-[#0D0D12] text-[11px] font-extrabold transition"
-                                >
-                                  내 과목 성적에 반영
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleLoadPredictionToEdit(pred)}
-                                  className="px-2.5 py-1 rounded-lg bg-[#161622] text-gray-300 hover:text-white text-[11px] font-bold"
-                                >
-                                  불러오기/수정
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleDeletePrediction(pred.id, pred.courseName)
-                                  }
-                                  className="p-1 text-gray-500 hover:text-[#FFB2D0]"
-                                  title="삭제"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            </div>
+                    {!collapsedBoxes['predictionSavedListBox'] && (
+                      <>
+                        {savedPredictions.length === 0 ? (
+                          <div className="p-8 rounded-2xl bg-[#0D0D12] border border-gray-800 text-center text-xs text-gray-500">
+                            아직 저장된 성적 예측 내역이 없습니다. 좌측에서 점수와 비율을 입력한 뒤{' '}
+                            <strong className="text-gray-300">저장하기</strong>를 눌러보세요!
                           </div>
-                        ))}
-                      </div>
+                        ) : (
+                          <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+                            {savedPredictions.map((pred) => (
+                              <div
+                                key={pred.id}
+                                className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 hover:border-[#FFE699]/50 transition space-y-2.5"
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-extrabold text-white">
+                                      {pred.courseName}
+                                    </span>
+                                    <span className="text-xs text-gray-400">({pred.credits}학점)</span>
+                                    <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-gray-800 text-gray-300">
+                                      수강인원 {pred.totalStudents}명
+                                    </span>
+                                  </div>
+
+                                  <span className="px-3 py-1 rounded-xl bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-black">
+                                    예상 {pred.predictedGrade}
+                                  </span>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-300">
+                                  <span className="px-2 py-0.5 rounded bg-[#FFE699]/10 text-[#FFE699] font-mono">
+                                    시험 상위 {pred.examOnlyTopPercentile}% (약 {pred.estimatedRank}등/
+                                    {pred.totalStudents}명)
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded bg-[#D4B2FF]/10 text-[#D4B2FF] font-mono">
+                                    총 환산점수 {pred.calculatedTotalScore}점
+                                  </span>
+                                </div>
+
+                                <div className="flex items-center justify-between pt-1 border-t border-gray-800/80">
+                                  <span className="text-[11px] text-gray-500">
+                                    저장 시각: {pred.updatedAt || '방금 전'}
+                                  </span>
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleApplyPredictedGradeToCourse(pred)}
+                                      className="px-2.5 py-1 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] hover:bg-[#A8FFDB] hover:text-[#0D0D12] text-[11px] font-extrabold transition"
+                                    >
+                                      내 과목 성적에 반영
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleLoadPredictionToEdit(pred)}
+                                      className="px-2.5 py-1 rounded-lg bg-[#161622] text-gray-300 hover:text-white text-[11px] font-bold"
+                                    >
+                                      불러오기/수정
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleDeletePrediction(pred.id, pred.courseName)
+                                      }
+                                      className="p-1 text-gray-500 hover:text-[#FFB2D0]"
+                                      title="삭제"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* 2. 친구 기능 탭 (<조건 1 ~ 7> 완벽 구현) */}
+            {/* 2. 친구 기능 탭 (<조건 3> 각 박스 우측 상단 'v' 버튼) */}
             {activeToolCategory === 'FRIEND' && (
               <div className="space-y-6">
-                {/* <조건 4> 친구에게 보여줄 수 있는 나의 상태메시지 작성 바 */}
-                <form
-                  onSubmit={handleSaveStatusMessage}
-                  className="bg-[#151521] border border-[#99E6FF]/30 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4"
-                >
-                  <div className="space-y-1">
-                    <span className="text-xs font-extrabold text-[#99E6FF] flex items-center gap-1.5">
-                      <MessageSquare className="w-4 h-4" />
-                      친구에게 보여주는 나의 상태메시지
-                    </span>
-                    <p className="text-xs text-gray-400">
-                      친구 목록과 내 시간표 상단에 상태메시지가 표시됩니다. (예: 공강 시간, 스터디,
-                      점심 약속 등)
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-1 max-w-xl">
-                    <input
-                      type="text"
-                      maxLength={100}
-                      value={myStatusDraft}
-                      onChange={(e) => setMyStatusDraft(e.target.value)}
-                      placeholder="친구들에게 보여줄 상태메시지를 입력하세요..."
-                      className="flex-1 rounded-xl bg-[#0D0D12] border border-gray-700 px-4 py-2.5 text-sm text-white focus:border-[#99E6FF] focus:outline-none"
-                    />
+                <div className="bg-[#151521] border border-[#99E6FF]/30 rounded-2xl p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <span className="text-xs font-extrabold text-[#99E6FF] flex items-center gap-1.5">
+                        <MessageSquare className="w-4 h-4" />
+                        친구에게 보여주는 나의 상태메시지
+                      </span>
+                      <p className="text-xs text-gray-400">
+                        친구 목록과 내 시간표 상단에 상태메시지가 표시됩니다.
+                      </p>
+                    </div>
                     <button
-                      type="submit"
-                      className="px-4 py-2.5 rounded-xl bg-[#99E6FF] text-[#0D0D12] font-extrabold text-xs hover:opacity-90 transition shrink-0"
+                      type="button"
+                      onClick={() => toggleBoxCollapse('friendStatusBox')}
+                      className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#99E6FF] hover:border-[#99E6FF] flex items-center justify-center transition shrink-0"
+                      title="접기/펼치기"
                     >
-                      상태메시지 저장
+                      <span
+                        className={`inline-block transition-transform duration-200 ${
+                          collapsedBoxes['friendStatusBox'] ? '-rotate-90' : ''
+                        }`}
+                      >
+                        v
+                      </span>
                     </button>
                   </div>
-                </form>
 
-                {/* <조건 1> 친구 내부 3가지 서브 메뉴: 1. 친구 목록 / 2. 친구 신청 / 3. 친구 추가 */}
+                  {!collapsedBoxes['friendStatusBox'] && (
+                    <form onSubmit={handleSaveStatusMessage} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        maxLength={100}
+                        value={myStatusDraft}
+                        onChange={(e) => setMyStatusDraft(e.target.value)}
+                        placeholder="친구들에게 보여줄 상태메시지를 입력하세요..."
+                        className="flex-1 rounded-xl bg-[#0D0D12] border border-gray-700 px-4 py-2.5 text-sm text-white focus:border-[#99E6FF] focus:outline-none"
+                      />
+                      <button
+                        type="submit"
+                        className="px-4 py-2.5 rounded-xl bg-[#99E6FF] text-[#0D0D12] font-extrabold text-xs hover:opacity-90 transition shrink-0"
+                      >
+                        상태메시지 저장
+                      </button>
+                    </form>
+                  )}
+                </div>
+
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
@@ -4051,639 +5183,1752 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* 서브탭 1: 친구 목록 및 받은 활동 제안 확인 (<조건 5, 6, 7>) */}
                 {friendSubTab === 'LIST' && (
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* 좌측: 내 친구 목록 (클릭 시 친구 타임테이블 열람) */}
-                    <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
-                      <div>
-                        <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                          <Users className="w-5 h-5 text-[#A8FFDB]" />내 친구 목록 (
-                          {friendData.myFriends.length}명)
-                        </h3>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          친구 이름을 클릭하면 성적 정보를 제외한{' '}
-                          <strong className="text-[#A8FFDB]">친구의 강의 타임테이블</strong>을
-                          확인하고 시간별 활동을 제안할 수 있습니다.
-                        </p>
-                      </div>
-
-                      {friendData.myFriends.length === 0 ? (
-                        <div className="p-8 rounded-2xl bg-[#0D0D12] border border-gray-800 text-center space-y-2">
-                          <p className="text-sm text-gray-400">아직 등록된 친구가 없습니다.</p>
-                          <button
-                            type="button"
-                            onClick={() => setFriendSubTab('ADD')}
-                            className="px-4 py-2 rounded-xl bg-[#99E6FF]/15 text-[#99E6FF] text-xs font-bold hover:bg-[#99E6FF] hover:text-[#0D0D12] transition"
-                          >
-                            학과와 이름으로 친구 추가하기
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {friendData.myFriends.map((friend) => (
-                            <div
-                              key={friend.id}
-                              onClick={() => {
-                                setSelectedFriendForModal(friend);
-                                setProposalDraft({
-                                  isOpen: false,
-                                  day: '월',
-                                  startTime: '12:00',
-                                  endTime: '13:00',
-                                  content: ''
-                                });
-                              }}
-                              className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 hover:border-[#A8FFDB] cursor-pointer transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
-                            >
-                              <div className="space-y-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-[#A8FFDB]/10 text-[#A8FFDB] border border-[#A8FFDB]/30">
-                                    {friend.department}
-                                  </span>
-                                  <span className="text-base font-extrabold text-white group-hover:text-[#A8FFDB] transition underline-offset-4 group-hover:underline">
-                                    {friend.name}
-                                  </span>
-                                  {/* <조건 3> 동명이인이 존재할 때만 학번 맨앞 2자리 + 맨뒤 3자리 표시 */}
-                                  {friend.hasDuplicateSameName && friend.maskedStudentId && (
-                                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF] border border-[#D4B2FF]/40">
-                                      학번: {friend.maskedStudentId}
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-xs text-gray-400">
-                                  💬 {friend.statusMessage || '등록된 상태메시지가 없습니다.'}
-                                </p>
-                              </div>
-
-                              <div className="flex items-center gap-2 self-end sm:self-center">
-                                <span className="px-3 py-1.5 rounded-xl bg-[#161622] group-hover:bg-[#A8FFDB] text-xs font-extrabold text-[#A8FFDB] group-hover:text-[#0D0D12] transition flex items-center gap-1.5">
-                                  <Calendar className="w-3.5 h-3.5" />
-                                  타임테이블 & 활동 제안
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* 우측: 친구들과 주고받은 메시지 & 시간별 활동 제안 수락/거절함 (<조건 6, 7>) */}
-                    <div className="lg:col-span-5 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
-                      <div>
-                        <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                          <CalendarPlus className="w-5 h-5 text-[#D4B2FF]" />
-                          친구 메시지 및 활동 제안 알림함
-                        </h3>
-                        <p className="text-xs text-gray-400 mt-0.5">
-                          친구가 제안한 시간별 활동을 수락하거나 거절할 수 있습니다.
-                        </p>
-                      </div>
-
-                      <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
-                        {interactions.filter(
-                          (it) =>
-                            it.senderId === currentUser.id || it.receiverId === currentUser.id
-                        ).length === 0 ? (
-                          <p className="text-xs text-gray-500 text-center py-6">
-                            주고받은 메시지나 활동 제안이 없습니다.
+                    <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                            <Users className="w-5 h-5 text-[#A8FFDB]" />내 친구 목록 (
+                            {friendData.myFriends.length}명)
+                          </h3>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            친구 이름을 클릭하면 성적 정보를 제외한{' '}
+                            <strong className="text-[#A8FFDB]">친구의 강의 타임테이블</strong>을
+                            확인하고 시간별 활동을 제안할 수 있습니다.
                           </p>
-                        ) : (
-                          interactions
-                            .filter(
-                              (it) =>
-                                it.senderId === currentUser.id || it.receiverId === currentUser.id
-                            )
-                            .map((item) => {
-                              const isReceived = item.receiverId === currentUser.id;
-                              const otherUser = accounts.find(
-                                (a) => a.id === (isReceived ? item.senderId : item.receiverId)
-                              );
-                              return (
-                                <div
-                                  key={item.id}
-                                  className="p-3.5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-xs font-bold text-white">
-                                      {isReceived ? '📥 받은 내역' : '📤 보낸 내역'} ·{' '}
-                                      <span className="text-[#A8FFDB]">
-                                        {otherUser ? otherUser.name : '알 수 없음'}
-                                      </span>
-                                    </span>
-                                    <span className="text-[11px] text-gray-500">
-                                      {item.createdAt}
-                                    </span>
-                                  </div>
-
-                                  {item.type === 'PROPOSAL' && (
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#D4B2FF]/15 border border-[#D4B2FF]/40 text-xs font-mono text-[#D4B2FF]">
-                                      <Clock className="w-3.5 h-3.5" />
-                                      {item.day}요일 {item.startTime} ~ {item.endTime} 활동 제안
-                                    </div>
-                                  )}
-
-                                  <p className="text-xs text-gray-200 leading-relaxed">
-                                    {item.content}
-                                  </p>
-
-                                  {item.type === 'PROPOSAL' && (
-                                    <div className="flex items-center justify-between pt-1">
-                                      <span
-                                        className={`text-[11px] font-extrabold px-2 py-0.5 rounded ${
-                                          item.status === 'ACCEPTED'
-                                            ? 'bg-[#A8FFDB]/15 text-[#A8FFDB]'
-                                            : item.status === 'REJECTED'
-                                            ? 'bg-[#FFB2D0]/15 text-[#FFB2D0]'
-                                            : 'bg-yellow-500/15 text-yellow-300'
-                                        }`}
-                                      >
-                                        {item.status === 'ACCEPTED'
-                                          ? '수락됨'
-                                          : item.status === 'REJECTED'
-                                          ? '거절됨'
-                                          : '응답 대기중'}
-                                      </span>
-
-                                      {/* <조건 7> 친구가 제안한 활동 수락 혹은 거절 버튼 */}
-                                      {isReceived && item.status === 'PENDING' && (
-                                        <div className="flex items-center gap-1.5">
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              handleRespondActivityProposal(item.id, 'ACCEPTED')
-                                            }
-                                            className="px-2.5 py-1 rounded-lg bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold flex items-center gap-1 hover:opacity-90"
-                                          >
-                                            <Check className="w-3 h-3" /> 수락
-                                          </button>
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              handleRespondActivityProposal(item.id, 'REJECTED')
-                                            }
-                                            className="px-2.5 py-1 rounded-lg bg-[#FFB2D0]/20 text-[#FFB2D0] border border-[#FFB2D0]/40 text-xs font-extrabold flex items-center gap-1 hover:bg-[#FFB2D0]/30"
-                                          >
-                                            <XCircle className="w-3 h-3" /> 거절
-                                          </button>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 서브탭 2: 친구 신청 관리 (받은 친구 신청 수락/거절 및 보낸 신청 내역) */}
-                {friendSubTab === 'REQUESTS' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
-                      <h3 className="text-base font-extrabold text-white">
-                        받은 친구 신청 ({friendData.incomingRequests.length}건)
-                      </h3>
-                      {friendData.incomingRequests.length === 0 ? (
-                        <p className="text-xs text-gray-500 py-6 text-center">
-                          현재 도착한 친구 신청이 없습니다.
-                        </p>
-                      ) : (
-                        <div className="space-y-3">
-                          {friendData.incomingRequests.map((req) => (
-                            <div
-                              key={req.friendshipId}
-                              className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-3"
-                            >
-                              <div className="space-y-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs font-bold text-[#A8FFDB]">
-                                    {req.requester.department}
-                                  </span>
-                                  <span className="text-sm font-extrabold text-white">
-                                    {req.requester.name}
-                                  </span>
-                                  {req.requester.hasDuplicateSameName &&
-                                    req.requester.maskedStudentId && (
-                                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF]">
-                                        {req.requester.maskedStudentId}
-                                      </span>
-                                    )}
-                                </div>
-                                <p className="text-xs text-gray-400">
-                                  {req.requester.statusMessage || '상태메시지 없음'}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleRespondFriendRequest(req.friendshipId, 'ACCEPT')
-                                  }
-                                  className="px-3 py-1.5 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold"
-                                >
-                                  수락
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleRespondFriendRequest(req.friendshipId, 'REJECT')
-                                  }
-                                  className="px-3 py-1.5 rounded-xl bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40 text-xs font-extrabold"
-                                >
-                                  거절
-                                                                </button>
-                              </div>
-                            </div>
-                          ))}
                         </div>
-                      )}
-                    </div>
-
-                    <div className="bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
-                      <h3 className="text-base font-extrabold text-white">
-                        내가 보낸 친구 신청 ({friendData.outgoingRequests.length}건)
-                      </h3>
-                      {friendData.outgoingRequests.length === 0 ? (
-                        <p className="text-xs text-gray-500 py-6 text-center">
-                          대기 중인 보낸 친구 신청이 없습니다.
-                        </p>
-                      ) : (
-                        <div className="space-y-3">
-                          {friendData.outgoingRequests.map((req) => (
-                            <div
-                              key={req.friendshipId}
-                              className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-3"
-                            >
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs font-bold text-[#99E6FF]">
-                                    {req.receiver.department}
-                                  </span>
-                                  <span className="text-sm font-extrabold text-white">
-                                    {req.receiver.name}
-                                  </span>
-                                  {req.receiver.hasDuplicateSameName &&
-                                    req.receiver.maskedStudentId && (
-                                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF]">
-                                        {req.receiver.maskedStudentId}
-                                      </span>
-                                    )}
-                                </div>
-                                <p className="text-xs text-gray-400 mt-0.5">
-                                  {req.receiver.statusMessage || '상태메시지 없음'}
-                                </p>
-                              </div>
-                              <span className="text-xs font-bold text-yellow-300 bg-yellow-500/10 px-2.5 py-1 rounded-lg">
-                                수락 대기중
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* 서브탭 3: 학과와 이름으로 친구 추가 (<조건 2, 3>) */}
-                {friendSubTab === 'ADD' && (
-                  <div className="bg-[#151521] border border-[#99E6FF]/30 rounded-2xl p-6 space-y-5">
-                    <div>
-                      <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                        <UserPlus className="w-5 h-5 text-[#99E6FF]" />
-                        학과와 이름으로 친구 찾기 및 신청
-                      </h3>
-                      <p className="text-xs text-gray-400 mt-1">
-                        학과와 이름을 입력해 친구를 검색하세요.{' '}
-                        <strong className="text-[#D4B2FF]">
-                          만약 학과와 이름이 같은 동명이인이 존재할 경우 학번의 맨앞 2자리와 맨뒤
-                          3자리(예: 26***501)가 자동으로 공개
-                        </strong>
-                        됩니다. (테스트 팁: 컴퓨터공학과 <strong>김민수</strong> 검색)
-                      </p>
-                    </div>
-
-                    <form
-                      onSubmit={handleSearchFriends}
-                      className="grid grid-cols-1 sm:grid-cols-12 gap-3"
-                    >
-                      <div className="sm:col-span-5">
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          학과
-                        </label>
-                        <input
-                          type="text"
-                          value={friendSearchForm.department}
-                          onChange={(e) =>
-                            setFriendSearchForm({ ...friendSearchForm, department: e.target.value })
-                          }
-                          placeholder="컴퓨터공학과"
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#99E6FF] focus:outline-none"
-                        />
-                      </div>
-                      <div className="sm:col-span-5">
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          이름
-                        </label>
-                        <input
-                          type="text"
-                          value={friendSearchForm.name}
-                          onChange={(e) =>
-                            setFriendSearchForm({ ...friendSearchForm, name: e.target.value })
-                          }
-                          placeholder="예: 김민수 또는 이서연"
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#99E6FF] focus:outline-none"
-                        />
-                      </div>
-                      <div className="sm:col-span-2 flex items-end">
                         <button
-                          type="submit"
-                          className="w-full py-2.5 rounded-xl bg-[#99E6FF] text-[#0D0D12] font-extrabold text-sm flex items-center justify-center gap-1.5 hover:opacity-90 transition"
+                          type="button"
+                          onClick={() => toggleBoxCollapse('friendMyListBox')}
+                          className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                          title="접기/펼치기"
                         >
-                          <Search className="w-4 h-4" /> 검색
+                          <span
+                            className={`inline-block transition-transform duration-200 ${
+                              collapsedBoxes['friendMyListBox'] ? '-rotate-90' : ''
+                            }`}
+                          >
+                            v
+                          </span>
                         </button>
                       </div>
-                    </form>
 
-                    {hasSearchedFriend && (
-                      <div className="space-y-3 pt-2 border-t border-gray-800">
-                        {friendSearchResults.length === 0 ? (
-                          <p className="text-xs text-gray-400 py-4 text-center">
-                            일치하는 학우를 찾을 수 없습니다. 학과와 이름을 다시 확인해 주세요.
-                          </p>
-                        ) : (
-                          friendSearchResults.map((candidate) => (
-                            <div
-                              key={candidate.id}
-                              className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                            >
-                              <div className="space-y-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-[#99E6FF]/15 text-[#99E6FF]">
-                                    {candidate.department}
-                                  </span>
-                                  <span className="text-sm font-extrabold text-white">
-                                    {candidate.name}
-                                  </span>
-                                  {/* <조건 3> 학과와 이름이 같은 사람이 존재할 때만 학번의 맨앞 2자리 + 맨뒤 3자리 공개 */}
-                                  {candidate.hasDuplicateSameName && candidate.maskedStudentId && (
-                                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-lg bg-[#D4B2FF]/20 text-[#D4B2FF] border border-[#D4B2FF]/50">
-                                      동명이인 구분 학번: {candidate.maskedStudentId}
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-xs text-gray-400">
-                                  💬 {candidate.statusMessage || '상태메시지 없음'}
-                                </p>
-                              </div>
-
+                      {!collapsedBoxes['friendMyListBox'] && (
+                        <>
+                          {friendData.myFriends.length === 0 ? (
+                            <div className="p-8 rounded-2xl bg-[#0D0D12] border border-gray-800 text-center space-y-2">
+                              <p className="text-sm text-gray-400">아직 등록된 친구가 없습니다.</p>
                               <button
                                 type="button"
-                                onClick={() => handleSendFriendRequest(candidate)}
-                                className="px-4 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold hover:opacity-90 transition flex items-center gap-1.5 self-end sm:self-center"
+                                onClick={() => setFriendSubTab('ADD')}
+                                className="px-4 py-2 rounded-xl bg-[#99E6FF]/15 text-[#99E6FF] text-xs font-bold hover:bg-[#99E6FF] hover:text-[#0D0D12] transition"
                               >
-                                <UserPlus className="w-3.5 h-3.5" /> 친구 신청 보내기
+                                학과와 이름으로 친구 추가하기
                               </button>
                             </div>
-                          ))
-                        )}
+                          ) : (
+                            <div className="space-y-3">
+                              {friendData.myFriends.map((friend) => (
+                                <div
+                                  key={friend.id}
+                                  onClick={() => {
+                                    setSelectedFriendForModal(friend);
+                                    setProposalDraft({
+                                      isOpen: false,
+                                      day: '월',
+                                      startTime: '12:00',
+                                      endTime: '13:00',
+                                      content: ''
+                                    });
+                                  }}
+                                  className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 hover:border-[#A8FFDB] cursor-pointer transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                                >
+                                  <div className="space-y-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-[#A8FFDB]/10 text-[#A8FFDB] border border-[#A8FFDB]/30">
+                                        {friend.department}
+                                      </span>
+                                      <span className="text-base font-extrabold text-white group-hover:text-[#A8FFDB] transition underline-offset-4 group-hover:underline">
+                                        {friend.name}
+                                      </span>
+                                      {friend.hasDuplicateSameName && friend.maskedStudentId && (
+                                        <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF] border border-[#D4B2FF]/40">
+                                          학번: {friend.maskedStudentId}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-xs text-gray-400">
+                                      💬 {friend.statusMessage || '등록된 상태메시지가 없습니다.'}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center gap-2 self-end sm:self-center">
+                                    <span className="px-3 py-1.5 rounded-xl bg-[#161622] group-hover:bg-[#A8FFDB] text-xs font-extrabold text-[#A8FFDB] group-hover:text-[#0D0D12] transition flex items-center gap-1.5">
+                                      <Calendar className="w-3.5 h-3.5" />
+                                      타임테이블 & 활동 제안
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    <div className="lg:col-span-5 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                            <CalendarPlus className="w-5 h-5 text-[#D4B2FF]" />
+                            친구 메시지 및 활동 제안 알림함
+                          </h3>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            친구가 제안한 시간별 활동을 수락하거나 거절할 수 있습니다.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleBoxCollapse('friendInteractionsBox')}
+                          className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#D4B2FF] hover:border-[#D4B2FF] flex items-center justify-center transition shrink-0"
+                          title="접기/펼치기"
+                        >
+                          <span
+                            className={`inline-block transition-transform duration-200 ${
+                              collapsedBoxes['friendInteractionsBox'] ? '-rotate-90' : ''
+                            }`}
+                          >
+                            v
+                          </span>
+                        </button>
                       </div>
+
+                      {!collapsedBoxes['friendInteractionsBox'] && (
+                        <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                          {interactions.filter(
+                            (it) =>
+                              it.senderId === currentUser.id || it.receiverId === currentUser.id
+                          ).length === 0 ? (
+                            <p className="text-xs text-gray-500 text-center py-6">
+                              주고받은 메시지나 활동 제안이 없습니다.
+                            </p>
+                          ) : (
+                            interactions
+                              .filter(
+                                (it) =>
+                                  it.senderId === currentUser.id || it.receiverId === currentUser.id
+                              )
+                              .map((item) => {
+                                const isReceived = item.receiverId === currentUser.id;
+                                const otherUser = accounts.find(
+                                  (a) => a.id === (isReceived ? item.senderId : item.receiverId)
+                                );
+                                return (
+                                  <div
+                                    key={item.id}
+                                    className="p-3.5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2"
+                                  >
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-xs font-bold text-white">
+                                        {isReceived ? '📥 받은 내역' : '📤 보낸 내역'} ·{' '}
+                                        <span className="text-[#A8FFDB]">
+                                          {otherUser ? otherUser.name : '알 수 없음'}
+                                        </span>
+                                      </span>
+                                      <span className="text-[11px] text-gray-500">
+                                        {item.createdAt}
+                                      </span>
+                                    </div>
+
+                                    {item.type === 'PROPOSAL' && (
+                                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#D4B2FF]/15 border border-[#D4B2FF]/40 text-xs font-mono text-[#D4B2FF]">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        {item.day}요일 {item.startTime} ~ {item.endTime} 활동 제안
+                                      </div>
+                                    )}
+
+                                    <p className="text-xs text-gray-200 leading-relaxed">
+                                      {item.content}
+                                    </p>
+
+                                    {item.type === 'PROPOSAL' && (
+                                      <div className="flex items-center justify-between pt-1">
+                                        <span
+                                          className={`text-[11px] font-extrabold px-2 py-0.5 rounded ${
+                                            item.status === 'ACCEPTED'
+                                              ? 'bg-[#A8FFDB]/15 text-[#A8FFDB]'
+                                              : item.status === 'REJECTED'
+                                              ? 'bg-[#FFB2D0]/15 text-[#FFB2D0]'
+                                              : 'bg-yellow-500/15 text-yellow-300'
+                                          }`}
+                                        >
+                                          {item.status === 'ACCEPTED'
+                                            ? '수락됨'
+                                            : item.status === 'REJECTED'
+                                            ? '거절됨'
+                                            : '응답 대기중'}
+                                        </span>
+
+                                        {isReceived && item.status === 'PENDING' && (
+                                          <div className="flex items-center gap-1.5">
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                handleRespondActivityProposal(item.id, 'ACCEPTED')
+                                              }
+                                              className="px-2.5 py-1 rounded-lg bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold flex items-center gap-1 hover:opacity-90"
+                                            >
+                                              <Check className="w-3 h-3" /> 수락
+                                            </button>
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                handleRespondActivityProposal(item.id, 'REJECTED')
+                                              }
+                                              className="px-2.5 py-1 rounded-lg bg-[#FFB2D0]/20 text-[#FFB2D0] border border-[#FFB2D0]/40 text-xs font-extrabold flex items-center gap-1 hover:bg-[#FFB2D0]/30"
+                                            >
+                                              <XCircle className="w-3 h-3" /> 거절
+                                            </button>
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {friendSubTab === 'REQUESTS' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base font-extrabold text-white">
+                          받은 친구 신청 ({friendData.incomingRequests.length}건)
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => toggleBoxCollapse('friendIncomingBox')}
+                          className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition"
+                          title="접기/펼치기"
+                        >
+                          <span
+                            className={`inline-block transition-transform duration-200 ${
+                              collapsedBoxes['friendIncomingBox'] ? '-rotate-90' : ''
+                            }`}
+                          >
+                            v
+                          </span>
+                        </button>
+                      </div>
+                      {!collapsedBoxes['friendIncomingBox'] && (
+                        <>
+                          {friendData.incomingRequests.length === 0 ? (
+                            <p className="text-xs text-gray-500 py-6 text-center">
+                              현재 도착한 친구 신청이 없습니다.
+                            </p>
+                          ) : (
+                            <div className="space-y-3">
+                              {friendData.incomingRequests.map((req) => (
+                                <div
+                                  key={req.friendshipId}
+                                  className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-3"
+                                >
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs font-bold text-[#A8FFDB]">
+                                        {req.requester.department}
+                                      </span>
+                                      <span className="text-sm font-extrabold text-white">
+                                        {req.requester.name}
+                                      </span>
+                                      {req.requester.hasDuplicateSameName &&
+                                        req.requester.maskedStudentId && (
+                                          <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF]">
+                                            {req.requester.maskedStudentId}
+                                          </span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-gray-400">
+                                      {req.requester.statusMessage || '상태메시지 없음'}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleRespondFriendRequest(req.friendshipId, 'ACCEPT')
+                                      }
+                                      className="px-3 py-1.5 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold"
+                                    >
+                                      수락
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleRespondFriendRequest(req.friendshipId, 'REJECT')
+                                      }
+                                      className="px-3 py-1.5 rounded-xl bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40 text-xs font-extrabold"
+                                    >
+                                      거절
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    <div className="bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base font-extrabold text-white">
+                          내가 보낸 친구 신청 ({friendData.outgoingRequests.length}건)
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => toggleBoxCollapse('friendOutgoingBox')}
+                          className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#99E6FF] hover:border-[#99E6FF] flex items-center justify-center transition"
+                          title="접기/펼치기"
+                        >
+                          <span
+                            className={`inline-block transition-transform duration-200 ${
+                              collapsedBoxes['friendOutgoingBox'] ? '-rotate-90' : ''
+                            }`}
+                          >
+                            v
+                          </span>
+                        </button>
+                      </div>
+                      {!collapsedBoxes['friendOutgoingBox'] && (
+                        <>
+                          {friendData.outgoingRequests.length === 0 ? (
+                            <p className="text-xs text-gray-500 py-6 text-center">
+                              대기 중인 보낸 친구 신청이 없습니다.
+                            </p>
+                          ) : (
+                            <div className="space-y-3">
+                              {friendData.outgoingRequests.map((req) => (
+                                <div
+                                  key={req.friendshipId}
+                                  className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-3"
+                                >
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs font-bold text-[#99E6FF]">
+                                        {req.receiver.department}
+                                      </span>
+                                      <span className="text-sm font-extrabold text-white">
+                                        {req.receiver.name}
+                                      </span>
+                                      {req.receiver.hasDuplicateSameName &&
+                                        req.receiver.maskedStudentId && (
+                                          <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF]">
+                                            {req.receiver.maskedStudentId}
+                                          </span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-0.5">
+                                      {req.receiver.statusMessage || '상태메시지 없음'}
+                                    </p>
+                                  </div>
+                                  <span className="text-xs font-bold text-yellow-300 bg-yellow-500/10 px-2.5 py-1 rounded-lg">
+                                    수락 대기중
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {friendSubTab === 'ADD' && (
+                  <div className="bg-[#151521] border border-[#99E6FF]/30 rounded-2xl p-6 space-y-5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                          <UserPlus className="w-5 h-5 text-[#99E6FF]" />
+                          학과와 이름으로 친구 찾기 및 신청
+                        </h3>
+                        <p className="text-xs text-gray-400 mt-1">
+                          학과와 이름을 입력해 친구를 검색하세요.{' '}
+                          <strong className="text-[#D4B2FF]">
+                            만약 학과와 이름이 같은 동명이인이 존재할 경우 학번의 맨앞 2자리와 맨뒤
+                            3자리가 자동으로 공개
+                          </strong>
+                          됩니다.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('friendAddSearchBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#99E6FF] hover:border-[#99E6FF] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['friendAddSearchBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
+                    </div>
+
+                    {!collapsedBoxes['friendAddSearchBox'] && (
+                      <>
+                        <form
+                          onSubmit={handleSearchFriends}
+                          className="grid grid-cols-1 sm:grid-cols-12 gap-3"
+                        >
+                          <div className="sm:col-span-5">
+                            <label className="block text-xs font-semibold text-gray-300 mb-1">
+                              학과
+                            </label>
+                            <input
+                              type="text"
+                              value={friendSearchForm.department}
+                              onChange={(e) =>
+                                setFriendSearchForm({ ...friendSearchForm, department: e.target.value })
+                              }
+                              placeholder="컴퓨터공학과"
+                              className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#99E6FF] focus:outline-none"
+                            />
+                          </div>
+                          <div className="sm:col-span-5">
+                            <label className="block text-xs font-semibold text-gray-300 mb-1">
+                              이름
+                            </label>
+                            <input
+                              type="text"
+                              value={friendSearchForm.name}
+                              onChange={(e) =>
+                                setFriendSearchForm({ ...friendSearchForm, name: e.target.value })
+                              }
+                              placeholder="예: 김민수, 박진, 이서연"
+                              className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#99E6FF] focus:outline-none"
+                            />
+                          </div>
+                          <div className="sm:col-span-2 flex items-end">
+                            <button
+                              type="submit"
+                              className="w-full py-2.5 rounded-xl bg-[#99E6FF] text-[#0D0D12] font-extrabold text-sm flex items-center justify-center gap-1.5 hover:opacity-90 transition"
+                            >
+                              <Search className="w-4 h-4" /> 검색
+                            </button>
+                          </div>
+                        </form>
+
+                        {hasSearchedFriend && (
+                          <div className="space-y-3 pt-2 border-t border-gray-800">
+                            {friendSearchResults.length === 0 ? (
+                              <p className="text-xs text-gray-400 py-4 text-center">
+                                일치하는 학우를 찾을 수 없습니다. 학과와 이름을 다시 확인해 주세요.
+                              </p>
+                            ) : (
+                              friendSearchResults.map((candidate) => (
+                                <div
+                                  key={candidate.id}
+                                  className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                                >
+                                  <div className="space-y-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-[#99E6FF]/15 text-[#99E6FF]">
+                                        {candidate.department}
+                                      </span>
+                                      <span className="text-sm font-extrabold text-white">
+                                        {candidate.name}
+                                      </span>
+                                      {candidate.hasDuplicateSameName && candidate.maskedStudentId && (
+                                        <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-lg bg-[#D4B2FF]/20 text-[#D4B2FF] border border-[#D4B2FF]/50">
+                                          동명이인 구분 학번: {candidate.maskedStudentId}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-xs text-gray-400">
+                                      💬 {candidate.statusMessage || '상태메시지 없음'}
+                                    </p>
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSendFriendRequest(candidate)}
+                                    className="px-4 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold hover:opacity-90 transition flex items-center gap-1.5 self-end sm:self-center"
+                                  >
+                                    <UserPlus className="w-3.5 h-3.5" /> 친구 신청 보내기
+                                  </button>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 )}
               </div>
             )}
 
-            {/* 3. 개인정보 및 현재 학기 설정 탭 */}
-            {activeToolCategory === 'PROFILE' && (
-              <div className="max-w-2xl bg-[#151521] border border-[#A8FFDB]/30 rounded-2xl p-6 space-y-5">
-                <div className="flex items-center gap-2.5">
-                  <Settings className="w-5 h-5 text-[#A8FFDB]" />
-                  <div>
-                    <h2 className="text-base font-extrabold text-white">
-                      개인정보 수정 및 현재 학기 설정
-                    </h2>
-                    <p className="text-xs text-gray-400">
-                      학과, 학번, 이름, 상태메시지 및 시간표에 표시할 현재 학기를 변경할 수 있습니다.
-                    </p>
+            {/* 2-2. 그룹 기능 탭 (<조건 3> 각 박스 우측 상단 'v' 버튼) */}
+            {activeToolCategory === 'GROUP' && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-4 space-y-6">
+                  {/* 그룹 생성 박스 */}
+                  <div className="bg-[#151521] border border-[#A8FFDB]/35 rounded-2xl p-5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-base font-extrabold text-white flex items-center gap-2">
+                          <Users className="w-5 h-5 text-[#A8FFDB]" />새 그룹 만들기
+                        </h2>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          그룹을 생성하면 자동으로{' '}
+                          <strong className="text-[#A8FFDB]">그룹 최고 관리자(OWNER)</strong>가 됩니다.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('groupCreateBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['groupCreateBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
+                    </div>
+
+                    {!collapsedBoxes['groupCreateBox'] && (
+                      <form onSubmit={handleCreateStudyGroup} className="space-y-3">
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            그룹 이름 <span className="text-[#FFB2D0]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={groupForm.name}
+                            onChange={(e) => setGroupForm({ ...groupForm, name: e.target.value })}
+                            placeholder="예: 운영체제 A+ 스터디, 캡스톤 팀"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2 text-xs text-white focus:border-[#A8FFDB] focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            그룹 소개
+                          </label>
+                          <input
+                            type="text"
+                            value={groupForm.description}
+                            onChange={(e) =>
+                              setGroupForm({ ...groupForm, description: e.target.value })
+                            }
+                            placeholder="그룹 활동 목적이나 규칙을 간단히 적어주세요"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2 text-xs text-white focus:border-[#A8FFDB] focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 pt-1">
+                          <button
+                            type="button"
+                            onClick={() => setGroupForm({ ...groupForm, isPrivate: false })}
+                            className={`p-2.5 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1.5 transition ${
+                              !groupForm.isPrivate
+                                ? 'bg-[#A8FFDB]/15 border-[#A8FFDB] text-[#A8FFDB]'
+                                : 'bg-[#0D0D12] border-gray-800 text-gray-400'
+                            }`}
+                          >
+                            <Unlock className="w-3.5 h-3.5" />
+                            공개 그룹 (즉시가입)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setGroupForm({ ...groupForm, isPrivate: true })}
+                            className={`p-2.5 rounded-xl border text-xs font-extrabold flex items-center justify-center gap-1.5 transition ${
+                              groupForm.isPrivate
+                                ? 'bg-[#FFB2D0]/15 border-[#FFB2D0] text-[#FFB2D0]'
+                                : 'bg-[#0D0D12] border-gray-800 text-gray-400'
+                            }`}
+                          >
+                            <Lock className="w-3.5 h-3.5" />
+                            비공개 (승인필요)
+                          </button>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#A8FFDB] to-[#99E6FF] text-[#0D0D12] font-extrabold text-xs hover:opacity-95 transition shadow-md"
+                        >
+                          + 그룹 생성 및 관리자 시작하기
+                        </button>
+                      </form>
+                    )}
+                  </div>
+
+                  {/* 전체 그룹 목록 */}
+                  <div className="bg-[#151521] border border-gray-800 rounded-2xl p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-extrabold text-white">
+                          전체 그룹 목록 ({studyGroups.length}개)
+                        </h3>
+                        <span className="text-[11px] text-gray-400">인원 0명 시 자동 삭제</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('groupListBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['groupListBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
+                    </div>
+
+                    {!collapsedBoxes['groupListBox'] && (
+                      <>
+                        {studyGroups.length === 0 ? (
+                          <p className="text-xs text-gray-500 text-center py-6">
+                            현재 생성된 그룹이 없습니다. 위에서 첫 그룹을 만들어 보세요!
+                          </p>
+                        ) : (
+                          <div className="space-y-2.5">
+                            {studyGroups.map((g) => {
+                              const activeCount = (g.members || []).filter(
+                                (m) => m.status === 'ACTIVE'
+                              ).length;
+                              const pendingCount = (g.members || []).filter(
+                                (m) => m.status === 'PENDING'
+                              ).length;
+                              const myRel = (g.members || []).find(
+                                (m) => m.userId === currentUser.id
+                              );
+                              const isSelected = activeGroup?.id === g.id;
+
+                              return (
+                                <div
+                                  key={g.id}
+                                  onClick={() => setSelectedGroupId(g.id)}
+                                  className={`p-3.5 rounded-2xl border cursor-pointer transition space-y-2 ${
+                                    isSelected
+                                      ? 'bg-[#1E1E2E] border-[#A8FFDB]'
+                                      : 'bg-[#0D0D12] border-gray-800 hover:border-gray-700'
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-1.5 truncate">
+                                      {g.isPrivate ? (
+                                        <span className="px-2 py-0.5 rounded bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40 text-[10px] font-extrabold flex items-center gap-1 shrink-0">
+                                          <Lock className="w-2.5 h-2.5" /> 비공개
+                                        </span>
+                                      ) : (
+                                        <span className="px-2 py-0.5 rounded bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-[10px] font-extrabold flex items-center gap-1 shrink-0">
+                                          <Unlock className="w-2.5 h-2.5" /> 공개
+                                        </span>
+                                      )}
+                                      <span className="text-xs font-extrabold text-white truncate">
+                                        {g.name}
+                                      </span>
+                                    </div>
+                                    <span className="text-[11px] font-mono text-gray-400 shrink-0">
+                                      {activeCount}명
+                                    </span>
+                                  </div>
+
+                                  <p className="text-[11px] text-gray-400 line-clamp-1">
+                                    {g.description}
+                                  </p>
+
+                                  <div className="flex items-center justify-between pt-1">
+                                    {myRel ? (
+                                      <span
+                                        className={`text-[10px] font-extrabold px-2 py-0.5 rounded ${
+                                          myRel.status === 'PENDING'
+                                            ? 'bg-yellow-500/15 text-yellow-300'
+                                            : myRel.role === 'OWNER'
+                                            ? 'bg-[#A8FFDB] text-[#0D0D12]'
+                                            : myRel.role === 'MANAGER'
+                                            ? 'bg-[#D4B2FF]/20 text-[#D4B2FF]'
+                                            : 'bg-gray-800 text-gray-300'
+                                        }`}
+                                      >
+                                        {myRel.status === 'PENDING'
+                                          ? '⏳ 가입 승인 대기중'
+                                          : myRel.role === 'OWNER'
+                                          ? '👑 최고 관리자'
+                                          : myRel.role === 'MANAGER'
+                                          ? '🛡️ 부관리자'
+                                          : '✅ 그룹원'}
+                                      </span>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleJoinStudyGroup(g);
+                                        }}
+                                        className="px-2.5 py-1 rounded-lg bg-[#99E6FF] text-[#0D0D12] text-[11px] font-extrabold hover:opacity-90"
+                                      >
+                                        {g.isPrivate ? '가입 허락 신청' : '즉시 가입하기'}
+                                      </button>
+                                    )}
+
+                                    {pendingCount > 0 &&
+                                      (myRel?.role === 'OWNER' || myRel?.canManageRoles) && (
+                                        <span className="text-[10px] font-bold text-[#FFB2D0]">
+                                          가입신청 {pendingCount}건 대기
+                                        </span>
+                                      )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
 
-                <form onSubmit={handleSaveProfile} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">
-                        학과
-                      </label>
-                      <input
-                        type="text"
-                        value={profileForm.department}
-                        onChange={(e) =>
-                          setProfileForm({ ...profileForm, department: e.target.value })
-                        }
-                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
-                      />
+                {/* 우측 8칸: 선택된 그룹 상세 화면 */}
+                <div className="lg:col-span-8 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-5 h-fit">
+                  {!activeGroup ? (
+                    <div className="p-12 text-center text-xs text-gray-500">
+                      선택된 그룹이 없습니다. 좌측에서 그룹을 선택하거나 새로 생성해 주세요.
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4">
+                        <div className="space-y-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span
+                              className={`px-2.5 py-0.5 rounded-lg text-xs font-extrabold ${
+                                activeGroup.isPrivate
+                                  ? 'bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40'
+                                  : 'bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40'
+                              }`}
+                            >
+                              {activeGroup.isPrivate ? '🔒 비공개 그룹 (승인제)' : '🌐 공개 그룹'}
+                            </span>
+                            <h2 className="text-lg font-extrabold text-white">
+                              {activeGroup.name}
+                            </h2>
+                            <span className="text-xs text-gray-400">
+                              (현재 그룹원{' '}
+                              {
+                                (activeGroup.members || []).filter((m) => m.status === 'ACTIVE')
+                                  .length
+                              }
+                              명)
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-400">{activeGroup.description}</p>
+                        </div>
+
+                        <div className="flex items-center gap-2 self-end sm:self-center">
+                          {!myMembershipInActiveGroup ? (
+                            <button
+                              type="button"
+                              onClick={() => handleJoinStudyGroup(activeGroup)}
+                              className="px-4 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold hover:opacity-90"
+                            >
+                              {activeGroup.isPrivate ? '가입 승인 신청하기' : '그룹 즉시 가입하기'}
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleGroupMemberStatusAction(
+                                  activeGroup.id,
+                                  currentUser.id,
+                                  'REMOVE_OR_LEAVE'
+                                )
+                              }
+                              className="px-3 py-1.5 rounded-xl bg-[#FFB2D0]/15 text-[#FFB2D0] border border-[#FFB2D0]/40 text-xs font-extrabold hover:bg-[#FFB2D0] hover:text-[#0D0D12] transition"
+                              title="남은 인원이 0명이 되면 그룹이 자동으로 삭제됩니다"
+                            >
+                              그룹 나가기 (0명 시 자동삭제)
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => toggleBoxCollapse('groupDetailBox')}
+                            className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition"
+                            title="접기/펼치기"
+                          >
+                            <span
+                              className={`inline-block transition-transform duration-200 ${
+                                collapsedBoxes['groupDetailBox'] ? '-rotate-90' : ''
+                              }`}
+                            >
+                              v
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {!collapsedBoxes['groupDetailBox'] && (
+                        <>
+                          {/* 그룹 내부 서브탭 */}
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setGroupInnerTab('BOARD')}
+                              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition ${
+                                groupInnerTab === 'BOARD'
+                                  ? 'bg-[#A8FFDB] text-[#0D0D12]'
+                                  : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
+                              }`}
+                            >
+                              📋 그룹 게시판 ({(activeGroup.posts || []).length})
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setGroupInnerTab('MEMBERS')}
+                              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition ${
+                                groupInnerTab === 'MEMBERS'
+                                  ? 'bg-[#99E6FF] text-[#0D0D12]'
+                                  : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
+                              }`}
+                            >
+                              👥 그룹원 목록 & 빠른 친구추가/메시지 (
+                              {
+                                (activeGroup.members || []).filter((m) => m.status === 'ACTIVE')
+                                  .length
+                              }
+                              명)
+                            </button>
+
+                            {(myMembershipInActiveGroup?.role === 'OWNER' ||
+                              myMembershipInActiveGroup?.canManageRoles ||
+                              currentUser.role === 'ADMIN') && (
+                              <button
+                                type="button"
+                                onClick={() => setGroupInnerTab('ROLES')}
+                                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition ${
+                                  groupInnerTab === 'ROLES'
+                                    ? 'bg-[#D4B2FF] text-[#0D0D12]'
+                                    : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
+                                }`}
+                              >
+                                🛡️ 그룹원 관리 & 세부 권한 임명
+                              </button>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* 2-3. 졸업요건 (EPiC folio & 총 이수학점) 탭 (<조건 3> 각 박스 우측 상단 'v' 버튼) */}
+            {activeToolCategory === 'GRADUATION' && (
+              <div className="space-y-6">
+                <div className="bg-[#151521] border border-[#FFE699]/40 rounded-2xl p-6 space-y-6 shadow-[0_0_30px_rgba(255,230,153,0.06)]">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-800 pb-4">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="px-3 py-1 rounded-full bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-extrabold">
+                          {currentUser.department} · {graduationStandardsAndProgress.entryYear}학번 (
+                          {graduationStandardsAndProgress.studentYearPrefix}학번 자동 인식)
+                        </span>
+                        <h2 className="text-lg font-extrabold text-white flex items-center gap-2">
+                          <GraduationCap className="w-5 h-5 text-[#FFE699]" />
+                          맞춤형 졸업요건 & 서울과기대 EPiC folio 시뮬레이터
+                        </h2>
+                      </div>
+                      <p className="text-xs text-gray-400">
+                        개인정보의 학번({currentUser.studentId})으로 입학년도를 자동 판별하여 졸업
+                        기준을 적용하며, 성적이 확정된 과목들의 총 학점과 EPiC folio(이수 완료 +
+                        이수 희망) 점수를 계산합니다.
+                      </p>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">
-                        학번
-                      </label>
-                      <input
-                        type="text"
-                        value={profileForm.studentId}
-                        onChange={(e) =>
-                          setProfileForm({ ...profileForm, studentId: e.target.value })
-                        }
-                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">
-                        이름
-                      </label>
-                      <input
-                        type="text"
-                        value={profileForm.name}
-                        onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
-                      />
+                    <div className="flex items-center gap-2 self-start lg:self-center">
+                      <div className="flex items-center gap-2 bg-[#0D0D12] p-1.5 rounded-2xl border border-gray-800">
+                        <button
+                          type="button"
+                          onClick={() => handleChangeAdmissionType('REGULAR')}
+                          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition ${
+                            graduationStandardsAndProgress.admissionType === 'REGULAR'
+                              ? 'bg-[#A8FFDB] text-[#0D0D12] shadow-md'
+                              : 'text-gray-400 hover:text-white'
+                          }`}
+                        >
+                          🎓 신입학 (재학생 기준)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleChangeAdmissionType('TRANSFER')}
+                          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition ${
+                            graduationStandardsAndProgress.admissionType === 'TRANSFER'
+                              ? 'bg-[#FFE699] text-[#0D0D12] shadow-md'
+                              : 'text-gray-400 hover:text-white'
+                          }`}
+                        >
+                          🔄 편입생 (EPiC 50% 감면 기준)
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('gradSummaryBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#FFE699] hover:border-[#FFE699] flex items-center justify-center transition"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['gradSummaryBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">
-                      친구에게 보여줄 나의 상태메시지
-                    </label>
-                    <input
-                      type="text"
-                      maxLength={100}
-                      value={profileForm.statusMessage}
-                      onChange={(e) =>
-                        setProfileForm({ ...profileForm, statusMessage: e.target.value })
-                      }
-                      placeholder="예: 수요일 오후 공강! 같이 밥 먹어요"
-                      className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
-                    />
+                  {!collapsedBoxes['gradSummaryBox'] && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                      {/* 카드 1: 학기가 끝나고 평점이 나온 과목들의 총 이수 학점 */}
+                      <div className="p-5 rounded-2xl bg-[#0D0D12] border border-[#D4B2FF]/40 space-y-3.5">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xs font-extrabold text-[#D4B2FF]">
+                              📚 1. 총 졸업 이수 학점 (평점 확정 과목 합산)
+                            </span>
+                            <p className="text-[11px] text-gray-400 mt-0.5">
+                              &apos;현재 이수 중&apos;이거나 수강포기(W)·F인 과목을 제외하고 학기가 끝나 평점이
+                              나온 과목 학점만 계산합니다.
+                            </p>
+                          </div>
+                          <span className="px-3 py-1 rounded-xl bg-[#D4B2FF]/15 text-[#D4B2FF] border border-[#D4B2FF]/40 text-xs font-black shrink-0">
+                            {graduationStandardsAndProgress.entryYear}학번 기준:{' '}
+                            {graduationStandardsAndProgress.requiredTotalCredits}학점
+                          </span>
+                        </div>
+
+                        <div className="flex items-baseline justify-between pt-1">
+                          <div>
+                            <span className="text-3xl font-black text-white">
+                              {academicStats.totalEarnedCredits}
+                            </span>
+                            <span className="text-sm text-gray-400 font-bold">
+                              {' '}
+                              / {graduationStandardsAndProgress.requiredTotalCredits} 학점
+                            </span>
+                          </div>
+                          <span className="text-xs font-bold text-[#A8FFDB]">
+                            {academicStats.totalEarnedCredits >=
+                            graduationStandardsAndProgress.requiredTotalCredits
+                              ? '🎉 졸업 학점 요건 충족 완료!'
+                              : `졸업까지 ${
+                                  graduationStandardsAndProgress.requiredTotalCredits -
+                                  academicStats.totalEarnedCredits
+                                }학점 남음 (현재 학기 수강 중: ${academicStats.currentSemesterCredits}학점)`}
+                          </span>
+                        </div>
+
+                        <div className="w-full h-3 rounded-full bg-[#161622] overflow-hidden border border-gray-800">
+                          <div
+                            className="h-full bg-gradient-to-r from-[#D4B2FF] to-[#A8FFDB] transition-all duration-300"
+                            style={{
+                              width: `${Math.min(
+                                100,
+                                Math.round(
+                                  (academicStats.totalEarnedCredits /
+                                    graduationStandardsAndProgress.requiredTotalCredits) *
+                                    100
+                                )
+                              )}%`
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* 카드 2: EPiC folio 졸업인증 점수 */}
+                      <div className="p-5 rounded-2xl bg-[#0D0D12] border border-[#A8FFDB]/40 space-y-3.5">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xs font-extrabold text-[#A8FFDB]">
+                              🏆 2. 서울과기대 EPiC folio 졸업인증 점수
+                            </span>
+                            <p className="text-[11px] text-gray-400 mt-0.5">
+                              이수 완료한 활동 점수에{' '}
+                              <strong className="text-[#FFE699]">이수하고 싶은 활동(희망)</strong>을
+                              더해 이수 시 몇 점이 되는지 즉시 시뮬레이션합니다.
+                            </p>
+                          </div>
+                          <span className="px-3 py-1 rounded-xl bg-[#A8FFDB]/15 text-[#A8FFDB] border border-[#A8FFDB]/40 text-xs font-black shrink-0">
+                            {graduationStandardsAndProgress.admissionType === 'TRANSFER'
+                              ? '편입생 기준'
+                              : `${graduationStandardsAndProgress.entryYear}학번 재학생 기준`}
+                            : {graduationStandardsAndProgress.requiredEpicScore}점
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2.5 pt-1">
+                          <div className="p-2.5 rounded-xl bg-[#151521] border border-gray-800 text-center">
+                            <div className="text-[11px] text-gray-400">현재 이수 완료</div>
+                            <div className="text-xl font-black text-[#A8FFDB]">
+                              {graduationStandardsAndProgress.currentEpicScore}점
+                            </div>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-[#151521] border border-[#FFE699]/40 text-center">
+                            <div className="text-[11px] text-[#FFE699]">+ 이수 희망 활동</div>
+                            <div className="text-xl font-black text-[#FFE699]">
+                              +{graduationStandardsAndProgress.wishEpicScore}점
+                            </div>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#A8FFDB]/20 to-[#FFE699]/20 border border-[#A8FFDB]/50 text-center">
+                            <div className="text-[11px] text-gray-200 font-bold">
+                              희망 활동 이수 시
+                            </div>
+                            <div className="text-xl font-black text-white">
+                              총 {graduationStandardsAndProgress.projectedEpicScore}점
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <div className="w-full h-3 rounded-full bg-[#161622] overflow-hidden border border-gray-800 flex">
+                            <div
+                              className="h-full bg-[#A8FFDB] transition-all duration-300"
+                              style={{
+                                width: `${Math.min(
+                                  100,
+                                  Math.round(
+                                    (graduationStandardsAndProgress.currentEpicScore /
+                                      graduationStandardsAndProgress.requiredEpicScore) *
+                                      100
+                                  )
+                                )}%`
+                              }}
+                              title={`현재 이수 완료: ${graduationStandardsAndProgress.currentEpicScore}점`}
+                            />
+                            <div
+                              className="h-full bg-[#FFE699] transition-all duration-300"
+                              style={{
+                                width: `${Math.max(
+                                  0,
+                                  Math.min(
+                                    100 -
+                                      Math.min(
+                                        100,
+                                        Math.round(
+                                          (graduationStandardsAndProgress.currentEpicScore /
+                                            graduationStandardsAndProgress.requiredEpicScore) *
+                                            100
+                                        )
+                                      ),
+                                    Math.round(
+                                      (graduationStandardsAndProgress.wishEpicScore /
+                                        graduationStandardsAndProgress.requiredEpicScore) *
+                                        100
+                                    )
+                                  )
+                                )}%`
+                              }}
+                              title={`이수 희망 활동 추가분: +${graduationStandardsAndProgress.wishEpicScore}점`}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="text-gray-400">
+                              현재 달성률:{' '}
+                              <strong className="text-[#A8FFDB]">
+                                {Math.round(
+                                  (graduationStandardsAndProgress.currentEpicScore /
+                                    graduationStandardsAndProgress.requiredEpicScore) *
+                                    100
+                                )}
+                                %
+                              </strong>{' '}
+                              → 희망 활동 모두 이수 시:{' '}
+                              <strong className="text-[#FFE699]">
+                                {Math.round(
+                                  (graduationStandardsAndProgress.projectedEpicScore /
+                                    graduationStandardsAndProgress.requiredEpicScore) *
+                                    100
+                                )}
+                                % ({graduationStandardsAndProgress.projectedEpicScore}점 /{' '}
+                                {graduationStandardsAndProgress.requiredEpicScore}점)
+                              </strong>
+                            </span>
+                            <a
+                              href="https://epic.seoultech.ac.kr"
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-[#99E6FF] hover:underline flex items-center gap-1 font-bold"
+                            >
+                              <Link2 className="w-3 h-3" /> 서울과기대 EPiC folio 공식 웹사이트
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 하단 12그리드: 좌측 7칸(공식 카탈로그) + 우측 5칸(내 이수 완료 & 이수 희망 활동 보관함) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                          <Sparkles className="w-5 h-5 text-[#A8FFDB]" />
+                          서울과기대 공식 EPiC folio 활동 원클릭 선택 카탈로그
+                        </h3>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          직접 입력할 필요 없이 버튼 클릭 한 번으로{' '}
+                          <strong className="text-[#A8FFDB]">[이수 완료]</strong> 또는{' '}
+                          <strong className="text-[#FFE699]">[이수 희망]</strong>에 추가하거나 다시
+                          클릭해 삭제할 수 있습니다.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('gradCatalogBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['gradCatalogBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
+                    </div>
+
+                    {!collapsedBoxes['gradCatalogBox'] && (
+                      <>
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-gray-800">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            {['ALL', '필수 요건', '선택 요건'].map((reqFilter) => (
+                              <button
+                                key={reqFilter}
+                                type="button"
+                                onClick={() => setEpicCatalogFilter(reqFilter)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition ${
+                                  epicCatalogFilter === reqFilter
+                                    ? reqFilter === '필수 요건'
+                                      ? 'bg-[#FFB2D0] text-[#0D0D12]'
+                                      : 'bg-[#A8FFDB] text-[#0D0D12]'
+                                    : 'bg-[#0D0D12] text-gray-400 hover:text-white border border-gray-800'
+                                }`}
+                              >
+                                {reqFilter === 'ALL' ? '전체 요건' : reqFilter}
+                              </button>
+                            ))}
+                          </div>
+
+                          <select
+                            value={epicCategoryFilter}
+                            onChange={(e) => setEpicCategoryFilter(e.target.value)}
+                            className="rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-1.5 text-xs text-white"
+                          >
+                            <option value="ALL">모든 영역 보기</option>
+                            <option value="전공/학술">전공/학술</option>
+                            <option value="어학/자격증">어학/자격증</option>
+                            <option value="공모전/경진대회">공모전/경진대회</option>
+                            <option value="현장실습/인턴">현장실습/인턴</option>
+                            <option value="비교과/특강">비교과/특강</option>
+                            <option value="진로/상담">진로/상담</option>
+                            <option value="글로벌/봉사">글로벌/봉사</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-3 max-h-[620px] overflow-y-auto pr-1">
+                          {SEOULTECH_OFFICIAL_EPIC_CATALOG.filter((item) => {
+                            const matchReq =
+                              epicCatalogFilter === 'ALL' || item.reqType === epicCatalogFilter;
+                            const matchCat =
+                              epicCategoryFilter === 'ALL' || item.category === epicCategoryFilter;
+                            return matchReq && matchCat;
+                          }).map((item) => {
+                            const savedEntry = (myGraduationData.selectedEpicItems || []).find(
+                              (s) => s.activityCode === item.activityCode
+                            );
+                            const isCompleted = savedEntry?.status === 'COMPLETED';
+                            const isWish = savedEntry?.status === 'WISH';
+
+                            return (
+                              <div
+                                key={item.activityCode}
+                                className={`p-4 rounded-2xl border transition space-y-2.5 ${
+                                  isCompleted
+                                    ? 'bg-[#A8FFDB]/10 border-[#A8FFDB]'
+                                    : isWish
+                                    ? 'bg-[#FFE699]/10 border-[#FFE699]'
+                                    : 'bg-[#0D0D12] border-gray-800 hover:border-gray-700'
+                                }`}
+                              >
+                                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
+                                  <div className="space-y-1.5">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <span className="text-sm font-extrabold text-white">
+                                        {item.title}
+                                      </span>
+
+                                      <span
+                                        className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border ${
+                                          item.reqType === '필수 요건'
+                                            ? 'bg-[#FFB2D0]/20 text-[#FFB2D0] border-[#FFB2D0]/50'
+                                            : 'bg-[#99E6FF]/20 text-[#99E6FF] border-[#99E6FF]/50'
+                                        }`}
+                                      >
+                                        {item.reqType}
+                                      </span>
+
+                                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FFE699]/20 text-[#FFE699] border border-[#FFE699]/50">
+                                        {item.points}점
+                                      </span>
+
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-800 text-gray-300">
+                                        {item.category}
+                                      </span>
+                                    </div>
+
+                                    <p className="text-xs text-gray-300">{item.description}</p>
+
+                                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-gray-400 pt-0.5">
+                                      <span className="flex items-center gap-1 text-[#D4B2FF] font-semibold">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        일시: {item.scheduleDate}
+                                      </span>
+                                      <a
+                                        href={item.officialUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-[#99E6FF] hover:underline flex items-center gap-1"
+                                      >
+                                        <Link2 className="w-3 h-3" /> 공식 안내 확인
+                                      </a>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleToggleEpicCatalogItem(item, 'COMPLETED')
+                                      }
+                                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1 ${
+                                        isCompleted
+                                          ? 'bg-[#A8FFDB] text-[#0D0D12] shadow-md'
+                                          : 'bg-[#161622] text-gray-300 hover:text-[#A8FFDB] border border-gray-700'
+                                      }`}
+                                    >
+                                      <Check className="w-3.5 h-3.5" />
+                                      {isCompleted ? '이수완료됨 (클릭해제)' : '이수 완료'}
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleEpicCatalogItem(item, 'WISH')}
+                                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1 ${
+                                        isWish
+                                          ? 'bg-[#FFE699] text-[#0D0D12] shadow-md'
+                                          : 'bg-[#161622] text-gray-300 hover:text-[#FFE699] border border-gray-700'
+                                      }`}
+                                    >
+                                      <Plus className="w-3.5 h-3.5" />
+                                      {isWish ? '희망등록됨 (클릭해제)' : '이수 희망'}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
 
-                  <div className="p-4 rounded-xl bg-[#0D0D12] border border-[#D4B2FF]/40 space-y-3">
-                    <div className="text-xs font-bold text-[#D4B2FF]">
-                      📌 현재 나의 수강 학기 설정 (상단 현재 학기 학점 및 주간 시간표 기준)
+                  {/* 우측 5칸: 내가 선택한 [이수 완료 활동] 및 [이수하고 싶은 희망 활동] 목록 */}
+                  <div className="lg:col-span-5 space-y-6">
+                    <div className="bg-[#151521] border border-[#A8FFDB]/35 rounded-2xl p-5 space-y-3.5">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-[#A8FFDB]" />내 이수 완료 EPiC 활동 (
+                          {graduationStandardsAndProgress.completedItems.length}건)
+                        </h3>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#A8FFDB]/15 text-[#A8FFDB] text-xs font-black">
+                            현재 {graduationStandardsAndProgress.currentEpicScore}점
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => toggleBoxCollapse('gradCompletedBox')}
+                            className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition"
+                            title="접기/펼치기"
+                          >
+                            <span
+                              className={`inline-block transition-transform duration-200 ${
+                                collapsedBoxes['gradCompletedBox'] ? '-rotate-90' : ''
+                              }`}
+                            >
+                              v
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {!collapsedBoxes['gradCompletedBox'] && (
+                        <>
+                          {graduationStandardsAndProgress.completedItems.length === 0 ? (
+                            <p className="text-xs text-gray-500 py-5 text-center bg-[#0D0D12] rounded-xl border border-gray-800">
+                              좌측 목록에서 이미 참여한 활동의 <strong>[이수 완료]</strong> 버튼을
+                              클릭해 보세요!
+                            </p>
+                          ) : (
+                            <div className="space-y-2.5">
+                              {graduationStandardsAndProgress.completedItems.map((it) => (
+                                <div
+                                  key={it.activityCode}
+                                  className="p-3.5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-1.5"
+                                >
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <span className="text-xs font-extrabold text-white">
+                                        {it.title}
+                                      </span>
+                                      <span
+                                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${
+                                          it.reqType === '필수 요건'
+                                            ? 'bg-[#FFB2D0]/20 text-[#FFB2D0] border-[#FFB2D0]/50'
+                                            : 'bg-[#99E6FF]/20 text-[#99E6FF] border-[#99E6FF]/50'
+                                        }`}
+                                      >
+                                        {it.reqType}
+                                      </span>
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#A8FFDB]/20 text-[#A8FFDB] border border-[#A8FFDB]/50">
+                                        {it.points}점
+                                      </span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleRemoveEpicItem(it.activityCode, it.title)
+                                      }
+                                      className="text-gray-500 hover:text-[#FFB2D0] p-1"
+                                      title="클릭하여 삭제"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                  <div className="text-[11px] text-gray-400 flex items-center gap-1">
+                                    <Clock className="w-3 h-3 text-[#D4B2FF]" /> 일시:{' '}
+                                    {it.scheduleDate}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    <div className="bg-[#151521] border border-[#FFE699]/40 rounded-2xl p-5 space-y-3.5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-[#FFE699]" />
+                            이수하고 싶은 희망 활동 (
+                            {graduationStandardsAndProgress.wishItems.length}건)
+                          </h3>
+                          <p className="text-[11px] text-gray-400 mt-0.5">
+                            현재{' '}
+                            <strong className="text-[#A8FFDB]">
+                              {graduationStandardsAndProgress.currentEpicScore}점
+                            </strong>
+                            에서 아래 희망 활동을 이수하면{' '}
+                            <strong className="text-[#FFE699]">
+                              총 {graduationStandardsAndProgress.projectedEpicScore}점
+                            </strong>
+                            이 됩니다!
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#FFE699]/20 text-[#FFE699] text-xs font-black">
+                            +{graduationStandardsAndProgress.wishEpicScore}점 예상
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => toggleBoxCollapse('gradWishBox')}
+                            className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#FFE699] hover:border-[#FFE699] flex items-center justify-center transition"
+                            title="접기/펼치기"
+                          >
+                            <span
+                              className={`inline-block transition-transform duration-200 ${
+                                collapsedBoxes['gradWishBox'] ? '-rotate-90' : ''
+                              }`}
+                            >
+                              v
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {!collapsedBoxes['gradWishBox'] && (
+                        <>
+                          {graduationStandardsAndProgress.wishItems.length === 0 ? (
+                            <p className="text-xs text-gray-500 py-5 text-center bg-[#0D0D12] rounded-xl border border-gray-800">
+                              좌측 목록에서 앞으로 참여하고 싶은 활동의{' '}
+                              <strong className="text-[#FFE699]">[이수 희망]</strong> 버튼을 클릭해
+                              예상 점수를 계산해 보세요!
+                            </p>
+                          ) : (
+                            <div className="space-y-2.5">
+                              {graduationStandardsAndProgress.wishItems.map((it) => (
+                                <div
+                                  key={it.activityCode}
+                                  className="p-3.5 rounded-2xl bg-[#0D0D12] border border-[#FFE699]/30 space-y-2"
+                                >
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <span className="text-xs font-extrabold text-white">
+                                        {it.title}
+                                      </span>
+                                      <span
+                                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${
+                                          it.reqType === '필수 요건'
+                                            ? 'bg-[#FFB2D0]/20 text-[#FFB2D0] border-[#FFB2D0]/50'
+                                            : 'bg-[#99E6FF]/20 text-[#99E6FF] border-[#99E6FF]/50'
+                                        }`}
+                                      >
+                                        {it.reqType}
+                                      </span>
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FFE699]/20 text-[#FFE699] border border-[#FFE699]/50">
+                                        {it.points}점
+                                      </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-1 shrink-0">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleToggleEpicCatalogItem(it, 'COMPLETED')
+                                        }
+                                        className="px-2 py-1 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] hover:bg-[#A8FFDB] hover:text-[#0D0D12] text-[10px] font-extrabold transition"
+                                        title="이수 완료로 전환"
+                                      >
+                                        완료로 변경
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleRemoveEpicItem(it.activityCode, it.title)
+                                        }
+                                        className="text-gray-500 hover:text-[#FFB2D0] p-1"
+                                        title="삭제"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center justify-between text-[11px] text-gray-400">
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3 text-[#D4B2FF]" /> 일시:{' '}
+                                      {it.scheduleDate}
+                                    </span>
+                                    <span className="text-[#FFE699] font-mono font-bold">
+                                      단독 이수 시:{' '}
+                                      {graduationStandardsAndProgress.currentEpicScore +
+                                        Number(it.points)}
+                                      점
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 3. 개인정보 및 현재 학기 설정 탭 (<조건 3, 4, 5> 학번 수정 불가 처리 + 우측 상단 'v' 버튼) */}
+            {activeToolCategory === 'PROFILE' && (
+              <div className="max-w-2xl bg-[#151521] border border-[#A8FFDB]/30 rounded-2xl p-6 space-y-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Settings className="w-5 h-5 text-[#A8FFDB]" />
+                    <div>
+                      <h2 className="text-base font-extrabold text-white">
+                        개인정보 수정 및 현재 학기 설정
+                      </h2>
+                      <p className="text-xs text-gray-400">
+                        학번을 제외한 학과, 이름, 상태메시지 및 현재 학기를 변경할 수 있습니다.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleBoxCollapse('profileSettingBox')}
+                    className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition"
+                    title="접기/펼치기"
+                  >
+                    <span
+                      className={`inline-block transition-transform duration-200 ${
+                        collapsedBoxes['profileSettingBox'] ? '-rotate-90' : ''
+                      }`}
+                    >
+                      v
+                    </span>
+                  </button>
+                </div>
+
+                {!collapsedBoxes['profileSettingBox'] && (
+                  <form onSubmit={handleSaveProfile} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div>
                         <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          현재 수강 년도
+                          학과
                         </label>
                         <input
-                          type="number"
-                          min={1980}
-                          max={2050}
-                          value={profileForm.currentYear}
+                          type="text"
+                          value={profileForm.department}
                           onChange={(e) =>
-                            setProfileForm({ ...profileForm, currentYear: e.target.value })
+                            setProfileForm({ ...profileForm, department: e.target.value })
                           }
-                          className="w-full rounded-xl bg-[#151521] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-400 mb-1">
+                          학번 (변경 불가)
+                        </label>
+                        <input
+                          type="text"
+                          value={currentUser.studentId}
+                          disabled
+                          className="w-full rounded-xl bg-[#0D0D12]/60 border border-gray-800 px-3.5 py-2.5 text-sm font-mono text-gray-500 cursor-not-allowed"
                         />
                       </div>
 
                       <div>
                         <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          현재 수강 학기
+                          이름
                         </label>
-                        <select
-                          value={profileForm.currentSemester}
-                          onChange={(e) =>
-                            setProfileForm({ ...profileForm, currentSemester: e.target.value })
-                          }
-                          className="w-full rounded-xl bg-[#151521] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
-                        >
-                          {SEMESTER_OPTIONS.map((sem) => (
-                            <option key={sem} value={sem}>
-                              {sem}
-                            </option>
-                          ))}
-                        </select>
+                        <input
+                          type="text"
+                          value={profileForm.name}
+                          onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
+                        />
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-                    <button
-                      type="submit"
-                      className="px-6 py-2.5 rounded-xl font-extrabold text-xs bg-[#A8FFDB] text-[#0D0D12] hover:bg-[#8ef5c8] transition"
-                    >
-                      개인정보 및 학기 설정 저장
-                    </button>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1">
+                        친구에게 보여줄 나의 상태메시지
+                      </label>
+                      <input
+                        type="text"
+                        maxLength={100}
+                        value={profileForm.statusMessage}
+                        onChange={(e) =>
+                          setProfileForm({ ...profileForm, statusMessage: e.target.value })
+                        }
+                        placeholder="예: 수요일 오후 공강! 같이 밥 먹어요"
+                        className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
+                      />
+                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setIsDeleteAccountModalOpen(true)}
-                      className="px-4 py-2.5 rounded-xl font-bold text-xs bg-[#FFB2D0]/10 text-[#FFB2D0] border border-[#FFB2D0]/40 hover:bg-[#FFB2D0]/20 transition flex items-center justify-center gap-1.5"
-                    >
-                      <UserX className="w-4 h-4" />
-                      회원탈퇴
-                    </button>
-                  </div>
-                </form>
+                    <div className="p-4 rounded-xl bg-[#0D0D12] border border-[#D4B2FF]/40 space-y-3">
+                      <div className="text-xs font-bold text-[#D4B2FF]">
+                        📌 현재 나의 수강 학기 설정 (상단 현재 학기 학점 및 주간 시간표 기준)
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            현재 수강 년도
+                          </label>
+                          <input
+                            type="number"
+                            min={1980}
+                            max={2050}
+                            value={profileForm.currentYear}
+                            onChange={(e) =>
+                              setProfileForm({ ...profileForm, currentYear: e.target.value })
+                            }
+                            className="w-full rounded-xl bg-[#151521] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            현재 수강 학기
+                          </label>
+                          <select
+                            value={profileForm.currentSemester}
+                            onChange={(e) =>
+                              setProfileForm({ ...profileForm, currentSemester: e.target.value })
+                            }
+                            className="w-full rounded-xl bg-[#151521] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#D4B2FF] focus:outline-none"
+                          >
+                            {SEMESTER_OPTIONS.map((sem) => (
+                              <option key={sem} value={sem}>
+                                {sem}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                      <button
+                        type="submit"
+                        className="px-6 py-2.5 rounded-xl font-extrabold text-xs bg-[#A8FFDB] text-[#0D0D12] hover:bg-[#8ef5c8] transition"
+                      >
+                        개인정보 및 학기 설정 저장
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsDeleteAccountModalOpen(true)}
+                        className="px-4 py-2.5 rounded-xl font-bold text-xs bg-[#FFB2D0]/10 text-[#FFB2D0] border border-[#FFB2D0]/40 hover:bg-[#FFB2D0]/20 transition flex items-center justify-center gap-1.5"
+                      >
+                        <UserX className="w-4 h-4" />
+                        회원탈퇴
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             )}
 
-            {/* 4. ADMIN 전용 전체 유저 목록 & 유저별 친구 강제 추가/삭제 & 타임테이블(비공개 기타활동 포함) 열람 탭 */}
+            {/* 4. ADMIN 전용 전체 유저 목록 & 유저별 친구 강제 추가/삭제 */}
             {activeToolCategory === 'ADMIN' && currentUser.role === 'ADMIN' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* 좌측 6칸: 전체 유저 목록 및 강제 삭제 / 타임테이블 열람 */}
-                <div className="lg:col-span-6 bg-[#151521] border border-[#FFB2D0]/40 rounded-2xl p-6 space-y-4">
-                  <div>
-                    <h2 className="text-base font-extrabold text-white flex items-center gap-2">
-                      <ShieldCheck className="w-5 h-5 text-[#FFB2D0]" />
-                      [ADMIN] 전체 사용자 목록 관리 ({accounts.length}명)
-                    </h2>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      유저를 클릭해 그 유저의 친구 관계를 조회·강제 추가·강제 삭제하거나, 비공개
-                      기타 활동이 포함된 타임테이블을 열람할 수 있습니다.
-                    </p>
+                <div className="lg:col-span-6 bg-[#151521] border border-[#FFB2D0]/40 rounded-2xl p-6 space-y-4 h-fit">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-base font-extrabold text-white flex items-center gap-2">
+                        <ShieldCheck className="w-5 h-5 text-[#FFB2D0]" />
+                        [ADMIN] 전체 사용자 목록 관리 ({accounts.length}명)
+                      </h2>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        유저를 클릭해 친구 관계를 조회·강제 추가·삭제하거나 타임테이블을 열람합니다.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleBoxCollapse('adminUserListBox')}
+                      className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#FFB2D0] hover:border-[#FFB2D0] flex items-center justify-center transition shrink-0"
+                      title="접기/펼치기"
+                    >
+                      <span
+                        className={`inline-block transition-transform duration-200 ${
+                          collapsedBoxes['adminUserListBox'] ? '-rotate-90' : ''
+                        }`}
+                      >
+                        v
+                      </span>
+                    </button>
                   </div>
 
-                  <div className="space-y-3">
-                    {accounts.map((acc) => {
-                      const isSelected = adminSelectedUserId === acc.id;
-                      const userFriendCount = friendships.filter(
-                        (f) =>
-                          f.status === 'ACCEPTED' &&
-                          (f.requesterId === acc.id || f.receiverId === acc.id)
-                      ).length;
+                  {!collapsedBoxes['adminUserListBox'] && (
+                    <div className="space-y-3">
+                      {accounts.map((acc) => {
+                        const isSelected = adminSelectedUserId === acc.id;
+                        const userFriendCount = friendships.filter(
+                          (f) =>
+                            f.status === 'ACCEPTED' &&
+                            (f.requesterId === acc.id || f.receiverId === acc.id)
+                        ).length;
 
-                      return (
-                        <div
-                          key={acc.id}
-                          onClick={() => setAdminSelectedUserId(acc.id)}
-                          className={`p-4 rounded-2xl border cursor-pointer transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                            isSelected
-                              ? 'bg-[#1E1E2E] border-[#FFB2D0]'
-                              : 'bg-[#0D0D12] border-gray-800 hover:border-gray-700'
-                          }`}
-                        >
-                          <div className="space-y-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#A8FFDB]/15 text-[#A8FFDB]">
-                                {acc.department}
-                              </span>
-                              <span className="text-sm font-extrabold text-white">{acc.name}</span>
-                              <span className="text-xs font-mono text-gray-400">
-                                ({acc.studentId})
-                              </span>
-                              {acc.role === 'ADMIN' && (
-                                <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[#FFB2D0] text-[#0D0D12]">
-                                  ADMIN
+                        return (
+                          <div
+                            key={acc.id}
+                            onClick={() => setAdminSelectedUserId(acc.id)}
+                            className={`p-4 rounded-2xl border cursor-pointer transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                              isSelected
+                                ? 'bg-[#1E1E2E] border-[#FFB2D0]'
+                                : 'bg-[#0D0D12] border-gray-800 hover:border-gray-700'
+                            }`}
+                          >
+                            <div className="space-y-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#A8FFDB]/15 text-[#A8FFDB]">
+                                  {acc.department}
                                 </span>
-                              )}
-                              <span className="text-[11px] px-2 py-0.5 rounded bg-gray-800 text-gray-300">
-                                친구 {userFriendCount}명
-                              </span>
+                                <span className="text-sm font-extrabold text-white">{acc.name}</span>
+                                <span className="text-xs font-mono text-gray-400">
+                                  ({acc.studentId})
+                                </span>
+                                {acc.role === 'ADMIN' && (
+                                  <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[#FFB2D0] text-[#0D0D12]">
+                                    ADMIN
+                                  </span>
+                                )}
+                                <span className="text-[11px] px-2 py-0.5 rounded bg-gray-800 text-gray-300">
+                                  친구 {userFriendCount}명
+                                </span>
+                              </div>
+                              <p className="text-xs text-gray-400">
+                                💬 {acc.statusMessage || '상태메시지 없음'}
+                              </p>
                             </div>
-                            <p className="text-xs text-gray-400">
-                              💬 {acc.statusMessage || '상태메시지 없음'}
-                            </p>
-                          </div>
 
-                          <div className="flex items-center gap-2 self-end sm:self-center">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedFriendForModal(formatUserWithDuplicateMask(acc));
-                              }}
-                              className="px-2.5 py-1.5 rounded-xl bg-[#99E6FF]/15 text-[#99E6FF] hover:bg-[#99E6FF] hover:text-[#0D0D12] text-xs font-extrabold transition flex items-center gap-1"
-                              title="비공개 기타 활동을 포함한 전체 타임테이블 확인"
-                            >
-                              <Eye className="w-3.5 h-3.5" /> 타임테이블(비공개포함)
-                            </button>
-
-                            {acc.id !== currentUser.id && (
+                            <div className="flex items-center gap-2 self-end sm:self-center">
                               <button
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleAdminForceDeleteUser(acc);
+                                  setSelectedFriendForModal(formatUserWithDuplicateMask(acc));
                                 }}
-                                className="px-2.5 py-1.5 rounded-xl bg-[#FFB2D0]/15 text-[#FFB2D0] hover:bg-[#FFB2D0] hover:text-[#0D0D12] text-xs font-extrabold transition flex items-center gap-1"
+                                className="px-2.5 py-1.5 rounded-xl bg-[#99E6FF]/15 text-[#99E6FF] hover:bg-[#99E6FF] hover:text-[#0D0D12] text-xs font-extrabold transition flex items-center gap-1"
                               >
-                                <Trash2 className="w-3.5 h-3.5" /> 유저 강제삭제
+                                <Eye className="w-3.5 h-3.5" /> 타임테이블(비공개포함)
                               </button>
-                            )}
+
+                              {acc.id !== currentUser.id && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAdminForceDeleteUser(acc);
+                                  }}
+                                  className="px-2.5 py-1.5 rounded-xl bg-[#FFB2D0]/15 text-[#FFB2D0] hover:bg-[#FFB2D0] hover:text-[#0D0D12] text-xs font-extrabold transition flex items-center gap-1"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" /> 유저 강제삭제
+                                </button>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
-                {/* 우측 6칸: 선택한 유저의 친구 목록 확인 및 강제 추가/강제 삭제 */}
                 <div className="lg:col-span-6 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-5 h-fit">
                   {(() => {
                     const targetUser =
@@ -4696,120 +6941,139 @@ export default function App() {
 
                     return (
                       <>
-                        <div className="border-b border-gray-800 pb-3">
-                          <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                            <Users className="w-5 h-5 text-[#A8FFDB]" />
-                            [ADMIN] {targetUser.name} ({targetUser.studentId})님의 친구 강제 관리
-                          </h3>
-                          <p className="text-xs text-gray-400 mt-0.5">
-                            해당 유저의 친구 목록을 확인하고, 운영자 권한으로 친구를 강제로
-                            추가하거나 삭제할 수 있습니다.
-                          </p>
-                        </div>
-
-                        {/* 강제 친구 추가 폼 */}
-                        <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#A8FFDB]/40 space-y-3">
-                          <label className="block text-xs font-extrabold text-[#A8FFDB]">
-                            ➕ {targetUser.name}님에게 새로운 친구 강제 추가
-                          </label>
-                          <div className="flex gap-2">
-                            <select
-                              value={adminFriendAddTargetId}
-                              onChange={(e) => setAdminFriendAddTargetId(e.target.value)}
-                              className="flex-1 rounded-xl bg-[#151521] border border-gray-700 px-3 py-2 text-xs text-white"
-                            >
-                              <option value="">강제로 친구 맺어줄 다른 유저 선택...</option>
-                              {accounts
-                                .filter((a) => a.id !== targetUser.id)
-                                .map((a) => (
-                                  <option key={a.id} value={a.id}>
-                                    {a.department} · {a.name} ({a.studentId})
-                                  </option>
-                                ))}
-                            </select>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleAdminForceAddFriend(targetUser.id, adminFriendAddTargetId)
-                              }
-                              className="px-4 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold hover:opacity-90 shrink-0"
-                            >
-                              강제 친구 추가
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* 현재 친구 및 신청 관계 목록 */}
-                        <div className="space-y-2.5">
-                          <h4 className="text-xs font-bold text-gray-300">
-                            등록된 친구 및 신청 관계 ({targetRelations.length}건)
-                          </h4>
-                          {targetRelations.length === 0 ? (
-                            <p className="text-xs text-gray-500 py-6 text-center bg-[#0D0D12] rounded-xl border border-gray-800">
-                              현재 연결된 친구 관계가 없습니다.
+                        <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+                          <div>
+                            <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                              <Users className="w-5 h-5 text-[#A8FFDB]" />
+                              [ADMIN] {targetUser.name} ({targetUser.studentId})님의 친구 강제 관리
+                            </h3>
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              운영자 권한으로 친구를 강제로 추가하거나 삭제할 수 있습니다.
                             </p>
-                          ) : (
-                            targetRelations.map((rel) => {
-                              const otherId =
-                                rel.requesterId === targetUser.id
-                                  ? rel.receiverId
-                                  : rel.requesterId;
-                              const otherUser = accounts.find((a) => a.id === otherId);
-                              if (!otherUser) return null;
-
-                              return (
-                                <div
-                                  key={rel.id}
-                                  className="p-3.5 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-2"
-                                >
-                                  <div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs font-bold text-[#99E6FF]">
-                                        {otherUser.department}
-                                      </span>
-                                      <span className="text-sm font-extrabold text-white">
-                                        {otherUser.name}
-                                      </span>
-                                      <span className="text-xs font-mono text-gray-400">
-                                        ({otherUser.studentId})
-                                      </span>
-                                      <span
-                                        className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                                          rel.status === 'ACCEPTED'
-                                            ? 'bg-[#A8FFDB]/15 text-[#A8FFDB]'
-                                            : 'bg-yellow-500/15 text-yellow-300'
-                                        }`}
-                                      >
-                                        {rel.status === 'ACCEPTED' ? '친구(승인됨)' : '신청 대기중'}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex items-center gap-1.5">
-                                    {rel.status !== 'ACCEPTED' && (
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleAdminForceAddFriend(targetUser.id, otherUser.id)
-                                        }
-                                        className="px-2.5 py-1 rounded-lg bg-[#A8FFDB] text-[#0D0D12] text-[11px] font-extrabold"
-                                      >
-                                        강제 승인
-                                      </button>
-                                    )}
-                                    <button
-                                      type="button"
-                                      onClick={() => handleAdminForceRemoveFriend(rel.id)}
-                                      className="px-2.5 py-1 rounded-lg bg-[#FFB2D0]/20 text-[#FFB2D0] border border-[#FFB2D0]/40 text-[11px] font-extrabold hover:bg-[#FFB2D0] hover:text-[#0D0D12] transition"
-                                    >
-                                      친구 강제삭제
-                                    </button>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          )}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => toggleBoxCollapse('adminFriendManageBox')}
+                            className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                            title="접기/펼치기"
+                          >
+                            <span
+                              className={`inline-block transition-transform duration-200 ${
+                                collapsedBoxes['adminFriendManageBox'] ? '-rotate-90' : ''
+                              }`}
+                            >
+                              v
+                            </span>
+                          </button>
                         </div>
+
+                        {!collapsedBoxes['adminFriendManageBox'] && (
+                          <>
+                            <div className="p-4 rounded-2xl bg-[#0D0D12] border border-[#A8FFDB]/40 space-y-3">
+                              <label className="block text-xs font-extrabold text-[#A8FFDB]">
+                                ➕ {targetUser.name}님에게 새로운 친구 강제 추가
+                              </label>
+                              <div className="flex gap-2">
+                                <select
+                                  value={adminFriendAddTargetId}
+                                  onChange={(e) => setAdminFriendAddTargetId(e.target.value)}
+                                  className="flex-1 rounded-xl bg-[#151521] border border-gray-700 px-3 py-2 text-xs text-white"
+                                >
+                                  <option value="">강제로 친구 맺어줄 다른 유저 선택...</option>
+                                  {accounts
+                                    .filter((a) => a.id !== targetUser.id)
+                                    .map((a) => (
+                                      <option key={a.id} value={a.id}>
+                                        {a.department} · {a.name} ({a.studentId})
+                                      </option>
+                                    ))}
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleAdminForceAddFriend(targetUser.id, adminFriendAddTargetId)
+                                  }
+                                  className="px-4 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] text-xs font-extrabold hover:opacity-90 shrink-0"
+                                >
+                                  강제 친구 추가
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="space-y-2.5">
+                              <h4 className="text-xs font-bold text-gray-300">
+                                등록된 친구 및 신청 관계 ({targetRelations.length}건)
+                              </h4>
+                              {targetRelations.length === 0 ? (
+                                <p className="text-xs text-gray-500 py-6 text-center bg-[#0D0D12] rounded-xl border border-gray-800">
+                                  현재 연결된 친구 관계가 없습니다.
+                                </p>
+                              ) : (
+                                targetRelations.map((rel) => {
+                                  const otherId =
+                                    rel.requesterId === targetUser.id
+                                      ? rel.receiverId
+                                      : rel.requesterId;
+                                  const otherUser = accounts.find((a) => a.id === otherId);
+                                  if (!otherUser) return null;
+
+                                  return (
+                                    <div
+                                      key={rel.id}
+                                      className="p-3.5 rounded-xl bg-[#0D0D12] border border-gray-800 flex items-center justify-between gap-2"
+                                    >
+                                      <div>
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-xs font-bold text-[#99E6FF]">
+                                            {otherUser.department}
+                                          </span>
+                                          <span className="text-sm font-extrabold text-white">
+                                            {otherUser.name}
+                                          </span>
+                                          <span className="text-xs font-mono text-gray-400">
+                                            ({otherUser.studentId})
+                                          </span>
+                                          <span
+                                            className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                                              rel.status === 'ACCEPTED'
+                                                ? 'bg-[#A8FFDB]/15 text-[#A8FFDB]'
+                                                : 'bg-yellow-500/15 text-yellow-300'
+                                            }`}
+                                          >
+                                            {rel.status === 'ACCEPTED'
+                                              ? '친구(승인됨)'
+                                              : '신청 대기중'}
+                                          </span>
+                                        </div>
+                                      </div>
+
+                                      <div className="flex items-center gap-1.5">
+                                        {rel.status !== 'ACCEPTED' && (
+                                          <button
+                                            type="button"
+                                            onClick={() =>
+                                              handleAdminForceAddFriend(targetUser.id, otherUser.id)
+                                            }
+                                            className="px-2.5 py-1 rounded-lg bg-[#A8FFDB] text-[#0D0D12] text-[11px] font-extrabold"
+                                          >
+                                            강제 승인
+                                          </button>
+                                        )}
+                                        <button
+                                          type="button"
+                                          onClick={() => handleAdminForceRemoveFriend(rel.id)}
+                                          className="px-2.5 py-1 rounded-lg bg-[#FFB2D0]/20 text-[#FFB2D0] border border-[#FFB2D0]/40 text-[11px] font-extrabold hover:bg-[#FFB2D0] hover:text-[#0D0D12] transition"
+                                        >
+                                          친구 강제삭제
+                                        </button>
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              )}
+                            </div>
+                          </>
+                        )}
                       </>
                     );
                   })()}
@@ -4817,76 +7081,88 @@ export default function App() {
               </div>
             )}
 
-            {/* 5. 피드백 기능 탭 (<조건 1 ~ 5> 기능들 중 가장 마지막에 위치 + 3단계 상태 확인 + 답변 확인 + ADMIN 전용 답변/현황 관리) */}
+            {/* 5. 피드백 기능 탭 (<조건 3> 각 박스 우측 상단 'v' 버튼) */}
             {activeToolCategory === 'FEEDBACK' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  {/* 좌측 5칸: 건의 사항 및 개선점 제출 폼 (<조건 2>) */}
                   <div className="lg:col-span-5 bg-[#151521] border border-[#A8FFDB]/35 rounded-2xl p-6 space-y-5 h-fit">
-                    <div>
-                      <h2 className="text-base font-extrabold text-white flex items-center gap-2">
-                        <MessageCircleQuestion className="w-5 h-5 text-[#A8FFDB]" />
-                        건의 사항 및 서비스 개선점 제출
-                      </h2>
-                      <p className="text-xs text-gray-400 mt-1">
-                        제출하신 피드백은 서버에 등록되어 운영자(ADMIN)가 확인하며, 우측에서{' '}
-                        <strong className="text-[#A8FFDB]">
-                          제출 완료 → 검토 중 → 검토 완료
-                        </strong>{' '}
-                        진행 현황과 운영자 답변을 실시간으로 확인하실 수 있습니다.
-                      </p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-base font-extrabold text-white flex items-center gap-2">
+                          <MessageCircleQuestion className="w-5 h-5 text-[#A8FFDB]" />
+                          건의 사항 및 서비스 개선점 제출
+                        </h2>
+                        <p className="text-xs text-gray-400 mt-1">
+                          제출하신 피드백은 서버에 등록되어 운영자(ADMIN)가 확인합니다.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('feedbackFormBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['feedbackFormBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
                     </div>
 
-                    <form onSubmit={handleSubmitUserFeedback} className="space-y-4">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          피드백 제목 <span className="text-[#FFB2D0]">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={feedbackSubmissionForm.title}
-                          onChange={(e) =>
-                            setFeedbackSubmissionForm({
-                              ...feedbackSubmissionForm,
-                              title: e.target.value
-                            })
-                          }
-                          placeholder="예: 시간표 이미지 저장 기능 건의, 학점 계산 개선 요청"
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
-                        />
-                      </div>
+                    {!collapsedBoxes['feedbackFormBox'] && (
+                      <form onSubmit={handleSubmitUserFeedback} className="space-y-4">
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            피드백 제목 <span className="text-[#FFB2D0]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={feedbackSubmissionForm.title}
+                            onChange={(e) =>
+                              setFeedbackSubmissionForm({
+                                ...feedbackSubmissionForm,
+                                title: e.target.value
+                              })
+                            }
+                            placeholder="예: 시간표 이미지 저장 기능 건의, 학점 계산 개선 요청"
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none"
+                          />
+                        </div>
 
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-300 mb-1">
-                          건의 사항 및 개선점 상세 내용 <span className="text-[#FFB2D0]">*</span>
-                        </label>
-                        <textarea
-                          rows={5}
-                          value={feedbackSubmissionForm.content}
-                          onChange={(e) =>
-                            setFeedbackSubmissionForm({
-                              ...feedbackSubmissionForm,
-                              content: e.target.value
-                            })
-                          }
-                          placeholder="불편했던 점이나 추가되었으면 하는 기능을 자유롭게 작성해 주세요..."
-                          className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 p-3.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none resize-none"
-                        />
-                      </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-gray-300 mb-1">
+                            건의 사항 및 개선점 상세 내용 <span className="text-[#FFB2D0]">*</span>
+                          </label>
+                          <textarea
+                            rows={5}
+                            value={feedbackSubmissionForm.content}
+                            onChange={(e) =>
+                              setFeedbackSubmissionForm({
+                                ...feedbackSubmissionForm,
+                                content: e.target.value
+                              })
+                            }
+                            placeholder="불편했던 점이나 추가되었으면 하는 기능을 자유롭게 작성해 주세요..."
+                            className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 p-3.5 text-sm text-white focus:border-[#A8FFDB] focus:outline-none resize-none"
+                          />
+                        </div>
 
-                      <button
-                        type="submit"
-                        className="w-full py-3 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#A8FFDB] to-[#99E6FF] text-[#0D0D12] hover:opacity-95 transition shadow-lg flex items-center justify-center gap-2"
-                      >
-                        <Send className="w-4 h-4" />
-                        피드백 서버에 제출하기
-                      </button>
-                    </form>
+                        <button
+                          type="submit"
+                          className="w-full py-3 rounded-xl font-extrabold text-sm bg-gradient-to-r from-[#A8FFDB] to-[#99E6FF] text-[#0D0D12] hover:opacity-95 transition shadow-lg flex items-center justify-center gap-2"
+                        >
+                          <Send className="w-4 h-4" />
+                          피드백 서버에 제출하기
+                        </button>
+                      </form>
+                    )}
                   </div>
 
-                  {/* 우측 7칸: 내가 제출한 피드백의 진행 상황(제출 완료 / 검토 중 / 검토 완료) 및 답변 확인 (<조건 3, 4>) */}
-                  <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-6 space-y-4 h-fit">
+                    <div className="flex items-center justify-between gap-2">
                       <div>
                         <h3 className="text-base font-extrabold text-white">
                           내가 제출한 피드백 현황 및 답변 확인 ({mySubmittedFeedbacks.length}건)
@@ -4899,109 +7175,123 @@ export default function App() {
                           표시됩니다.
                         </p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleBoxCollapse('feedbackMyListBox')}
+                        className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#A8FFDB] hover:border-[#A8FFDB] flex items-center justify-center transition shrink-0"
+                        title="접기/펼치기"
+                      >
+                        <span
+                          className={`inline-block transition-transform duration-200 ${
+                            collapsedBoxes['feedbackMyListBox'] ? '-rotate-90' : ''
+                          }`}
+                        >
+                          v
+                        </span>
+                      </button>
                     </div>
 
-                    {mySubmittedFeedbacks.length === 0 ? (
-                      <div className="p-8 rounded-2xl bg-[#0D0D12] border border-gray-800 text-center text-xs text-gray-500">
-                        아직 제출하신 피드백이 없습니다. 좌측에서 건의 사항이나 개선점을
-                        제출해 보세요!
-                      </div>
-                    ) : (
-                      <div className="space-y-3.5">
-                        {mySubmittedFeedbacks.map((fb) => {
-                          const stepIndex = FEEDBACK_STATUS_OPTIONS.indexOf(fb.status);
-                          return (
-                            <div
-                              key={fb.id}
-                              className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-3"
-                            >
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                <div className="space-y-0.5">
-                                  <h4 className="text-sm font-extrabold text-white">
-                                    {fb.title}
-                                  </h4>
-                                  <span className="text-[11px] text-gray-500">
-                                    제출 일시: {fb.createdAt}
-                                  </span>
-                                </div>
-
-                                {/* <조건 3> 3가지 진행 상태 배지 */}
-                                <span
-                                  className={`px-3 py-1 rounded-full text-xs font-extrabold border self-start sm:self-center ${
-                                    fb.status === '검토 완료'
-                                      ? 'bg-[#A8FFDB]/15 text-[#A8FFDB] border-[#A8FFDB]/40'
-                                      : fb.status === '검토 중'
-                                      ? 'bg-[#D4B2FF]/15 text-[#D4B2FF] border-[#D4B2FF]/40'
-                                      : 'bg-[#FFE699]/15 text-[#FFE699] border-[#FFE699]/40'
-                                  }`}
+                    {!collapsedBoxes['feedbackMyListBox'] && (
+                      <>
+                        {mySubmittedFeedbacks.length === 0 ? (
+                          <div className="p-8 rounded-2xl bg-[#0D0D12] border border-gray-800 text-center text-xs text-gray-500">
+                            아직 제출하신 피드백이 없습니다. 좌측에서 건의 사항이나 개선점을
+                            제출해 보세요!
+                          </div>
+                        ) : (
+                          <div className="space-y-3.5">
+                            {mySubmittedFeedbacks.map((fb) => {
+                              const stepIndex = FEEDBACK_STATUS_OPTIONS.indexOf(fb.status);
+                              return (
+                                <div
+                                  key={fb.id}
+                                  className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-3"
                                 >
-                                  {fb.status}
-                                </span>
-                              </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <div className="space-y-0.5">
+                                      <h4 className="text-sm font-extrabold text-white">
+                                        {fb.title}
+                                      </h4>
+                                      <span className="text-[11px] text-gray-500">
+                                        제출 일시: {fb.createdAt}
+                                      </span>
+                                    </div>
 
-                              {/* 3단계 진행 스테퍼 바 (제출 완료 -> 검토 중 -> 검토 완료) */}
-                              <div className="grid grid-cols-3 gap-2 pt-1">
-                                {FEEDBACK_STATUS_OPTIONS.map((st, idx) => {
-                                  const isDoneOrCurrent = idx <= stepIndex;
-                                  return (
-                                    <div
-                                      key={st}
-                                      className={`py-1.5 px-2 rounded-lg text-center text-[11px] font-extrabold border ${
-                                        fb.status === st
-                                          ? 'bg-[#A8FFDB] text-[#0D0D12] border-[#A8FFDB]'
-                                          : isDoneOrCurrent
-                                          ? 'bg-[#A8FFDB]/15 text-[#A8FFDB] border-[#A8FFDB]/30'
-                                          : 'bg-[#151521] text-gray-500 border-gray-800'
+                                    <span
+                                      className={`px-3 py-1 rounded-full text-xs font-extrabold border self-start sm:self-center ${
+                                        fb.status === '검토 완료'
+                                          ? 'bg-[#A8FFDB]/15 text-[#A8FFDB] border-[#A8FFDB]/40'
+                                          : fb.status === '검토 중'
+                                          ? 'bg-[#D4B2FF]/15 text-[#D4B2FF] border-[#D4B2FF]/40'
+                                          : 'bg-[#FFE699]/15 text-[#FFE699] border-[#FFE699]/40'
                                       }`}
                                     >
-                                      {idx + 1}. {st}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-
-                              <p className="text-xs text-gray-200 leading-relaxed bg-[#151521] p-3 rounded-xl border border-gray-800/80">
-                                {fb.content}
-                              </p>
-
-                              {/* <조건 4> 자신이 보낸 피드백에 대한 ADMIN 답변 확인 영역 */}
-                              <div
-                                className={`p-3.5 rounded-xl border ${
-                                  fb.adminReply
-                                    ? 'bg-[#A8FFDB]/10 border-[#A8FFDB]/40'
-                                    : 'bg-[#151521]/50 border-gray-800'
-                                }`}
-                              >
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs font-extrabold text-[#A8FFDB] flex items-center gap-1.5">
-                                    <ShieldCheck className="w-4 h-4" />
-                                    운영자(ADMIN) 답변
-                                  </span>
-                                  {fb.repliedAt && (
-                                    <span className="text-[10px] text-gray-400">
-                                      답변 시각: {fb.repliedAt}
+                                      {fb.status}
                                     </span>
-                                  )}
+                                  </div>
+
+                                  <div className="grid grid-cols-3 gap-2 pt-1">
+                                    {FEEDBACK_STATUS_OPTIONS.map((st, idx) => {
+                                      const isDoneOrCurrent = idx <= stepIndex;
+                                      return (
+                                        <div
+                                          key={st}
+                                          className={`py-1.5 px-2 rounded-lg text-center text-[11px] font-extrabold border ${
+                                            fb.status === st
+                                              ? 'bg-[#A8FFDB] text-[#0D0D12] border-[#A8FFDB]'
+                                              : isDoneOrCurrent
+                                              ? 'bg-[#A8FFDB]/15 text-[#A8FFDB] border-[#A8FFDB]/30'
+                                              : 'bg-[#151521] text-gray-500 border-gray-800'
+                                          }`}
+                                        >
+                                          {idx + 1}. {st}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+
+                                  <p className="text-xs text-gray-200 leading-relaxed bg-[#151521] p-3 rounded-xl border border-gray-800/80">
+                                    {fb.content}
+                                  </p>
+
+                                  <div
+                                    className={`p-3.5 rounded-xl border ${
+                                      fb.adminReply
+                                        ? 'bg-[#A8FFDB]/10 border-[#A8FFDB]/40'
+                                        : 'bg-[#151521]/50 border-gray-800'
+                                    }`}
+                                  >
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-xs font-extrabold text-[#A8FFDB] flex items-center gap-1.5">
+                                        <ShieldCheck className="w-4 h-4" />
+                                        운영자(ADMIN) 답변
+                                      </span>
+                                      {fb.repliedAt && (
+                                        <span className="text-[10px] text-gray-400">
+                                          답변 시각: {fb.repliedAt}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {fb.adminReply ? (
+                                      <p className="text-xs text-white leading-relaxed">
+                                        {fb.adminReply}
+                                      </p>
+                                    ) : (
+                                      <p className="text-xs text-gray-500">
+                                        아직 운영자 답변이 등록되지 않았습니다. (현재 상태: {fb.status})
+                                      </p>
+                                    )}
+                                  </div>
                                 </div>
-                                {fb.adminReply ? (
-                                  <p className="text-xs text-white leading-relaxed">
-                                    {fb.adminReply}
-                                  </p>
-                                ) : (
-                                  <p className="text-xs text-gray-500">
-                                    아직 운영자 답변이 등록되지 않았습니다. (현재 상태: {fb.status})
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
 
-                {/* <조건 2, 5> ADMIN 유저 전용: 전체 유저 피드백 목록 확인 + 현황(3단계) 체크 + 답변 발송 패널 */}
                 {currentUser.role === 'ADMIN' && (
                   <div className="bg-[#151521] border border-[#FFB2D0]/45 rounded-2xl p-6 space-y-5 shadow-[0_0_30px_rgba(255,178,208,0.08)]">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4">
@@ -5012,15 +7302,11 @@ export default function App() {
                           {userFeedbacks.length}건)
                         </h3>
                         <p className="text-xs text-gray-400 mt-0.5">
-                          모든 사용자가 제출한 건의 사항을 확인하고, 진행 상태(
-                          <strong className="text-[#FFE699]">제출 완료</strong> /{' '}
-                          <strong className="text-[#D4B2FF]">검토 중</strong> /{' '}
-                          <strong className="text-[#A8FFDB]">검토 완료</strong>)를 변경하거나
-                          답변을 보낼 수 있습니다.
+                          모든 사용자가 제출한 건의 사항을 확인하고, 진행 상태를 변경하거나 답변을
+                          보낼 수 있습니다.
                         </p>
                       </div>
 
-                      {/* 상태별 필터 */}
                       <div className="flex flex-wrap items-center gap-1.5">
                         {['ALL', ...FEEDBACK_STATUS_OPTIONS].map((filterKey) => (
                           <button
@@ -5036,121 +7322,135 @@ export default function App() {
                             {filterKey === 'ALL' ? `전체 (${userFeedbacks.length})` : filterKey}
                           </button>
                         ))}
+                        <button
+                          type="button"
+                          onClick={() => toggleBoxCollapse('feedbackAdminBox')}
+                          className="w-7 h-7 rounded-lg bg-[#0D0D12] border border-gray-700 text-xs font-extrabold text-gray-300 hover:text-[#FFB2D0] hover:border-[#FFB2D0] flex items-center justify-center transition"
+                          title="접기/펼치기"
+                        >
+                          <span
+                            className={`inline-block transition-transform duration-200 ${
+                              collapsedBoxes['feedbackAdminBox'] ? '-rotate-90' : ''
+                            }`}
+                          >
+                            v
+                          </span>
+                        </button>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      {userFeedbacks
-                        .filter(
-                          (fb) =>
-                            adminFeedbackStatusFilter === 'ALL' ||
-                            fb.status === adminFeedbackStatusFilter
-                        )
-                        .map((fb) => {
-                          const draft = adminFeedbackDrafts[fb.id] || {
-                            status: fb.status,
-                            adminReply: fb.adminReply || ''
-                          };
+                    {!collapsedBoxes['feedbackAdminBox'] && (
+                      <div className="space-y-4">
+                        {userFeedbacks
+                          .filter(
+                            (fb) =>
+                              adminFeedbackStatusFilter === 'ALL' ||
+                              fb.status === adminFeedbackStatusFilter
+                          )
+                          .map((fb) => {
+                            const draft = adminFeedbackDrafts[fb.id] || {
+                              status: fb.status,
+                              adminReply: fb.adminReply || ''
+                            };
 
-                          return (
-                            <div
-                              key={fb.id}
-                              className="p-5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-3.5"
-                            >
-                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-[#99E6FF]/15 text-[#99E6FF]">
-                                    {fb.department}
-                                  </span>
-                                  <span className="text-sm font-extrabold text-white">
-                                    {fb.authorName}
-                                  </span>
-                                  <span className="text-xs font-mono text-gray-400">
-                                    ({fb.studentId})
-                                  </span>
-                                  <span className="text-[11px] text-gray-500">
-                                    · {fb.createdAt}
-                                  </span>
+                            return (
+                              <div
+                                key={fb.id}
+                                className="p-5 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-3.5"
+                              >
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-[#99E6FF]/15 text-[#99E6FF]">
+                                      {fb.department}
+                                    </span>
+                                    <span className="text-sm font-extrabold text-white">
+                                      {fb.authorName}
+                                    </span>
+                                    <span className="text-xs font-mono text-gray-400">
+                                      ({fb.studentId})
+                                    </span>
+                                    <span className="text-[11px] text-gray-500">
+                                      · {fb.createdAt}
+                                    </span>
+                                  </div>
+
+                                  <div className="flex items-center gap-1.5">
+                                    {FEEDBACK_STATUS_OPTIONS.map((statusOption) => (
+                                      <button
+                                        key={statusOption}
+                                        type="button"
+                                        onClick={() => {
+                                          setAdminFeedbackDrafts((prev) => ({
+                                            ...prev,
+                                            [fb.id]: { ...draft, status: statusOption }
+                                          }));
+                                          handleAdminUpdateFeedbackItem(
+                                            fb.id,
+                                            statusOption,
+                                            draft.adminReply
+                                          );
+                                        }}
+                                        className={`px-2.5 py-1 rounded-lg text-xs font-extrabold transition border ${
+                                          fb.status === statusOption
+                                            ? 'bg-[#A8FFDB] text-[#0D0D12] border-[#A8FFDB]'
+                                            : 'bg-[#151521] text-gray-400 hover:text-white border-gray-700'
+                                        }`}
+                                      >
+                                        {statusOption}
+                                      </button>
+                                    ))}
+                                  </div>
                                 </div>
 
-                                {/* ADMIN 현황 즉시 체크 버튼 그룹 (<조건 3, 5>) */}
-                                <div className="flex items-center gap-1.5">
-                                  {FEEDBACK_STATUS_OPTIONS.map((statusOption) => (
-                                    <button
-                                      key={statusOption}
-                                      type="button"
-                                      onClick={() => {
+                                <div>
+                                  <h4 className="text-sm font-extrabold text-[#FFE699]">
+                                    📌 {fb.title}
+                                  </h4>
+                                  <p className="text-xs text-gray-200 mt-1 leading-relaxed bg-[#151521] p-3 rounded-xl border border-gray-800">
+                                    {fb.content}
+                                  </p>
+                                </div>
+
+                                <div className="pt-2 border-t border-gray-800/80 space-y-2">
+                                  <label className="block text-xs font-extrabold text-[#FFB2D0]">
+                                    ✍️ 작성자({fb.authorName})에게 보낼 답변 작성
+                                  </label>
+                                  <div className="flex flex-col sm:flex-row gap-2">
+                                    <input
+                                      type="text"
+                                      value={draft.adminReply}
+                                      onChange={(e) =>
                                         setAdminFeedbackDrafts((prev) => ({
                                           ...prev,
-                                          [fb.id]: { ...draft, status: statusOption }
-                                        }));
+                                          [fb.id]: {
+                                            status: draft.status || fb.status,
+                                            adminReply: e.target.value
+                                          }
+                                        }))
+                                      }
+                                      placeholder="피드백에 대한 답변을 입력해 주세요..."
+                                      className="flex-1 rounded-xl bg-[#151521] border border-gray-700 px-3.5 py-2 text-xs text-white focus:border-[#FFB2D0] focus:outline-none"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() =>
                                         handleAdminUpdateFeedbackItem(
                                           fb.id,
-                                          statusOption,
+                                          draft.status || fb.status,
                                           draft.adminReply
-                                        );
-                                      }}
-                                      className={`px-2.5 py-1 rounded-lg text-xs font-extrabold transition border ${
-                                        fb.status === statusOption
-                                          ? 'bg-[#A8FFDB] text-[#0D0D12] border-[#A8FFDB]'
-                                          : 'bg-[#151521] text-gray-400 hover:text-white border-gray-700'
-                                      }`}
+                                        )
+                                      }
+                                      className="px-4 py-2 rounded-xl bg-[#FFB2D0] text-[#0D0D12] text-xs font-extrabold hover:opacity-90 transition shrink-0"
                                     >
-                                      {statusOption}
+                                      답변 및 현황 저장
                                     </button>
-                                  ))}
+                                  </div>
                                 </div>
                               </div>
-
-                              <div>
-                                <h4 className="text-sm font-extrabold text-[#FFE699]">
-                                  📌 {fb.title}
-                                </h4>
-                                <p className="text-xs text-gray-200 mt-1 leading-relaxed bg-[#151521] p-3 rounded-xl border border-gray-800">
-                                  {fb.content}
-                                </p>
-                              </div>
-
-                              {/* ADMIN 답변 입력 및 저장 바 */}
-                              <div className="pt-2 border-t border-gray-800/80 space-y-2">
-                                <label className="block text-xs font-extrabold text-[#FFB2D0]">
-                                  ✍️ 작성자({fb.authorName})에게 보낼 답변 작성
-                                </label>
-                                <div className="flex flex-col sm:flex-row gap-2">
-                                  <input
-                                    type="text"
-                                    value={draft.adminReply}
-                                    onChange={(e) =>
-                                      setAdminFeedbackDrafts((prev) => ({
-                                        ...prev,
-                                        [fb.id]: {
-                                          status: draft.status || fb.status,
-                                          adminReply: e.target.value
-                                        }
-                                      }))
-                                    }
-                                    placeholder="피드백에 대한 답변을 입력해 주세요 (답변 등록 시 작성자 화면에 즉시 표시됩니다)..."
-                                    className="flex-1 rounded-xl bg-[#151521] border border-gray-700 px-3.5 py-2 text-xs text-white focus:border-[#FFB2D0] focus:outline-none"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleAdminUpdateFeedbackItem(
-                                        fb.id,
-                                        draft.status || fb.status,
-                                        draft.adminReply
-                                      )
-                                    }
-                                    className="px-4 py-2 rounded-xl bg-[#FFB2D0] text-[#0D0D12] text-xs font-extrabold hover:opacity-90 transition shrink-0"
-                                  >
-                                    답변 및 현황 저장
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
+                            );
+                          })}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -5158,419 +7458,153 @@ export default function App() {
           </div>
         )}
 
-        {/* <조건 5, 6, 7> 친구 타임테이블 전용 열람 + 기타 활동(비공개는 ADMIN만 표시) + 활동 제안 모달 */}
-        {selectedFriendForModal && (
-          <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 overflow-y-auto">
-            <div className="w-full max-w-6xl bg-[#151521] border border-[#A8FFDB]/40 rounded-3xl p-6 space-y-5 my-8 max-h-[92vh] overflow-y-auto">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4">
-                <div className="space-y-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-lg bg-[#A8FFDB]/15 text-[#A8FFDB] text-xs font-extrabold">
-                      {selectedFriendForModal.department}
-                    </span>
-                    <h3 className="text-lg font-extrabold text-white">
-                      {selectedFriendForModal.name}님의 강의 타임테이블
-                    </h3>
-                    {selectedFriendForModal.hasDuplicateSameName &&
-                      selectedFriendForModal.maskedStudentId && (
-                        <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF]">
-                          학번: {selectedFriendForModal.maskedStudentId}
-                        </span>
-                      )}
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-gray-800 text-gray-300">
-                      🔒 성적·학점 비공개 (시간표 전용 열람)
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-300">
-                    💬 상태메시지:{' '}
-                    <span className="text-[#99E6FF] font-semibold">
-                      {selectedFriendForModal.statusMessage || '등록된 상태메시지가 없습니다.'}
-                    </span>
-                  </p>
+        {/* <조건 4, 5> 화면 상단의 이름·학번·학과 클릭 시 열리는 개인정보 수정(학번 제외) 및 로그아웃·탈퇴 팝업창 */}
+        {isProfilePopupOpen && (
+          <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
+            <div className="w-full max-w-lg bg-[#151521] border border-[#A8FFDB]/40 rounded-3xl p-6 space-y-5 shadow-[0_0_40px_rgba(168,255,219,0.12)]">
+              <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-[#A8FFDB]" />
+                  <h3 className="text-base font-extrabold text-white">
+                    내 개인정보 수정 (학번 변경 불가)
+                  </h3>
                 </div>
-
                 <button
                   type="button"
-                  onClick={() => setSelectedFriendForModal(null)}
-                  className="p-2 rounded-xl bg-[#0D0D12] border border-gray-700 text-gray-400 hover:text-white self-end sm:self-center"
+                  onClick={() => setIsProfilePopupOpen(false)}
+                  className="p-1.5 rounded-xl bg-[#0D0D12] border border-gray-700 text-gray-400 hover:text-white"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* 좌측 8칸: 친구 강의 타임테이블 (빈 시간 클릭 시 활동 제안 폼 자동 오픈) */}
-                <div className="lg:col-span-8 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-[#A8FFDB] font-bold">
-                      ✨ 타임테이블의 원하는 요일/시간 칸을 클릭하면 해당 시간에 활동을 제안할 수
-                      있습니다!
-                    </p>
-                    <span className="text-xs text-gray-400">
-                      {selectedFriendForModal.currentYear || 2026}년{' '}
-                      {selectedFriendForModal.currentSemester || '1학기'}
-                    </span>
-                  </div>
-
-                  <div className="overflow-x-auto">
-                    <div className="min-w-[600px] border border-gray-800 rounded-2xl overflow-hidden bg-[#0D0D12]">
-                      <div className="grid grid-cols-6 border-b border-gray-800 bg-[#1A1A28]">
-                        <div className="p-2.5 text-center text-xs font-bold text-gray-400 border-r border-gray-800">
-                          시간
-                        </div>
-                        {DAYS.map((day) => (
-                          <div
-                            key={day}
-                            className="p-2.5 text-center text-xs font-extrabold text-[#A8FFDB] border-r border-gray-800 last:border-r-0"
-                          >
-                            {day}요일
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="grid grid-cols-6 relative" style={{ height: '672px' }}>
-                        <div className="border-r border-gray-800">
-                          {Array.from({ length: 12 }, (_, idx) => 9 + idx).map((hour) => (
-                            <div
-                              key={hour}
-                              className="h-14 border-b border-gray-800/60 px-2 py-1 text-[10px] font-mono text-gray-400"
-                            >
-                              {String(hour).padStart(2, '0')}:00
-                            </div>
-                          ))}
-                        </div>
-
-                        {DAYS.map((day) => (
-                          <div
-                            key={day}
-                            className="relative border-r border-gray-800 last:border-r-0"
-                          >
-                            {/* 30분 단위 슬롯 클릭 시 해당 시간으로 활동 제안 열기 */}
-                            {Array.from({ length: 24 }, (_, idx) => idx).map((halfIdx) => {
-                              const startHour = 9 + Math.floor(halfIdx / 2);
-                              const startMinStr = halfIdx % 2 === 0 ? '00' : '30';
-                              const slotStart = `${String(startHour).padStart(2, '0')}:${startMinStr}`;
-                              const endTotalMin = startHour * 60 + (halfIdx % 2 === 0 ? 0 : 30) + 60;
-                              const endH = Math.min(21, Math.floor(endTotalMin / 60));
-                              const endM = endTotalMin >= 1260 ? '00' : endTotalMin % 60 === 0 ? '00' : '30';
-                              const slotEnd = `${String(endH).padStart(2, '0')}:${endM}`;
-
-                              return (
-                                <div
-                                  key={halfIdx}
-                                  onClick={() =>
-                                    setProposalDraft({
-                                      isOpen: true,
-                                      day,
-                                      startTime: slotStart,
-                                      endTime: slotEnd,
-                                      content: proposalDraft.content
-                                    })
-                                  }
-                                  title={`${day}요일 ${slotStart} 활동 제안하기`}
-                                  className={`h-7 cursor-pointer hover:bg-[#A8FFDB]/10 transition ${
-                                    halfIdx % 2 === 0
-                                      ? 'border-b border-gray-800/30'
-                                      : 'border-b border-gray-800/70'
-                                  }`}
-                                />
-                              );
-                            })}
-
-                            {/* 친구의 강의 블록 렌더링 (성적/학점 정보 일체 표시 안 함) */}
-                            {selectedFriendTimetableCourses.map((course) =>
-                              (course.schedules || [])
-                                .filter((s) => s.day === day)
-                                .map((slot, sIdx) => {
-                                  const startMin = timeToMin(slot.startTime);
-                                  const endMin = timeToMin(slot.endTime);
-                                  const topPx = ((startMin - 540) / 30) * 28;
-                                  const heightPx = Math.max(((endMin - startMin) / 30) * 28, 28);
-
-                                  return (
-                                    <div
-                                      key={`${course.id}-${sIdx}`}
-                                      style={{
-                                        top: `${topPx}px`,
-                                        height: `${heightPx}px`,
-                                        backgroundColor: `${course.color || '#99E6FF'}25`,
-                                        borderColor: course.color || '#99E6FF'
-                                      }}
-                                      className="absolute left-1 right-1 rounded-lg border-l-4 p-1.5 pointer-events-none overflow-hidden"
-                                    >
-                                      <div
-                                        className="text-[11px] font-extrabold truncate"
-                                        style={{ color: course.color || '#99E6FF' }}
-                                      >
-                                        {course.courseName}
-                                      </div>
-                                      <div className="text-[9px] text-gray-300 font-mono">
-                                        {slot.startTime}-{slot.endTime}
-                                      </div>
-                                    </div>
-                                  );
-                                })
-                            )}
-
-                            {/* <기타 활동 조건 7> 친구의 기타 활동 블록 렌더링 (친구 비공개 설정된 활동은 일반 친구에게 숨겨지며 ADMIN에게만 표시) */}
-                            {selectedFriendTimetableActivities.map((act) =>
-                              (act.schedules || [])
-                                .filter((s) => s.day === day)
-                                .map((slot, sIdx) => {
-                                  const startMin = timeToMin(slot.startTime);
-                                  const endMin = timeToMin(slot.endTime);
-                                  const topPx = ((startMin - 540) / 30) * 28;
-                                  const heightPx = Math.max(((endMin - startMin) / 30) * 28, 28);
-
-                                  return (
-                                    <div
-                                      key={`friend-act-${act.id}-${sIdx}`}
-                                      style={{
-                                        top: `${topPx}px`,
-                                        height: `${heightPx}px`,
-                                        backgroundColor: `${act.color || '#FFE699'}26`,
-                                        borderColor: act.color || '#FFE699'
-                                      }}
-                                      className="absolute left-1 right-1 rounded-lg border-l-4 border-dashed p-1.5 pointer-events-none overflow-hidden"
-                                    >
-                                      <div
-                                        className="text-[10px] font-extrabold truncate"
-                                        style={{ color: act.color || '#FFE699' }}
-                                      >
-                                        ★ {act.title}{' '}
-                                        {act.isPrivate && currentUser.role === 'ADMIN'
-                                          ? '(비공개·ADMIN열람)'
-                                          : ''}
-                                      </div>
-                                      <div className="text-[9px] text-gray-200 font-mono">
-                                        {slot.startTime}-{slot.endTime}
-                                      </div>
-                                    </div>
-                                  );
-                                })
-                            )}
-
-                            {/* 수락된 활동 제안 블록 함께 표시 */}
-                            {selectedFriendInteractions
-                              .filter(
-                                (it) =>
-                                  it.type === 'PROPOSAL' &&
-                                  it.status === 'ACCEPTED' &&
-                                  it.day === day
-                              )
-                              .map((act) => {
-                                const startMin = timeToMin(act.startTime);
-                                const endMin = timeToMin(act.endTime);
-                                const topPx = ((startMin - 540) / 30) * 28;
-                                const heightPx = Math.max(((endMin - startMin) / 30) * 28, 28);
-                                return (
-                                  <div
-                                    key={act.id}
-                                    style={{
-                                      top: `${topPx}px`,
-                                      height: `${heightPx}px`
-                                    }}
-                                    className="absolute left-1 right-1 rounded-lg border-l-4 border-[#FFB2D0] bg-[#FFB2D0]/25 p-1.5 pointer-events-none overflow-hidden"
-                                  >
-                                    <div className="text-[10px] font-extrabold text-[#FFB2D0] truncate">
-                                      🤝 {act.content}
-                                    </div>
-                                    <div className="text-[9px] text-gray-200 font-mono">
-                                      {act.startTime}-{act.endTime}
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 우측 4칸: 시간별 활동 제안 폼 & 친구에게 메시지 보내기 & 활동 수락/거절 */}
-                <div className="lg:col-span-4 space-y-4">
-                  {/* 타임테이블 클릭 시간별 활동 제안 박스 (<조건 6>) */}
-                  <form
-                    onSubmit={handleSendTimeProposal}
-                    className="p-4 rounded-2xl bg-[#0D0D12] border border-[#D4B2FF]/40 space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-extrabold text-[#D4B2FF] flex items-center gap-1.5">
-                        <CalendarPlus className="w-4 h-4" />
-                        타임테이블 시간별 활동 제안하기
-                      </h4>
-                      <span className="text-[10px] text-gray-400">시간표 칸 클릭 연동</span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2">
-                      <select
-                        value={proposalDraft.day}
-                        onChange={(e) =>
-                          setProposalDraft({ ...proposalDraft, day: e.target.value })
-                        }
-                        className="rounded-lg bg-[#151521] border border-gray-700 px-2 py-1.5 text-xs text-white"
-                      >
-                        {DAYS.map((d) => (
-                          <option key={d} value={d}>
-                            {d}요일
-                          </option>
-                        ))}
-                      </select>
-
-                      <select
-                        value={proposalDraft.startTime}
-                        onChange={(e) =>
-                          setProposalDraft({ ...proposalDraft, startTime: e.target.value })
-                        }
-                        className="rounded-lg bg-[#151521] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
-                      >
-                        {TIME_OPTIONS.slice(0, -1).map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
-
-                      <select
-                        value={proposalDraft.endTime}
-                        onChange={(e) =>
-                          setProposalDraft({ ...proposalDraft, endTime: e.target.value })
-                        }
-                        className="rounded-lg bg-[#151521] border border-gray-700 px-2 py-1.5 text-xs font-mono text-white"
-                      >
-                        {TIME_OPTIONS.slice(1).map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
+              <form onSubmit={handleSaveProfile} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 mb-1">
+                      학번 (고정)
+                    </label>
                     <input
                       type="text"
-                      value={proposalDraft.content}
-                      onChange={(e) =>
-                        setProposalDraft({ ...proposalDraft, content: e.target.value })
-                      }
-                      placeholder="활동 내용 (예: 공강 시간에 학식 먹기, 도서관 스터디)"
-                      className="w-full rounded-xl bg-[#151521] border border-gray-700 px-3 py-2 text-xs text-white focus:border-[#D4B2FF] focus:outline-none"
+                      value={currentUser.studentId}
+                      disabled
+                      className="w-full rounded-xl bg-[#0D0D12]/60 border border-gray-800 px-3 py-2 text-xs font-mono text-gray-500 cursor-not-allowed"
                     />
-
-                    <button
-                      type="submit"
-                      className="w-full py-2.5 rounded-xl bg-[#D4B2FF] text-[#0D0D12] font-extrabold text-xs hover:opacity-90 transition"
-                    >
-                      {proposalDraft.day}요일 {proposalDraft.startTime}~{proposalDraft.endTime} 활동
-                      제안 보내기
-                    </button>
-                  </form>
-
-                  {/* 친구에게 일반 메시지 전달 (<조건 6>) */}
-                  <form
-                    onSubmit={handleSendFriendMessage}
-                    className="p-4 rounded-2xl bg-[#0D0D12] border border-[#A8FFDB]/30 space-y-2.5"
-                  >
-                    <h4 className="text-xs font-extrabold text-[#A8FFDB] flex items-center gap-1.5">
-                      <Send className="w-3.5 h-3.5" />
-                      {selectedFriendForModal.name}님에게 메시지 전달
-                    </h4>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={messageInput}
-                        onChange={(e) => setMessageInput(e.target.value)}
-                        placeholder="친구에게 보낼 메시지 입력..."
-                        className="flex-1 rounded-xl bg-[#151521] border border-gray-700 px-3 py-2 text-xs text-white focus:border-[#A8FFDB] focus:outline-none"
-                      />
-                      <button
-                        type="submit"
-                        className="px-3.5 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] font-extrabold text-xs shrink-0"
-                      >
-                        전송
-                      </button>
-                    </div>
-                  </form>
-
-                  {/* 이 친구와 주고받은 메시지 & 활동 제안 내역 (수락/거절 포함) */}
-                  <div className="p-4 rounded-2xl bg-[#0D0D12] border border-gray-800 space-y-2.5 max-h-[300px] overflow-y-auto">
-                    <h4 className="text-xs font-extrabold text-gray-300">
-                      주고받은 메시지 및 활동 제안 ({selectedFriendInteractions.length})
-                    </h4>
-                    {selectedFriendInteractions.length === 0 ? (
-                      <p className="text-[11px] text-gray-500 py-4 text-center">
-                        아직 주고받은 메시지나 활동 제안이 없습니다.
-                      </p>
-                    ) : (
-                      selectedFriendInteractions.map((item) => {
-                        const isReceived = item.receiverId === currentUser.id;
-                        return (
-                          <div
-                            key={item.id}
-                            className="p-3 rounded-xl bg-[#151521] border border-gray-800 space-y-1.5"
-                          >
-                            <div className="flex items-center justify-between text-[11px]">
-                              <span
-                                className={
-                                  isReceived
-                                    ? 'text-[#A8FFDB] font-bold'
-                                    : 'text-[#D4B2FF] font-bold'
-                                }
-                              >
-                                {isReceived ? `${selectedFriendForModal.name}님 → 나` : '나 → 친구'}
-                              </span>
-                              <span className="text-gray-500">{item.createdAt}</span>
-                            </div>
-
-                            {item.type === 'PROPOSAL' && (
-                              <div className="text-[11px] font-mono text-[#D4B2FF]">
-                                📅 [{item.day}요일 {item.startTime}~{item.endTime}] 활동 제안
-                              </div>
-                            )}
-
-                            <p className="text-xs text-white">{item.content}</p>
-
-                            {item.type === 'PROPOSAL' && (
-                              <div className="flex items-center justify-between pt-1">
-                                <span className="text-[10px] font-bold text-gray-400">
-                                  상태:{' '}
-                                  {item.status === 'ACCEPTED'
-                                    ? '✅ 수락됨'
-                                    : item.status === 'REJECTED'
-                                    ? '❌ 거절됨'
-                                    : '⏳ 대기중'}
-                                </span>
-                                {isReceived && item.status === 'PENDING' && (
-                                  <div className="flex gap-1.5">
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleRespondActivityProposal(item.id, 'ACCEPTED')
-                                      }
-                                      className="px-2 py-1 rounded bg-[#A8FFDB] text-[#0D0D12] text-[10px] font-extrabold"
-                                    >
-                                      활동 수락
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleRespondActivityProposal(item.id, 'REJECTED')
-                                      }
-                                      className="px-2 py-1 rounded bg-[#FFB2D0]/20 text-[#FFB2D0] text-[10px] font-extrabold"
-                                    >
-                                      활동 거절
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })
-                    )}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">
+                      학과
+                    </label>
+                    <input
+                      type="text"
+                      value={profileForm.department}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, department: e.target.value })
+                      }
+                      className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs text-white focus:border-[#A8FFDB] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">
+                      이름
+                    </label>
+                    <input
+                      type="text"
+                      value={profileForm.name}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, name: e.target.value })
+                      }
+                      className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs text-white focus:border-[#A8FFDB] focus:outline-none"
+                    />
                   </div>
                 </div>
-              </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                    친구에게 보여줄 상태메시지
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={100}
+                    value={profileForm.statusMessage}
+                    onChange={(e) =>
+                      setProfileForm({ ...profileForm, statusMessage: e.target.value })
+                    }
+                    placeholder="상태메시지를 입력하세요..."
+                    className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3.5 py-2 text-xs text-white focus:border-[#A8FFDB] focus:outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">
+                      현재 수강 년도
+                    </label>
+                    <input
+                      type="number"
+                      min={1980}
+                      max={2050}
+                      value={profileForm.currentYear}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, currentYear: e.target.value })
+                      }
+                      className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs text-white focus:border-[#D4B2FF] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">
+                      현재 수강 학기
+                    </label>
+                    <select
+                      value={profileForm.currentSemester}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, currentSemester: e.target.value })
+                      }
+                      className="w-full rounded-xl bg-[#0D0D12] border border-gray-700 px-3 py-2 text-xs text-white focus:border-[#D4B2FF] focus:outline-none"
+                    >
+                      {SEMESTER_OPTIONS.map((sem) => (
+                        <option key={sem} value={sem}>
+                          {sem}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-gray-800">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsProfilePopupOpen(false);
+                        setCurrentUser(null);
+                        setAuthToken('');
+                        localStorage.removeItem('seoultech_auth_token_v6');
+                      }}
+                      className="px-3.5 py-2 rounded-xl bg-[#1E1E2E] hover:bg-gray-800 text-xs font-bold text-gray-200 border border-gray-700 flex items-center gap-1.5"
+                    >
+                      <LogOut className="w-3.5 h-3.5" /> 로그아웃
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsProfilePopupOpen(false);
+                        setIsDeleteAccountModalOpen(true);
+                      }}
+                      className="px-3.5 py-2 rounded-xl bg-[#FFB2D0]/15 hover:bg-[#FFB2D0]/25 text-xs font-bold text-[#FFB2D0] border border-[#FFB2D0]/40 flex items-center gap-1.5"
+                    >
+                      <UserX className="w-3.5 h-3.5" /> 회원탈퇴
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-xl bg-[#A8FFDB] text-[#0D0D12] font-extrabold text-xs hover:bg-[#8ef5c8] transition"
+                  >
+                    개인정보 저장
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

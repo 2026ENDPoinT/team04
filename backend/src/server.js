@@ -10,12 +10,16 @@ require(path.join(__dirname, './models/interaction.model'));
 require(path.join(__dirname, './models/prediction.model'));
 require(path.join(__dirname, './models/activity.model'));
 require(path.join(__dirname, './models/feedback.model'));
+require(path.join(__dirname, './models/group.model'));
+require(path.join(__dirname, './models/graduation.model'));
 
 const authRoutes = require(path.join(__dirname, './routes/auth.routes'));
 const courseRoutes = require(path.join(__dirname, './routes/course.routes'));
 const friendRoutes = require(path.join(__dirname, './routes/friend.routes'));
 const predictionRoutes = require(path.join(__dirname, './routes/prediction.routes'));
 const activityRoutes = require(path.join(__dirname, './routes/activity.routes'));
+const groupRoutes = require(path.join(__dirname, './routes/group.routes'));
+const graduationRoutes = require(path.join(__dirname, './routes/graduation.routes'));
 const adminRoutes = require(path.join(__dirname, './routes/admin.routes'));
 
 const app = express();
@@ -29,6 +33,8 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/friends', friendRoutes);
 app.use('/api/predictions', predictionRoutes);
 app.use('/api/activities', activityRoutes);
+app.use('/api/groups', groupRoutes);
+app.use('/api/graduation', graduationRoutes);
 app.use('/api/admin', adminRoutes);
 // 통합된 adminRoutes를 /api/feedbacks 경로에도 함께 연결하여 별도 라우터 파일 없이 동작 보장
 app.use('/api/feedbacks', adminRoutes);

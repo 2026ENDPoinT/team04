@@ -283,6 +283,16 @@ exports.getFriendOverview = async (req, res) => {
       friends,
       incomingRequests,
       outgoingRequests,
+      interactions: formattedInteractions
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: '친구 현황을 불러오는 중 오류가 발생했습니다.'
+    });
+  }
+};
+
 // 5. 친구 시간표 전용 조회 (<조건 5> 성적·학점·GPA 철저히 마스킹 + <기타활동 조건 7> 비공개 활동은 친구에게 숨김, 단 ADMIN은 열람 가능)
 exports.getFriendTimetable = async (req, res) => {
   try {
