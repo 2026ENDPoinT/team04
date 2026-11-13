@@ -31,6 +31,11 @@ const User = sequelize.define('User', {
       notEmpty: { msg: '이름을 입력해 주세요.' }
     }
   },
+  statusMessage: {
+    type: DataTypes.STRING(150),
+    allowNull: false,
+    defaultValue: ''
+  },
   role: {
     type: DataTypes.ENUM('STUDENT', 'ADMIN'),
     allowNull: false,
@@ -83,6 +88,7 @@ User.seedAdminAccount = async () => {
         department: '컴퓨터공학과',
         studentId: '26101232',
         name: '최준우',
+        statusMessage: '서울과기대 컴공 화이팅!',
         role: 'ADMIN',
         currentYear: 2026,
         currentSemester: '1학기',

@@ -39,6 +39,7 @@ exports.register = async (req, res) => {
       department: department || '컴퓨터공학과',
       studentId,
       name,
+      statusMessage: '',
       role: isAdmin ? 'ADMIN' : 'STUDENT',
       currentYear: 2026,
       currentSemester: '1학기'
@@ -117,6 +118,7 @@ exports.updateProfile = async (req, res) => {
       department,
       studentId,
       name,
+      statusMessage,
       preferredMainView,
       currentYear,
       currentSemester
@@ -140,6 +142,10 @@ exports.updateProfile = async (req, res) => {
 
     if (name && name.trim() !== '') {
       user.name = name.trim();
+    }
+
+    if (statusMessage !== undefined) {
+      user.statusMessage = String(statusMessage).trim().slice(0, 150);
     }
 
     if (preferredMainView && ['TIMETABLE', 'DASHBOARD'].includes(preferredMainView)) {
