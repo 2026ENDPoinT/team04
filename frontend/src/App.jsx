@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Terminal,
-  UserCheck,
-  ShieldAlert,
   LogOut,
   Calendar,
   Wrench,
   CheckCircle2,
   AlertCircle,
-  Building2,
-  IdCard,
   User as UserIcon,
-  Settings,
   Trash2,
   X,
-  Lock,
-  Save,
   Plus,
   Clock,
   BookOpen,
@@ -27,8 +20,6 @@ import {
   Ban,
   FolderKanban,
   Cloud,
-  Download,
-  Upload,
   Server
 } from 'lucide-react';
 
@@ -39,6 +30,11 @@ const STORAGE_KEYS = {
   TOKEN: 'seoultech_cse_auth_token',
   SERVER_CONFIG: 'seoultech_cse_server_config'
 };
+
+// Preview 및 배포 환경 모두에서 안전하게 동작하는 기본 API URL 참조
+const DEFAULT_API_URL =
+  (typeof window !== 'undefined' && window.__VITE_API_URL__) ||
+  'http://localhost:5000/api';
 
 const YEAR_OPTIONS = Array.from({ length: 2050 - 1980 + 1 }, (_, i) => 1980 + i);
 const SEMESTER_OPTIONS = ['1학기', '2학기', '여름계절학기', '겨울계절학기'];
@@ -116,30 +112,30 @@ const INITIAL_USERS_DB = [
 ];
 
 export default function App() {
-  const fileInputRef = useRef(null);
-
-  // 서버/클라우드 DB 설정 상태 (Backend API URL 또는 Supabase URL/Key 지원)
   const [serverConfig, setServerConfig] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SERVER_CONFIG);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          apiUrl: DEFAULT_API_URL !== 'http://localhost:5000/api' ? DEFAULT_API_URL : (parsed.apiUrl || DEFAULT_API_URL),
+          supabaseUrl: parsed.supabaseUrl || '',
+          supabaseKey: parsed.supabaseKey || ''
+        };
+      }
     } catch (e) {}
     return {
-      apiUrl: 'http://localhost:5000/api',
+      apiUrl: DEFAULT_API_URL,
       supabaseUrl: '',
       supabaseKey: ''
     };
   });
 
-  const [dbMode, setDbMode] = useState('LOCAL'); // 'BACKEND_API' | 'SUPABASE_CLOUD' | 'LOCAL'
+  const [dbMode, setDbMode] = useState('LOCAL');
   const [isServerModalOpen, setIsServerModalOpen] = useState(false);
 
-  // 사용자 DB (기존 로컬 버전 데이터까지 모두 복구)
   const [usersDb, setUsersDb] = useState(() => {
-    const raw =
-      localStorage.getItem(STORAGE_KEYS.USERS) ||
-      localStorage.getItem('seoultech_users_db_v3') ||
-      localStorage.getItem('seoultech_users_db_v2');
+    const raw = localStorage.getItem(STORAGE_KEYS.USERS);
     if (raw) {
       try {
         const parsed = JSON.parse(raw);
@@ -156,12 +152,8 @@ export default function App() {
     return INITIAL_USERS_DB;
   });
 
-  // 과목 DB
   const [coursesDb, setCoursesDb] = useState(() => {
-    const raw =
-      localStorage.getItem(STORAGE_KEYS.COURSES) ||
-      localStorage.getItem('seoultech_courses_db_v3') ||
-      localStorage.getItem('seoultech_courses_db_v2');
+    const raw = localStorage.getItem(STORAGE_KEYS.COURSES);
     if (raw) {
       try {
         const parsed = JSON.parse(raw);
@@ -225,7 +217,6 @@ export default function App() {
   const [modalSchedules, setModalSchedules] = useState([]);
   const [modalError, setModalError] = useState('');
 
-  // 로컬 백업 스토리지 자동 저장
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(usersDb));
   }, [usersDb]);
@@ -238,57 +229,75 @@ export default function App() {
     localStorage.setItem(STORAGE_KEYS.SERVER_CONFIG, JSON.stringify(serverConfig));
   }, [serverConfig]);
 
-  // Supabase REST 호출 헬퍼
-  const supabaseFetch = async (tableAndQuery, options = {}) => {
-    const cleanUrl = serverConfig.supabaseUrl.replace(/\/$/, '');
-    const res = await fetch(`${cleanUrl}/rest/v1/${tableAndQuery}`, {
-      ...options,
-      headers: {
-        apikey: serverConfig.supabaseKey,
-        Authorization: `Bearer ${serverConfig.supabaseKey}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=representation',
-        ...(options.headers || {})
+  // 백엔드 서버로부터 내 정보 및 과목 목록을 최신화하는 함수 (새로고침 및 다중 기기 동기화 핵심)
+  const fetchUserDataFromBackend = async (token, apiBaseUrl) => {
+    try {
+      const [meRes, coursesRes] = await Promise.all([
+        fetch(`${apiBaseUrl}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch(`${apiBaseUrl}/courses`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ]);
+
+      if (meRes.ok) {
+        const meData = await meRes.json();
+        if (meData.success && meData.user) {
+          setCurrentUser(meData.user);
+          setActiveMainView(meData.user.preferredMainView || 'TIMETABLE');
+          setCourseYear(meData.user.currentYear || 2026);
+          setCourseSemester(meData.user.currentSemester || '1학기');
+          setUsersDb((prev) => {
+            const exists = prev.some((u) => u.id === meData.user.id);
+            return exists
+              ? prev.map((u) => (u.id === meData.user.id ? meData.user : u))
+              : [...prev, meData.user];
+          });
+        }
       }
-    });
-    if (!res.ok) throw new Error('Supabase 요청 실패');
-    return res.json();
+
+      if (coursesRes.ok) {
+        const coursesData = await coursesRes.json();
+        if (coursesData.success && Array.isArray(coursesData.courses)) {
+          setCoursesDb(coursesData.courses);
+        }
+      }
+    } catch (err) {
+      console.error('서버 데이터 동기화 실패:', err);
+    }
   };
 
-  // 초기 서버/클라우드 DB 동기화 및 자동 로그인 복원
+  // 페이지 최초 로드 또는 새로고침(F5) 시 백엔드 서버 연결 확인 + 로그인 세션 및 과목 DB 복원
   useEffect(() => {
     const checkAndSyncServer = async () => {
-      // 1순위: Supabase 클라우드 DB가 입력되어 있는 경우
-      if (serverConfig.supabaseUrl && serverConfig.supabaseKey) {
-        try {
-          const remoteUsers = await supabaseFetch('users?select=*');
-          const remoteCourses = await supabaseFetch('courses?select=*');
-          if (Array.isArray(remoteUsers)) setUsersDb(remoteUsers);
-          if (Array.isArray(remoteCourses)) setCoursesDb(remoteCourses);
-          setDbMode('SUPABASE_CLOUD');
-        } catch (e) {
+      const cleanApiUrl = serverConfig.apiUrl.replace(/\/$/, '');
+      let isBackendOnline = false;
+
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 3500);
+        const res = await fetch(`${cleanApiUrl}/health`, {
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (res.ok) {
+          isBackendOnline = true;
+          setDbMode('BACKEND_API');
+        } else {
           setDbMode('LOCAL');
         }
-      } else {
-        // 2순위: Node.js 백엔드 API 서버(localhost:5000 등)가 켜져 있는지 확인
-        try {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 1200);
-          const res = await fetch(`${serverConfig.apiUrl}/health`, {
-            signal: controller.signal
-          });
-          clearTimeout(timer);
-          if (res.ok) {
-            setDbMode('BACKEND_API');
-          } else {
-            setDbMode('LOCAL');
-          }
-        } catch (e) {
-          setDbMode('LOCAL');
-        }
+      } catch (e) {
+        setDbMode('LOCAL');
       }
 
-      // 자동 로그인 세션 복원
+      const savedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+      if (isBackendOnline && savedToken) {
+        await fetchUserDataFromBackend(savedToken, cleanApiUrl);
+        return;
+      }
+
+      // 로컬 폴백 세션 복원
       const savedSession =
         localStorage.getItem('seoultech_auto_login_session') ||
         sessionStorage.getItem('seoultech_temp_login_session');
@@ -309,15 +318,13 @@ export default function App() {
     };
 
     checkAndSyncServer();
-  }, [serverConfig.supabaseUrl, serverConfig.supabaseKey, serverConfig.apiUrl]);
+  }, [serverConfig.apiUrl]);
 
-  // 현재 사용자의 과목 목록
   const userCourses = useMemo(() => {
     if (!currentUser) return [];
     return coursesDb.filter((c) => Number(c.userId) === Number(currentUser.id));
   }, [coursesDb, currentUser]);
 
-  // 조건 4 반영: 동일 과목명 2개 이상 존재 시 나중 학기(재수강) 과목만 GPA에 산입
   const gpaCalculationResult = useMemo(() => {
     if (!currentUser) {
       return {
@@ -358,7 +365,6 @@ export default function App() {
     groupedByName.forEach((group) => {
       const sorted = [...group].sort(compareCourseChronological);
       if (sorted.length >= 2) {
-        // 두 번째 이후 수강 과목은 자동으로 재수강 배지 부여
         sorted.slice(1).forEach((laterCourse) => autoRetakeCourseIds.add(laterCourse.id));
       }
 
@@ -402,7 +408,6 @@ export default function App() {
     };
   }, [userCourses, currentUser]);
 
-  // 현재 학기 과목 vs 다른 학기 과목 분류
   const currentSemesterCourses = useMemo(() => {
     if (!currentUser) return [];
     return userCourses.filter(
@@ -432,52 +437,6 @@ export default function App() {
     return Array.from(map.values()).sort((a, b) => compareCourseChronological(b, a));
   }, [userCourses, currentUser]);
 
-  // [필수 4] JSON 파일로 데이터 백업 다운로드 & 불러오기
-  const handleExportDataFile = () => {
-    const backupPayload = {
-      exportedAt: new Date().toISOString(),
-      users: usersDb,
-      courses: coursesDb
-    };
-    const blob = new Blob([JSON.stringify(backupPayload, null, 2)], {
-      type: 'application/json'
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `seoultech_cse_backup_${currentUser?.studentId || 'all'}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    setFeedback({
-      type: 'success',
-      message: '현재 성적 및 시간표 데이터가 JSON 파일로 안전하게 다운로드되었습니다.'
-    });
-  };
-
-  const handleImportDataFile = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const parsed = JSON.parse(event.target.result);
-        if (Array.isArray(parsed.users)) setUsersDb(parsed.users);
-        if (Array.isArray(parsed.courses)) setCoursesDb(parsed.courses);
-        setFeedback({
-          type: 'success',
-          message: '백업 파일에서 모든 사용자 및 과목 데이터를 성공적으로 복원했습니다!'
-        });
-      } catch (err) {
-        setFeedback({
-          type: 'error',
-          message: '올바른 백업 JSON 파일이 아닙니다.'
-        });
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  // 회원가입 / 로그인 처리 (백엔드 서버 또는 Supabase 클라우드 연동 포함)
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
     setFeedback({ type: '', message: '' });
@@ -485,6 +444,7 @@ export default function App() {
     const finalDept = department.trim() === '' ? '컴퓨터공학과' : department.trim();
     const finalSid = studentId.trim();
     const finalName = name.trim();
+    const cleanApiUrl = serverConfig.apiUrl.replace(/\/$/, '');
 
     if (!finalSid) {
       setFeedback({ type: 'error', message: '학번을 입력해 주세요.' });
@@ -493,6 +453,41 @@ export default function App() {
     if (!finalName) {
       setFeedback({ type: 'error', message: '이름을 입력해 주세요.' });
       return;
+    }
+
+    if (dbMode === 'BACKEND_API') {
+      try {
+        const endpoint = authMode === 'REGISTER' ? 'register' : 'login';
+        const res = await fetch(`${cleanApiUrl}/auth/${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            department: finalDept,
+            studentId: finalSid,
+            name: finalName,
+            autoLogin
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          setFeedback({
+            type: 'error',
+            message: data.message || '인증 처리 중 오류가 발생했습니다.'
+          });
+          return;
+        }
+        if (data.token) {
+          localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+          await fetchUserDataFromBackend(data.token, cleanApiUrl);
+        }
+        if (autoLogin) {
+          localStorage.setItem('seoultech_auto_login_session', JSON.stringify(data.user));
+        } else {
+          sessionStorage.setItem('seoultech_temp_login_session', JSON.stringify(data.user));
+        }
+        setFeedback({ type: 'success', message: data.message });
+        return;
+      } catch (err) {}
     }
 
     if (authMode === 'REGISTER') {
@@ -508,7 +503,7 @@ export default function App() {
       const isAdmin =
         finalSid === '26101232' && finalName === '최준우' && finalDept === '컴퓨터공학과';
 
-      let createdUser = {
+      const createdUser = {
         id: Date.now(),
         department: finalDept,
         studentId: finalSid,
@@ -521,42 +516,6 @@ export default function App() {
         gpa: 0.0,
         preferredMainView: 'TIMETABLE'
       };
-
-      // Supabase 클라우드가 연결된 경우 서버 DB에 즉시 INSERT
-      if (dbMode === 'SUPABASE_CLOUD') {
-        try {
-          const inserted = await supabaseFetch('users', {
-            method: 'POST',
-            body: JSON.stringify({
-              department: createdUser.department,
-              studentId: createdUser.studentId,
-              name: createdUser.name,
-              role: createdUser.role,
-              currentYear: 2026,
-              currentSemester: '1학기'
-            })
-          });
-          if (inserted?.[0]) createdUser = inserted[0];
-        } catch (err) {}
-      } else if (dbMode === 'BACKEND_API') {
-        try {
-          const res = await fetch(`${serverConfig.apiUrl}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              department: finalDept,
-              studentId: finalSid,
-              name: finalName,
-              autoLogin
-            })
-          });
-          const data = await res.json();
-          if (data.success && data.user) {
-            createdUser = data.user;
-            if (data.token) localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
-          }
-        } catch (err) {}
-      }
 
       setUsersDb((prev) => [...prev, createdUser]);
       setCurrentUser(createdUser);
@@ -581,23 +540,6 @@ export default function App() {
         return;
       }
 
-      if (dbMode === 'BACKEND_API') {
-        try {
-          const res = await fetch(`${serverConfig.apiUrl}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              department: finalDept,
-              studentId: finalSid,
-              name: finalName,
-              autoLogin
-            })
-          });
-          const data = await res.json();
-          if (data.token) localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
-        } catch (err) {}
-      }
-
       setCurrentUser(matched);
       setActiveMainView(matched.preferredMainView || 'TIMETABLE');
       setCourseYear(matched.currentYear || 2026);
@@ -611,7 +553,6 @@ export default function App() {
     }
   };
 
-  // 현재 진행 학기 변경
   const handleCurrentSemesterChange = async (newYear, newSem) => {
     if (!currentUser) return;
     const updatedUser = {
@@ -622,21 +563,11 @@ export default function App() {
     setCurrentUser(updatedUser);
     setUsersDb((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
 
-    if (dbMode === 'SUPABASE_CLOUD') {
-      try {
-        await supabaseFetch(`users?id=eq.${updatedUser.id}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            currentYear: Number(newYear),
-            currentSemester: newSem
-          })
-        });
-      } catch (e) {}
-    } else if (dbMode === 'BACKEND_API') {
+    if (dbMode === 'BACKEND_API') {
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
       if (token) {
         try {
-          await fetch(`${serverConfig.apiUrl}/auth/profile`, {
+          await fetch(`${serverConfig.apiUrl.replace(/\/$/, '')}/auth/profile`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
@@ -652,7 +583,6 @@ export default function App() {
     }
   };
 
-  // 수업 시간 슬롯 검증 (종료시간 <= 시작시간 예외 처리)
   const validateSchedules = (schedules) => {
     for (let i = 0; i < schedules.length; i++) {
       const s = schedules[i];
@@ -675,7 +605,6 @@ export default function App() {
     return null;
   };
 
-  // 과목 등록 처리 (클라우드/백엔드 DB 즉시 저장)
   const handleCreateCourse = async (e) => {
     e.preventDefault();
     if (!currentUser) return;
@@ -686,7 +615,6 @@ export default function App() {
       return;
     }
 
-    // 동일 학기 내 중복 과목명 차단 (다른 학기 재수강은 허용)
     const duplicateInSameTerm = userCourses.some(
       (c) =>
         Number(c.year) === Number(courseYear) &&
@@ -722,31 +650,11 @@ export default function App() {
       isWithdrawn: Boolean(courseIsWithdrawn)
     };
 
-    if (dbMode === 'SUPABASE_CLOUD') {
-      try {
-        const inserted = await supabaseFetch('courses', {
-          method: 'POST',
-          body: JSON.stringify({
-            userId: newCourse.userId,
-            year: newCourse.year,
-            semester: newCourse.semester,
-            courseName: newCourse.courseName,
-            credits: newCourse.credits,
-            grade: newCourse.grade,
-            gradePoint: newCourse.gradePoint,
-            schedules: newCourse.schedules,
-            color: newCourse.color,
-            isRetake: newCourse.isRetake,
-            isWithdrawn: newCourse.isWithdrawn
-          })
-        });
-        if (inserted?.[0]) newCourse = inserted[0];
-      } catch (err) {}
-    } else if (dbMode === 'BACKEND_API') {
+    if (dbMode === 'BACKEND_API') {
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
       if (token) {
         try {
-          const res = await fetch(`${serverConfig.apiUrl}/courses`, {
+          const res = await fetch(`${serverConfig.apiUrl.replace(/\/$/, '')}/courses`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -755,7 +663,11 @@ export default function App() {
             body: JSON.stringify(newCourse)
           });
           const data = await res.json();
-          if (data.success && data.course) newCourse = data.course;
+          if (!res.ok || !data.success) {
+            setFeedback({ type: 'error', message: data.message || '과목 저장 실패' });
+            return;
+          }
+          if (data.course) newCourse = data.course;
         } catch (err) {}
       }
     }
@@ -769,11 +681,10 @@ export default function App() {
     );
     setFeedback({
       type: 'success',
-      message: `'${trimmedName}' 과목이 저장되었으며 GPA가 자동 계산되었습니다.`
+      message: `'${trimmedName}' 과목이 서버 DB에 저장되었으며 GPA가 자동 계산되었습니다.`
     });
   };
 
-  // 과목 클릭 시 수정 모달 열기
   const openEditCourseModal = (course) => {
     setEditingCourse(course);
     setModalYear(course.year);
@@ -792,7 +703,6 @@ export default function App() {
     setModalError('');
   };
 
-  // 과목 수정 저장
   const handleUpdateCourse = async (e) => {
     e.preventDefault();
     if (!editingCourse) return;
@@ -821,7 +731,7 @@ export default function App() {
       return;
     }
 
-    const updatedCourse = {
+    let updatedCourse = {
       ...editingCourse,
       year: Number(modalYear),
       semester: modalSemester,
@@ -835,36 +745,23 @@ export default function App() {
       isWithdrawn: Boolean(modalIsWithdrawn)
     };
 
-    if (dbMode === 'SUPABASE_CLOUD') {
-      try {
-        await supabaseFetch(`courses?id=eq.${editingCourse.id}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            year: updatedCourse.year,
-            semester: updatedCourse.semester,
-            courseName: updatedCourse.courseName,
-            credits: updatedCourse.credits,
-            grade: updatedCourse.grade,
-            gradePoint: updatedCourse.gradePoint,
-            schedules: updatedCourse.schedules,
-            color: updatedCourse.color,
-            isRetake: updatedCourse.isRetake,
-            isWithdrawn: updatedCourse.isWithdrawn
-          })
-        });
-      } catch (err) {}
-    } else if (dbMode === 'BACKEND_API') {
+    if (dbMode === 'BACKEND_API') {
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
       if (token) {
         try {
-          await fetch(`${serverConfig.apiUrl}/courses/${editingCourse.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(updatedCourse)
-          });
+          const res = await fetch(
+            `${serverConfig.apiUrl.replace(/\/$/, '')}/courses/${editingCourse.id}`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify(updatedCourse)
+            }
+          );
+          const data = await res.json();
+          if (data.success && data.course) updatedCourse = data.course;
         } catch (err) {}
       }
     }
@@ -877,17 +774,12 @@ export default function App() {
     });
   };
 
-  // 과목 삭제
   const handleDeleteCourse = async (courseId) => {
-    if (dbMode === 'SUPABASE_CLOUD') {
-      try {
-        await supabaseFetch(`courses?id=eq.${courseId}`, { method: 'DELETE' });
-      } catch (err) {}
-    } else if (dbMode === 'BACKEND_API') {
+    if (dbMode === 'BACKEND_API') {
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
       if (token) {
         try {
-          await fetch(`${serverConfig.apiUrl}/courses/${courseId}`, {
+          await fetch(`${serverConfig.apiUrl.replace(/\/$/, '')}/courses/${courseId}`, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${token}` }
           });
@@ -900,7 +792,6 @@ export default function App() {
     setFeedback({ type: 'success', message: '과목이 삭제되었으며 GPA가 갱신되었습니다.' });
   };
 
-  // 로그아웃
   const handleLogout = () => {
     setCurrentUser(null);
     setIsProfileModalOpen(false);
@@ -909,36 +800,62 @@ export default function App() {
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
   };
 
-  // 회원탈퇴
   const handleDeleteAccount = async () => {
     if (!currentUser) return;
-    if (dbMode === 'SUPABASE_CLOUD') {
-      try {
-        await supabaseFetch(`users?id=eq.${currentUser.id}`, { method: 'DELETE' });
-      } catch (e) {}
+    if (dbMode === 'BACKEND_API') {
+      const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+      if (token) {
+        try {
+          await fetch(`${serverConfig.apiUrl.replace(/\/$/, '')}/auth/account`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } catch (e) {}
+      }
     }
     setUsersDb((prev) => prev.filter((u) => u.id !== currentUser.id));
     setCoursesDb((prev) => prev.filter((c) => c.userId !== currentUser.id));
     handleLogout();
   };
 
-  // 개인정보 수정 저장
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     if (!currentUser) return;
-    const updated = {
+    let updated = {
       ...currentUser,
       department: editDepartment.trim() || '컴퓨터공학과',
       studentId: editStudentId.trim() || currentUser.studentId,
       name: editName.trim() || currentUser.name
     };
+
+    if (dbMode === 'BACKEND_API') {
+      const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+      if (token) {
+        try {
+          const res = await fetch(`${serverConfig.apiUrl.replace(/\/$/, '')}/auth/profile`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              department: updated.department,
+              studentId: updated.studentId,
+              name: updated.name
+            })
+          });
+          const data = await res.json();
+          if (data.success && data.user) updated = data.user;
+        } catch (err) {}
+      }
+    }
+
     setCurrentUser(updated);
     setUsersDb((prev) => prev.map((u) => (u.id === updated.id ? updated : u)));
     setIsProfileModalOpen(false);
     setFeedback({ type: 'success', message: '개인정보가 수정되었습니다.' });
   };
 
-  // 과목 카드 렌더링 컴포넌트
   const renderCourseCard = (course) => {
     const isSuperseded = gpaCalculationResult.supersededCourseIds.has(course.id);
     const isAutoRetake = gpaCalculationResult.autoRetakeCourseIds.has(course.id);
@@ -1006,7 +923,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0D0D12] text-gray-100 p-[20px] font-sans">
       <div className="max-w-7xl mx-auto space-y-5">
-        {/* 상단 헤더 바 */}
         <header className="rounded-2xl bg-[#151521] border border-[#A8FFDB]/30 p-4 sm:p-5 shadow-lg">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -1018,21 +934,18 @@ export default function App() {
                   <span className="text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-[#D4B2FF]/15 text-[#D4B2FF] border border-[#D4B2FF]/30">
                     SEOULTECH CSE
                   </span>
-                  {/* 현재 DB 저장 모드 표시 배지 */}
                   <button
                     onClick={() => setIsServerModalOpen(true)}
                     className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 transition ${
-                      dbMode === 'SUPABASE_CLOUD' || dbMode === 'BACKEND_API'
+                      dbMode === 'BACKEND_API'
                         ? 'bg-[#A8FFDB]/15 text-[#A8FFDB] border-[#A8FFDB]/40'
                         : 'bg-[#FFE699]/15 text-[#FFE699] border-[#FFE699]/40 hover:bg-[#FFE699]/25'
                     }`}
                   >
                     <Cloud className="w-3 h-3" />
-                    {dbMode === 'SUPABASE_CLOUD'
-                      ? '클라우드 DB 실시간 연동 중'
-                      : dbMode === 'BACKEND_API'
-                      ? '백엔드 서버 DB 연동 중'
-                      : '로컬 DB 모드 (클릭하여 클라우드/백업 설정)'}
+                    {dbMode === 'BACKEND_API'
+                      ? '클라우드 백엔드 DB 실시간 연동 중'
+                      : '로컬 모드 (클릭하여 백엔드 서버 URL 설정)'}
                   </button>
                 </div>
                 <h1 className="text-lg sm:text-xl font-extrabold text-white mt-0.5">
@@ -1041,10 +954,8 @@ export default function App() {
               </div>
             </div>
 
-            {/* 로그인된 경우 사용자 학과/학번/이름 및 GPA 표시 */}
             {currentUser && (
               <div className="flex flex-wrap items-center gap-3">
-                {/* 현재 진행 학기 선택기 */}
                 <div className="flex items-center gap-1.5 bg-[#0D0D12] border border-gray-800 rounded-xl px-3 py-2">
                   <Calendar className="w-4 h-4 text-[#A8FFDB]" />
                   <span className="text-xs text-gray-400 mr-1">현재 학기:</span>
@@ -1076,7 +987,6 @@ export default function App() {
                   </select>
                 </div>
 
-                {/* 평점평균(GPA) & 학점 요약 */}
                 <div className="flex items-center gap-3 bg-[#0D0D12] border border-[#D4B2FF]/40 rounded-xl px-3.5 py-2">
                   <div>
                     <p className="text-[10px] text-gray-400">평점평균 (GPA)</p>
@@ -1095,7 +1005,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 이름 클릭 시 개인정보 수정/로그아웃/탈퇴 팝업 */}
                 <button
                   onClick={() => {
                     setEditDepartment(currentUser.department);
@@ -1126,7 +1035,6 @@ export default function App() {
           </div>
         </header>
 
-        {/* 알림 메시지 배너 */}
         {feedback.message && (
           <div
             className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border text-sm ${
@@ -1149,7 +1057,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 비로그인 상태: 로그인 / 회원가입 화면 */}
         {!currentUser ? (
           <div className="max-w-md mx-auto bg-[#151521] border border-gray-800 rounded-2xl p-6 shadow-xl">
             <div className="flex gap-2 mb-6 bg-[#0D0D12] p-1 rounded-xl">
@@ -1229,9 +1136,7 @@ export default function App() {
             </form>
           </div>
         ) : (
-          /* 로그인 후 메인 인터페이스 */
           <div className="space-y-5">
-            {/* 상단 메인 화면 전환 탭 & 데이터 백업 버튼 */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex gap-2">
                 <button
@@ -1257,32 +1162,8 @@ export default function App() {
                   2. 도구
                 </button>
               </div>
-
-              {/* [필수 4] 데이터 파일 백업 / 불러오기 & 클라우드 설정 버튼 */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleExportDataFile}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-[#151521] border border-gray-800 hover:border-[#A8FFDB]/50 text-[#A8FFDB]"
-                >
-                  <Download className="w-3.5 h-3.5" /> 데이터 백업(.json)
-                </button>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-[#151521] border border-gray-800 hover:border-[#D4B2FF]/50 text-[#D4B2FF]"
-                >
-                  <Upload className="w-3.5 h-3.5" /> 데이터 불러오기
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json"
-                  onChange={handleImportDataFile}
-                  className="hidden"
-                />
-              </div>
             </div>
 
-            {/* 화면 1: 주간 시간표 확인 화면 */}
             {activeMainView === 'TIMETABLE' && (
               <div className="bg-[#151521] border border-gray-800 rounded-2xl p-5 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -1296,7 +1177,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 주간 시간표 격자 (월~금, 09:00 ~ 21:00) */}
                 <div className="overflow-x-auto">
                   <div className="min-w-[680px] border border-gray-800 rounded-xl overflow-hidden bg-[#0D0D12]">
                     <div className="grid grid-cols-6 border-b border-gray-800 bg-[#151521] text-xs font-bold text-center py-2.5">
@@ -1309,7 +1189,6 @@ export default function App() {
                     </div>
 
                     <div className="relative grid grid-cols-6" style={{ height: '720px' }}>
-                      {/* 좌측 시간 축 (09:00 ~ 21:00) */}
                       <div className="border-r border-gray-800/80 relative">
                         {Array.from({ length: 12 }, (_, idx) => 9 + idx).map((hour) => (
                           <div
@@ -1322,7 +1201,6 @@ export default function App() {
                         ))}
                       </div>
 
-                      {/* 요일별 컬럼 */}
                       {DAY_OPTIONS.map((day) => (
                         <div
                           key={day}
@@ -1337,7 +1215,6 @@ export default function App() {
                             />
                           ))}
 
-                          {/* 현재 학기 과목 블록 렌더링 */}
                           {currentSemesterCourses
                             .filter((c) => !c.isWithdrawn)
                             .map((course) =>
@@ -1378,10 +1255,8 @@ export default function App() {
               </div>
             )}
 
-            {/* 화면 2: 도구 (카테고리 분리: 과목 등록 및 수정 / 학기별 조회) */}
             {activeMainView === 'DASHBOARD' && (
               <div className="space-y-5">
-                {/* 도구 카테고리 선택 버튼 (번호 '1.' 제거 완료) */}
                 <div className="bg-[#151521] border border-gray-800 rounded-2xl p-4 flex flex-wrap items-center gap-2.5">
                   <span className="text-xs font-bold text-gray-400 mr-2 flex items-center gap-1.5">
                     <Layers className="w-4 h-4 text-[#D4B2FF]" /> 도구 카테고리:
@@ -1408,10 +1283,8 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* 카테고리 1: 과목 등록 및 수정 */}
                 {activeToolCategory === 'COURSE_MANAGER' && (
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                    {/* 좌측: 과목 등록 폼 */}
                     <form
                       onSubmit={handleCreateCourse}
                       className="lg:col-span-5 bg-[#151521] border border-gray-800 rounded-2xl p-5 space-y-4"
@@ -1495,7 +1368,6 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* 선택 사항: 재수강 / 수강철회(W) 체크박스 */}
                       <div className="p-3 rounded-xl bg-[#0D0D12] border border-gray-800 space-y-2">
                         <p className="text-xs font-bold text-gray-300">
                           재수강 / 철회 표시 (선택 사항 - 설정하지 않아도 등록 가능)
@@ -1522,7 +1394,6 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* 분할 수업 시간 동적 입력 */}
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <label className="text-xs text-gray-400 flex items-center gap-1">
@@ -1619,7 +1490,6 @@ export default function App() {
                       </button>
                     </form>
 
-                    {/* 우측: 전체 등록 과목 빠른 목록 */}
                     <div className="lg:col-span-7 bg-[#151521] border border-gray-800 rounded-2xl p-5 space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-base font-extrabold text-white">
@@ -1643,7 +1513,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* 카테고리 2: 학기별 조회 (현재 학기 상단 고정 + 타 학기 그룹 분류 + 접기/펼치기) */}
                 {activeToolCategory === 'SEMESTER_VIEW' && (
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center justify-between gap-2 bg-[#151521] border border-gray-800 rounded-2xl p-4">
@@ -1677,7 +1546,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* 1. 상단 고정: 현재 학기 과목 목록 */}
                     <div className="bg-[#151521] border-2 border-[#A8FFDB]/40 rounded-2xl overflow-hidden">
                       <button
                         type="button"
@@ -1715,7 +1583,6 @@ export default function App() {
                       )}
                     </div>
 
-                    {/* 2. 하단: 다른 학기 이수 과목들 (학기별 아코디언) */}
                     {otherSemestersGrouped.map((group) => {
                       const isCollapsed = Boolean(collapsedSemesters[group.key]);
                       return (
@@ -1758,7 +1625,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 모달 1: 과목 수정 / 삭제 팝업 */}
         {editingCourse && (
           <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
             <form
@@ -1901,7 +1767,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 모달 2: 이름 클릭 시 개인정보 수정 / 로그아웃 / 회원탈퇴 팝업 */}
         {isProfileModalOpen && currentUser && (
           <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
             <div className="w-full max-w-md bg-[#151521] border border-[#D4B2FF]/40 rounded-2xl p-6 space-y-4">
@@ -1978,63 +1843,33 @@ export default function App() {
           </div>
         )}
 
-        {/* 모달 3: 클라우드 DB(Supabase) 및 백엔드 서버 주소 설정 모달 */}
         {isServerModalOpen && (
           <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
             <div className="w-full max-w-md bg-[#151521] border border-[#A8FFDB]/40 rounded-2xl p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                  <Server className="w-4 h-4 text-[#A8FFDB]" /> 클라우드 DB / 백엔드 서버 연결
+                  <Server className="w-4 h-4 text-[#A8FFDB]" /> 백엔드 서버 주소 설정
                 </h3>
                 <button onClick={() => setIsServerModalOpen(false)}>
                   <X className="w-5 h-5 text-gray-400" />
                 </button>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed">
-                여러 사용자가 기기 상관없이 접속하려면 무료 <strong>Supabase</strong> URL과 Anon Key를 입력하거나 배포된 백엔드 API 주소를 입력하세요.
+                Render 등으로 배포한 백엔드 API 주소(예: <code>https://team04-backend.onrender.com/api</code>)를 입력하면 PC·모바일 어디서든 클라우드 DB와 실시간 동기화됩니다.
               </p>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">
-                    Supabase Project URL (선택)
-                  </label>
-                  <input
-                    type="text"
-                    value={serverConfig.supabaseUrl}
-                    onChange={(e) =>
-                      setServerConfig((prev) => ({ ...prev, supabaseUrl: e.target.value }))
-                    }
-                    placeholder="https://xxxx.supabase.co"
-                    className="w-full rounded-xl bg-[#0D0D12] border border-gray-800 px-3 py-2 text-xs text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">
-                    Supabase Anon Public Key (선택)
-                  </label>
-                  <input
-                    type="password"
-                    value={serverConfig.supabaseKey}
-                    onChange={(e) =>
-                      setServerConfig((prev) => ({ ...prev, supabaseKey: e.target.value }))
-                    }
-                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..."
-                    className="w-full rounded-xl bg-[#0D0D12] border border-gray-800 px-3 py-2 text-xs text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">
-                    Node.js 백엔드 서버 주소 (기본: http://localhost:5000/api)
-                  </label>
-                  <input
-                    type="text"
-                    value={serverConfig.apiUrl}
-                    onChange={(e) =>
-                      setServerConfig((prev) => ({ ...prev, apiUrl: e.target.value }))
-                    }
-                    className="w-full rounded-xl bg-[#0D0D12] border border-gray-800 px-3 py-2 text-xs text-white"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">
+                  Node.js 백엔드 API 주소
+                </label>
+                <input
+                  type="text"
+                  value={serverConfig.apiUrl}
+                  onChange={(e) =>
+                    setServerConfig((prev) => ({ ...prev, apiUrl: e.target.value }))
+                  }
+                  placeholder="https://your-backend.onrender.com/api"
+                  className="w-full rounded-xl bg-[#0D0D12] border border-gray-800 px-3 py-2 text-xs text-white"
+                />
               </div>
               <button
                 type="button"

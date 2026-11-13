@@ -21,6 +21,18 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', service: 'SEOULTECH CSE Grade & Timetable API' });
 });
 
+// 프론트엔드 빌드 폴더(frontend/dist)가 존재하면 백엔드 서버 하나로 웹 화면까지 통합 제공
+const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+const fs = require('fs');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    }
+  });
+}
+
 const startServer = async () => {
   try {
     await sequelize.sync({ alter: true });

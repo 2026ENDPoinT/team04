@@ -4,7 +4,8 @@
 "description": "서울과학기술대학교 컴퓨터공학과 성적 및 시간표 관리 백엔드 서버",
 "main": "src/server.js",
 "scripts": {
-"start": "node src/server.js"
+"start": "node src/server.js",
+"dev": "node src/server.js"
 },
 "dependencies": {
 "cors": "^2.8.5",
