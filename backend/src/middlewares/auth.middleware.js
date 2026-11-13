@@ -1,13 +1,12 @@
+const path = require('path');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user.model');
+const User = require(path.join(__dirname, '../models/user.model'));
 
 const JWT_SECRET = process.env.JWT_SECRET || 'seoultech-cse-secret-key-2026';
 
-// [필수 5] 회원가입/로그인 시 학과, 학번, 이름 기본 예외 처리 미들웨어
 exports.validateAuthInput = (req, res, next) => {
   let { department, studentId, name } = req.body;
 
-  // 학과 미입력 시 기본값 '컴퓨터공학과' 자동 할당 (직접 입력한 경우 입력값 유지)
   if (!department || department.trim() === '') {
     req.body.department = '컴퓨터공학과';
   } else {
@@ -33,7 +32,6 @@ exports.validateAuthInput = (req, res, next) => {
   next();
 };
 
-// JWT 토큰 검증 및 자동 로그인 세션 유지 미들웨어
 exports.verifyToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
